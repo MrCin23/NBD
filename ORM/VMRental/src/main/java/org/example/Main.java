@@ -40,8 +40,11 @@ public class Main {
             var builder = sessionFactory.getCriteriaBuilder();
             var query = builder.createQuery(String.class);
             var car = query.from(Car.class);
-           query.select(builder.concat(builder.concat(car.get(Car_.carId), builder.literal(": ")),
-                    car.get(Car_.name)));
+           query.select(builder.concat(builder.concat(car.get("carId"), builder.literal(": ")),
+                    car.get("name")));
+
+           /*           query.select(builder.concat(builder.concat(car.get(Car_.carId), builder.literal(": ")),
+                    car.get(Car_.name)));*/
             out.println(session.createSelectionQuery(query).getSingleResult());
         });
     }
