@@ -3,6 +3,7 @@ package org.example;
 import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Entity
 public class Rent {
@@ -17,10 +18,21 @@ public class Rent {
     Time endTIme;
     double rentCost;
 
-    //Methods
-    public void beginRent() {
-        //TODO
+    public Rent() {
+
     }
+
+    //Methods
+    //TODO naprawić
+//    public void beginRent(Time beginTime) {
+//        //TODO
+//        if(this.beginTime)
+//        {
+//            pt::ptime now = pt::second_clock::local_time();
+//            this->setBeginTime(now);
+//        }
+//        this->setBeginTime(beginTime);
+//    }
 
     public Rent(UUID rentID, Client client, VMachine vMachine, Time beginTime) {
         this.rentID = rentID;

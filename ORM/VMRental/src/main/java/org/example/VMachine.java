@@ -22,6 +22,10 @@ public abstract class VMachine {
         this.isRented = isRented;
     }
 
+    public VMachine() {
+
+    }
+
     public UUID getvMachineID() {
         return vMachineID;
     }
