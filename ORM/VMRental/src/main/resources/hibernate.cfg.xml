@@ -4,7 +4,8 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432:5432/vmrental</property>  <!-- Update DB name -->
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/vmrental
+        </property>  <!-- Update DB name -->
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">password</property>
 
@@ -25,6 +26,14 @@
         <property name="hibernate.highlight_sql">true</property>
 
         <!-- Mappings -->
-        <mapping class="org.example.Car"/>
+        <mapping class="org.example.Client"/>
+        <mapping class="org.example.ClientType"/>
+        <mapping class="org.example.Admin"/>
+        <mapping class="org.example.Standard"/>
+        <mapping class="org.example.VMachine"/>
+        <mapping class="org.example.x86"/>
+        <mapping class="org.example.AppleArch"/>
+        <mapping class="org.example.Rent"/>
+
     </session-factory>
 </hibernate-configuration>

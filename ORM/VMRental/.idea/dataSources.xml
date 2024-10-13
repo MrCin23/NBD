@@ -9,7 +9,7 @@
 
 E:/Projects/NBD/ORM/VMRental/src/main/resources/hibernate.cfg.xml</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432:5432/vmrental</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/vmrental</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
       </jdbc-additional-properties>
