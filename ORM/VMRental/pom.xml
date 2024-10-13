@@ -80,7 +80,6 @@
             <version>42.7.2</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -96,7 +95,7 @@
                         <path>
                             <groupId>org.hibernate</groupId>
                             <artifactId>hibernate-jpamodelgen</artifactId>
-                            <version>6.x.x</version>
+                            <version>6.0.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

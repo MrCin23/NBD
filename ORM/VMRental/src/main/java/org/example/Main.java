@@ -2,7 +2,7 @@ package org.example;
 
 import org.hibernate.cfg.Configuration;
 
-import static java.lang.Boolean.TRUE;
+
 import static java.lang.System.out;
 import static org.hibernate.cfg.AvailableSettings.*;
 
@@ -11,7 +11,7 @@ public class Main {
         var sessionFactory = new Configuration()
                 .addAnnotatedClass(Car.class)
                 // use H2 in-memory database
-                .setProperty(URL, "jdbc:h2:mem:db1")
+                .setProperty(URL, "jdbc:postgresql://localhost:5432/vmrental")
                 .setProperty(USER, "postgres")
                 .setProperty(PASS, "password")
                 // use Agroal connection pool

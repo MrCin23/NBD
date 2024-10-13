@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 @Entity
 public class Rent {
@@ -15,7 +16,7 @@ public class Rent {
     @ManyToOne
     VMachine vMachine;
     Time beginTime;
-    Time endTIme;
+    Time endTime;
     double rentCost;
 
     public Rent() {
@@ -23,22 +24,47 @@ public class Rent {
     }
 
     //Methods
-    //TODO naprawić
-//    public void beginRent(Time beginTime) {
-//        //TODO
-//        if(this.beginTime)
-//        {
-//            pt::ptime now = pt::second_clock::local_time();
-//            this->setBeginTime(now);
-//        }
-//        this->setBeginTime(beginTime);
-//    }
+    public void beginRent(Time beginTime) {
+        if(this.beginTime == null){
+            if(beginTime == null)
+            {
+                this.setBeginTime(java.sql.Time.valueOf(LocalTime.now()));
+            }
+            this.setBeginTime(beginTime);
+        }
+        else {
+            throw new RuntimeException("beginRent() called twice");
+        }
+    }
+
+    public void endRent(Time endTime) {
+        if(this.endTime == null){
+            if(endTime == null)
+            {
+                this.setEndTime(java.sql.Time.valueOf(LocalTime.now()));
+            }
+            this.setEndTime(beginTime);
+        }
+        else {
+            throw new RuntimeException("endRent() called twice");
+        }
+    }
 
     public Rent(UUID rentID, Client client, VMachine vMachine, Time beginTime) {
-        this.rentID = rentID;
-        this.client = client;
-        this.vMachine = vMachine;
-        this.beginTime = beginTime;
+        if(!vMachine.isRented) {
+            this.rentID = rentID;
+            this.client = client;
+            this.vMachine = vMachine;
+            beginRent(beginTime);
+        }
+        else {
+            throw new RuntimeException("This machine is already rented");
+        }
+    }
+
+    public double calculateRentalPrice() {
+        //TODO add logic and code
+        return 0;
     }
 
     public UUID getRentID() {
@@ -73,12 +99,12 @@ public class Rent {
         this.beginTime = beginTime;
     }
 
-    public Time getEndTIme() {
-        return endTIme;
+    public Time getEndTime() {
+        return endTime;
     }
 
-    public void setEndTIme(Time endTIme) {
-        this.endTIme = endTIme;
+    public void setEndTime(Time endTIme) {
+        this.endTime = endTIme;
     }
 
     public double getRentCost() {
