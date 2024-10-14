@@ -5,8 +5,12 @@ import jakarta.persistence.Entity;
 import java.util.UUID;
 @Entity
 public class AppleArch extends VMachine{
-    public AppleArch(UUID vMachineID, int CPUNumber, String ramSize, boolean isRented) {
-        super(vMachineID, CPUNumber, ramSize, isRented);
+    public AppleArch(UUID vMachineID, int CPUNumber, String ramSize) {
+        super(vMachineID, CPUNumber, ramSize, false);
+    }
+
+    public AppleArch() {
+
     }
 
     @Override

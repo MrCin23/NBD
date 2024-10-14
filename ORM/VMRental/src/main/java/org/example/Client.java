@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 import java.util.UUID;
 
 @Entity
-public class Client {
+public class Client implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID ClientID;
@@ -19,6 +19,19 @@ public class Client {
     @ManyToOne
     private ClientType clientType;
 
+
+    public UUID getClientID() {
+        return ClientID;
+    }
+
+    //REPO TEMPLATE
+    public UUID getID() {
+        return ClientID;
+    }
+
+    public void setClientID(UUID clientID) {
+        ClientID = clientID;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -61,16 +74,19 @@ public class Client {
     public Client() {
     }
 
-    public Client(String firstName, String surname, String emailAddress) {
-        this.firstName = firstName;
-        this.surname = surname;
-        this.emailAddress = emailAddress;
-    }
 
     public Client(UUID clientID, String firstName, String surname, String emailAddress) {
         ClientID = clientID;
         this.firstName = firstName;
         this.surname = surname;
         this.emailAddress = emailAddress;
+    }
+
+    public Client(UUID clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
+        ClientID = clientID;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.emailAddress = emailAddress;
+        this.clientType = clientType;
     }
 }

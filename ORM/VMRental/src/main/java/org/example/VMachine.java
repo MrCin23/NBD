@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 @Entity
-public abstract class VMachine {
+public abstract class VMachine implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID vMachineID;
@@ -31,6 +31,11 @@ public abstract class VMachine {
     }
 
     public UUID getvMachineID() {
+        return vMachineID;
+    }
+
+    //REPO TEMPLATE
+    public UUID getID() {
         return vMachineID;
     }
 

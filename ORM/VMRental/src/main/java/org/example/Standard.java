@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 public class Standard extends ClientType{
     public Standard() {
     }
+
+
     public String toString() {
         return "Standard";
     }

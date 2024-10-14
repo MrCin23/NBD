@@ -3,12 +3,13 @@ package org.example;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 @Entity
-public class Rent {
+public class Rent implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     UUID rentID;
@@ -71,6 +72,11 @@ public class Rent {
     }
 
     public UUID getRentID() {
+        return rentID;
+    }
+
+    //REPO TEMPLATE
+    public UUID getID() {
         return rentID;
     }
 

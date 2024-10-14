@@ -8,9 +8,13 @@ import java.util.UUID;
 public class x86 extends VMachine {
     private String CPUManufacturer;
 
-    public x86(UUID vMachineID, int CPUNumber, String ramSize, boolean isRented, String CPUManufacturer) {
-        super(vMachineID, CPUNumber, ramSize, isRented);
+    public x86(UUID vMachineID, int CPUNumber, String ramSize, String CPUManufacturer) {
+        super(vMachineID, CPUNumber, ramSize, false);
         this.CPUManufacturer = CPUManufacturer;
+    }
+
+    public x86() {
+
     }
 
     @Override

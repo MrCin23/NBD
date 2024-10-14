@@ -1,18 +1,20 @@
 package org.example;
 
 import java.util.List;
+import java.util.UUID;
 
-public class Repository<T> {
-    List<T> elements;
+public class Repository {
+    List<RepoElement> elements;
 
 //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
-    public void add(T element) {
+    public void add(RepoElement element) {
         elements.add(element);
     }
-    public void remove(T element) {
-        //TODO zwracanie elementu usuniętego
+    public void remove(RepoElement element) {
+        //zwracanie elementu usuniętego
+        //TODO UPDATE jednak funkcja remove nie zwraca obiiektu a jedynie boolean czy się powiodło xDDD
         elements.remove(element);
     }
 
@@ -20,8 +22,17 @@ public class Repository<T> {
         return elements.size();
     }
 
-    public List<T> getElements() {
+    public List<RepoElement> getElements() {
         return elements;
+    }
+
+    public <T>T getElementByID(UUID ID) {
+        for(int i = 0; i < elements.size(); i++) {
+            if(elements.get(i).getID() == ID) { //TODO to pewnie nie działa, wypada to jakoś naprawić (może interface)
+                return (T) elements.get(i);
+            }
+        }
+        return null;
     }
 
 
