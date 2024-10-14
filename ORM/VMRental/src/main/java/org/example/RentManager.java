@@ -6,8 +6,8 @@ import java.util.UUID;
 //RentManager jako Singleton
 public final class RentManager {
     private static RentManager instance;
-    Repository activeRentsRepository;
-    Repository archiveRentsRepository;
+    private Repository activeRentsRepository;
+    private Repository archiveRentsRepository;
 
     public RentManager() {
         activeRentsRepository = new Repository();

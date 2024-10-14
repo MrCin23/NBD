@@ -75,12 +75,6 @@ public class Client implements RepoElement {
     }
 
 
-    public Client(UUID clientID, String firstName, String surname, String emailAddress) {
-        ClientID = clientID;
-        this.firstName = firstName;
-        this.surname = surname;
-        this.emailAddress = emailAddress;
-    }
 
     public Client(UUID clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
         ClientID = clientID;

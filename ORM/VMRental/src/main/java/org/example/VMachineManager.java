@@ -6,7 +6,7 @@ import java.util.UUID;
 public final class VMachineManager {
 
     private static VMachineManager instance;
-    Repository vMachinesRepository;
+    private Repository vMachinesRepository;
 
     public VMachineManager() {
         vMachinesRepository = new Repository();
@@ -44,5 +44,9 @@ public final class VMachineManager {
     }
     public VMachine getVMachine(UUID vMachineID) {
         return vMachinesRepository.getElementByID(vMachineID);
+    }
+
+    public int getElementsAmount() {
+        return vMachinesRepository.getElements().size();
     }
 }

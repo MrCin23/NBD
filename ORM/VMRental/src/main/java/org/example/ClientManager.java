@@ -5,7 +5,7 @@ import java.util.UUID;
 //ClientManager jako Singleton
 public final class ClientManager {
     private static ClientManager instance;
-    Repository clientsRepository;
+    private final Repository clientsRepository;
 
     public ClientManager() {
         clientsRepository = new Repository();
@@ -38,6 +38,10 @@ public final class ClientManager {
     }
     public Client getClient(UUID clientID) {
         return clientsRepository.getElementByID(clientID);
+    }
+
+    public int getElementsAmount() {
+        return clientsRepository.getElements().size();
     }
 }
 

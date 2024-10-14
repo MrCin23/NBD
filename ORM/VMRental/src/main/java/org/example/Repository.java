@@ -1,12 +1,17 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Repository {
     List<RepoElement> elements;
 
-//-------------METHODS---------------------------------------
+    public Repository() {
+        elements = new ArrayList<RepoElement>();
+    }
+
+    //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
     public void add(RepoElement element) {
@@ -14,7 +19,7 @@ public class Repository {
     }
     public void remove(RepoElement element) {
         //zwracanie elementu usuniętego
-        //TODO UPDATE jednak funkcja remove nie zwraca obiiektu a jedynie boolean czy się powiodło xDDD
+        //TODO UPDATE jednak funkcja remove nie zwraca obiektu a jedynie boolean czy się powiodło xDDD
         elements.remove(element);
     }
 

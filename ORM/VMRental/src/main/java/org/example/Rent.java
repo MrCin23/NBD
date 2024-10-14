@@ -29,15 +29,18 @@ public class Rent implements RepoElement {
 
     //Methods
     public void beginRent(Time beginTime) {
-        if(this.beginTime == null){
+        if(this.beginTime == null && !(getvMachine().isRented())){
             if(beginTime == null)
             {
                 this.setBeginTime(java.sql.Time.valueOf(LocalTime.now()));
             }
             this.setBeginTime(beginTime);
         }
-        else {
+        else if(beginTime == null){
             throw new RuntimeException("beginRent() called twice");
+        }
+        else {
+            throw new RuntimeException("this VMachine is already rented");
         }
     }
 
@@ -47,7 +50,8 @@ public class Rent implements RepoElement {
             {
                 this.setEndTime(java.sql.Time.valueOf(LocalTime.now()));
             }
-            this.setEndTime(beginTime);
+            this.setEndTime(endTime);
+            this.getvMachine().setRented(false);
         }
         else {
             throw new RuntimeException("endRent() called twice");
