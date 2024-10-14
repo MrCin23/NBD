@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.text.MessageFormat;
 import java.util.UUID;
@@ -10,9 +11,10 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID ClientID;
-
+    @NotNull
     private String firstName;
     private String surname;
+    @NotNull
     private String emailAddress;
     @ManyToOne
     private ClientType clientType;

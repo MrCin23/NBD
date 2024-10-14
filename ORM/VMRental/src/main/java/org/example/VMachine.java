@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 @Entity
@@ -11,8 +12,11 @@ public abstract class VMachine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID vMachineID;
+    @NotNull
     private int CPUNumber;
+    @NotNull
     private String ramSize;
+    @NotNull
     boolean isRented;
 
     public VMachine(UUID vMachineID, int CPUNumber, String ramSize, boolean isRented) {

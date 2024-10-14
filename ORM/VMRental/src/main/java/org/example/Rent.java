@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -12,8 +13,10 @@ public class Rent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     UUID rentID;
     @ManyToOne
+    @NotNull
     Client client;
     @ManyToOne
+    @NotNull
     VMachine vMachine;
     Time beginTime;
     Time endTime;
