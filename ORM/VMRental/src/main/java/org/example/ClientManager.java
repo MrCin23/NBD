@@ -1,14 +1,13 @@
 package org.example;
 
-import java.util.UUID;
 
 //ClientManager jako Singleton
 public final class ClientManager {
     private static ClientManager instance;
-    private final Repository clientsRepository;
+    private final ClientRepository clientsRepository;
 
     public ClientManager() {
-        clientsRepository = new Repository();
+        clientsRepository = new ClientRepository();
     }
 
     public static ClientManager getInstance() {
@@ -22,7 +21,7 @@ public final class ClientManager {
         clientsRepository.add(client);
     }
 
-    public void registerClient(UUID clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
+    public void registerClient(long clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
         Client client = new Client(clientID, firstName, surname, emailAddress, clientType);
         registerExsistingClient(client);
     }
@@ -34,14 +33,14 @@ public final class ClientManager {
     //METHODS-----------------------------------
 //TODO
     public String getAllClientsReport() {
-        return this.clientsRepository.getElements().toString();
+        return this.clientsRepository.getClients().toString();
     }
-    public Client getClient(UUID clientID) {
-        return clientsRepository.getElementByID(clientID);
+    public Client getClient(long clientID) {
+        return (Client) clientsRepository.getClientByID(clientID);
     }
 
-    public int getElementsAmount() {
-        return clientsRepository.getElements().size();
+    public int getClientsAmount() {
+        return clientsRepository.getClients().size();
     }
 }
 

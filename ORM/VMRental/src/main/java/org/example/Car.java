@@ -10,14 +10,14 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long carId;
+    private long carId;
 
     private String name;
 
     // Konstruktor, gettery, settery
 
 
-    public Car(Long carId, String name) {
+    public Car(long carId, String name) {
         this.carId = carId;
         this.name = name;
     }
@@ -27,11 +27,11 @@ public class Car {
     }
 
     // Getters and Setters
-    public Long getCarId() {
+    public long getCarId() {
         return carId;
     }
 
-    public void setCarId(Long carId) {
+    public void setCarId(long carId) {
         this.carId = carId;
     }
 

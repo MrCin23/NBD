@@ -7,17 +7,26 @@ import jakarta.persistence.OneToMany;
 public abstract class ClientType {
 
     @Id
-    private Long id;
+    private long id;
+
+    protected int maxRentedMachines;
+
+    public ClientType() {
+    }
+
+    public ClientType(long id) {
+        this.id = id;
+    }
 
     public String toString() {
         return "";
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 }

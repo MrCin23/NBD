@@ -1,7 +1,6 @@
 package org.example;
 
 import java.sql.Time;
-import java.util.UUID;
 
 //RentManager jako Singleton
 public final class RentManager {
@@ -25,7 +24,7 @@ public final class RentManager {
         activeRentsRepository.add(rent);
     }
 
-    public void registerRent(UUID rentID, Client client, VMachine vMachine, Time beginTime) {
+    public void registerRent(long rentID, Client client, VMachine vMachine, Time beginTime) {
         Rent rent = new Rent(rentID, client, vMachine, beginTime);
         registerExsistingRent(rent);
     }
@@ -41,8 +40,8 @@ public final class RentManager {
     public String getAllRentsReport() {
         return this.activeRentsRepository.getElements().toString();
     }
-    public Rent getRent(UUID rentID) {
-        return activeRentsRepository.getElementByID(rentID);
+    public Rent getRent(long rentID) {
+        return (Rent) activeRentsRepository.getElementByID(rentID);
     }
 }
 

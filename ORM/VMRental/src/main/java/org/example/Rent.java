@@ -7,12 +7,11 @@ import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.UUID;
 @Entity
 public class Rent implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    UUID rentID;
+    long rentID;
     @ManyToOne
     @NotNull
     Client client;
@@ -58,7 +57,7 @@ public class Rent implements RepoElement {
         }
     }
 
-    public Rent(UUID rentID, Client client, VMachine vMachine, Time beginTime) {
+    public Rent(long rentID, Client client, VMachine vMachine, Time beginTime) {
         if(!vMachine.isRented) {
             this.rentID = rentID;
             this.client = client;
@@ -75,16 +74,16 @@ public class Rent implements RepoElement {
         return 0;
     }
 
-    public UUID getRentID() {
+    public long getRentID() {
         return rentID;
     }
 
     //REPO TEMPLATE
-    public UUID getID() {
+    public long getID() {
         return rentID;
     }
 
-    public void setRentID(UUID rentID) {
+    public void setRentID(long rentID) {
         this.rentID = rentID;
     }
 

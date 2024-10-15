@@ -3,14 +3,13 @@ package org.example;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.text.MessageFormat;
-import java.util.UUID;
+
 
 @Entity
 public class Client implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID ClientID;
+    private long clientID;
     @NotNull
     private String firstName;
     private String surname;
@@ -20,17 +19,17 @@ public class Client implements RepoElement {
     private ClientType clientType;
 
 
-    public UUID getClientID() {
-        return ClientID;
+    public long getclientID() {
+        return clientID;
     }
 
     //REPO TEMPLATE
-    public UUID getID() {
-        return ClientID;
+    public long getID() {
+        return clientID;
     }
 
-    public void setClientID(UUID clientID) {
-        ClientID = clientID;
+    public void setclientID(long clientID) {
+        clientID = clientID;
     }
 
     public String getFirstName() {
@@ -76,8 +75,8 @@ public class Client implements RepoElement {
 
 
 
-    public Client(UUID clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
-        ClientID = clientID;
+    public Client(long clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
+        clientID = clientID;
         this.firstName = firstName;
         this.surname = surname;
         this.emailAddress = emailAddress;

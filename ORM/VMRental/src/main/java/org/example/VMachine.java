@@ -6,12 +6,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.UUID;
 @Entity
 public abstract class VMachine implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID vMachineID;
+    private long vMachineID;
     @NotNull
     private int CPUNumber;
     @NotNull
@@ -19,7 +18,7 @@ public abstract class VMachine implements RepoElement {
     @NotNull
     boolean isRented;
 
-    public VMachine(UUID vMachineID, int CPUNumber, String ramSize, boolean isRented) {
+    public VMachine(long vMachineID, int CPUNumber, String ramSize, boolean isRented) {
         this.vMachineID = vMachineID;
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
@@ -30,16 +29,16 @@ public abstract class VMachine implements RepoElement {
 
     }
 
-    public UUID getvMachineID() {
+    public long getvMachineID() {
         return vMachineID;
     }
 
     //REPO TEMPLATE
-    public UUID getID() {
+    public long getID() {
         return vMachineID;
     }
 
-    public void setvMachineID(UUID vMachineID) {
+    public void setvMachineID(long vMachineID) {
         this.vMachineID = vMachineID;
     }
 
