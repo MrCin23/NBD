@@ -19,18 +19,18 @@ public final class VMachineManager {
         return instance;
     }
 
-    public void registerExsistingVMachine(VMachine vm) {
+    public void registerExistingVMachine(VMachine vm) {
         vMachinesRepository.add(vm);
     }
 
     public void registerX86(int CPUNumber, String ramSize, String CPUManufacturer) {
         VMachine vMachine = new x86(CPUNumber, ramSize, CPUManufacturer);
-        registerExsistingVMachine(vMachine);
+        registerExistingVMachine(vMachine);
     }
 
     public void registerAppleArch(int CPUNumber, String ramSize) {
         VMachine vMachine = new AppleArch(CPUNumber, ramSize);
-        registerExsistingVMachine(vMachine);
+        registerExistingVMachine(vMachine);
     }
 
     public void unregisterVMachine(VMachine vm) {

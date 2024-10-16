@@ -5,12 +5,12 @@ import java.sql.Time;
 //RentManager jako Singleton
 public final class RentManager {
     private static RentManager instance;
-    private Repository activeRentsRepository;
-    private Repository archiveRentsRepository;
+    private RentRepository activeRentsRepository;
+    private RentRepository archiveRentsRepository;
 
     public RentManager() {
-        activeRentsRepository = new Repository();
-        archiveRentsRepository = new Repository();
+        activeRentsRepository = new RentRepository();
+        archiveRentsRepository = new RentRepository();
     }
 
     public static RentManager getInstance() {
@@ -20,18 +20,18 @@ public final class RentManager {
         return instance;
     }
 
-    public void registerExsistingRent(Rent rent) {
+    public void registerExistingRent(Rent rent) {
         activeRentsRepository.add(rent);
     }
 
-    public void registerRent(long rentID, Client client, VMachine vMachine, Time beginTime) {
-        Rent rent = new Rent(rentID, client, vMachine, beginTime);
-        registerExsistingRent(rent);
+    public void registerRent(Client client, VMachine vMachine, Time beginTime) {
+        Rent rent = new Rent(client, vMachine, beginTime);
+        registerExistingRent(rent);
     }
 
     public void endRent(Rent rent, Time endTime) {
         rent.endRent(endTime);
-        activeRentsRepository.remove(rent);
+        //activeRentsRepository.remove(rent);
         archiveRentsRepository.add(rent);
     }
 

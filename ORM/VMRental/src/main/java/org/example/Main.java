@@ -1,11 +1,8 @@
 package org.example;
 
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-
+import java.sql.Time;
+import java.time.LocalTime;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,11 +16,17 @@ public class Main {
 //            session.save(clientType2);
 //            transaction.commit();
 //        }
-        AppleArch apple = new AppleArch(16, "64GB");
-        VMachineManager mgr = new VMachineManager();
-        mgr.registerExsistingVMachine(apple);
-        mgr.getVMachinesAmount();
-        System.out.println(mgr.getAllVMachinesReport());
+//        AppleArch apple = new AppleArch(16, "64GB");
+//        VMachineManager mgr = new VMachineManager();
+//        mgr.registerExistingVMachine(apple);
+//        mgr.getVMachinesAmount();
+//        System.out.println(mgr.getAllVMachinesReport());
+        ClientManager cm = new ClientManager();
+//        cm.registerClient("XD", "xd", "balls", new Admin());
+        VMachineManager vmm = new VMachineManager();
+//        vmm.registerAppleArch(123213, "2GB");
+        RentManager rm = new RentManager();
+        rm.registerRent(new Client("aaaaaaaaaaa", "AAAAAAAAAAA", "ASDASDSAD", new Admin()), vmm.getVMachine(1), Time.valueOf(LocalTime.now()));
         //mgr.registerExsistingVMachine(normal);
 //        ClientManager cm = new ClientManager();
 //        Client client = new Client("Marcin", "Targoński", "247810@edu.p.lodz.pl", new Standard());

@@ -32,7 +32,6 @@ public class ClientRepository {
                     .setParameter("name", client.getClientType().getClass().getSimpleName())
                     .uniqueResult();
 
-
             if(clientType == null) {
                 session.save(client.getClientType());
             }

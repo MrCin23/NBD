@@ -57,9 +57,8 @@ public class Rent implements RepoElement {
         }
     }
 
-    public Rent(long rentID, Client client, VMachine vMachine, Time beginTime) {
+    public Rent(Client client, VMachine vMachine, Time beginTime) {
         if(!vMachine.isRented()) {
-            this.rentID = rentID;
             this.client = client;
             this.vMachine = vMachine;
             beginRent(beginTime);

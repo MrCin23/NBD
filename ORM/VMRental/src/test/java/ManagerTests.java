@@ -16,7 +16,7 @@ public class ManagerTests {
     public void addElementTest() {
         //ClientManager
         Assertions.assertEquals(cm.getClientsAmount(), 0);
-        cm.registerExsistingClient(c);
+        cm.registerExistingClient(c);
         Assertions.assertEquals(cm.getClientsAmount(), 1);
         Client cc = cm.getClient(c.getID());
         Assertions.assertEquals(c, cc);
@@ -24,9 +24,9 @@ public class ManagerTests {
         VMachine normalVMachine = new x86(8, "16GiB", "AMD");
         VMachine appleVMachine = new AppleArch(8, "16GiB");
         Assertions.assertEquals(vmm.getElementsAmount(), 0);
-        vmm.registerExsistingVMachine(normalVMachine);
+        vmm.registerExistingVMachine(normalVMachine);
         Assertions.assertEquals(vmm.getElementsAmount(), 1);
-        vmm.registerExsistingVMachine(appleVMachine);
+        vmm.registerExistingVMachine(appleVMachine);
         Assertions.assertEquals(vmm.getElementsAmount(), 2);
         VMachine vMachine = vmm.getVMachine(normalVMachine.getID());
         Assertions.assertEquals(vMachine, normalVMachine);

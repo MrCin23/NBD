@@ -17,13 +17,13 @@ public final class ClientManager {
         return instance;
     }
 
-    public void registerExsistingClient(Client client) {
+    public void registerExistingClient(Client client) {
         clientsRepository.add(client);
     }
 
     public void registerClient(String firstName, String surname, String emailAddress, ClientType clientType) {
         Client client = new Client(firstName, surname, emailAddress, clientType);
-        registerExsistingClient(client);
+        registerExistingClient(client);
     }
 
     public void unregisterClient(Client client) {

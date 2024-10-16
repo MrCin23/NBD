@@ -10,9 +10,6 @@ import java.util.List;
 
 public class VMachineRepository {
     List<VMachine> vMachines;
-    private final String url = "jdbc:postgresql://localhost:5432/vmrental";
-    private final String user = "postgres";
-    private final String password = "password";
     SessionFactory sessionFactory;
 
     public VMachineRepository() {
