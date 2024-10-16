@@ -10,7 +10,7 @@ public class ManagerTests {
     RentManager rm = new RentManager();
     ClientType standardAccount = new Standard();
     ClientType admin = new Admin();
-    Client c = new Client(3L, "Adam", "Nowak", "cti@p.lodz.pl", admin);
+    Client c = new Client("Adam", "Nowak", "cti@p.lodz.pl", admin);
 
     @Test
     public void addElementTest() {

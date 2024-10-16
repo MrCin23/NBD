@@ -9,11 +9,6 @@ public class Admin extends ClientType{
         this.maxRentedMachines = 10;
     }
 
-    public Admin(long id) {
-        super(id);
-        this.maxRentedMachines = 10;
-    }
-
     public String toString() {
         return "Admin";
     }

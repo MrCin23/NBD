@@ -1,20 +1,36 @@
 package org.example;
 
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
 
 public class Main {
     public static void main(String[] args) {
 
+//        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+//        try (Session session = sessionFactory.openSession()) {
+//            Transaction transaction = session.beginTransaction();
+//            ClientType clientType = new Admin();
+//            ClientType clientType2 = new Standard();
+//            session.save(clientType);
+//            session.save(clientType2);
+//            transaction.commit();
+//        }
         ClientManager cm = new ClientManager();
-//        Client client = new Client(3L, "Michał", "Karbowańczyk", "m.karbowanczyk@p.lodz.pl", new Admin(69L));
-//        cm.registerExsistingClient(client);
+        //Client client = new Client("Michał", "Karbowańczyk", "m.karbowanczyk@p.lodz.pl", new Admin(69L));
+        //cm.unregisterClient(cm.getClient(1));
+        cm.registerClient("Mateusz", "Smoliński", "m.smolinski@p.lodz.pl", new Admin());
+        cm.registerClient("Bartosz", "Lis", "bartosz.lis@p.lodz.pl", new Admin());
+
+
+
+//        System.out.println(cm.getClientsAmount());
 //
-//        cm.registerExsistingClient(client);
-
-        System.out.println(cm.getClientsAmount());
-
-        System.out.println(cm.getClient(4L));
-        System.out.println(cm.getClient(2137L));
+//        System.out.println(cm.getClient(4L));
+//        System.out.println(cm.getClient(2137L));
 //        var sessionFactory = new Configuration()
 //                .addAnnotatedClass(Car.class)
 //                // use H2 in-memory database

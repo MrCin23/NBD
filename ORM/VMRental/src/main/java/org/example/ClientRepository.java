@@ -28,18 +28,22 @@ public class ClientRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
-            //TODO żeby sprawdzało po nazwie klasy
-            ClientType existingClientType = (ClientType) session
-                    .createQuery("FROM ClientType WHERE id = :id")
-                    .setParameter("id", client.getClientType().getId())
+//            //TODO żeby sprawdzało po nazwie klasy
+//            ClientType existingClientType = (ClientType) session
+//                    .createQuery("FROM ClientType WHERE id = :id")
+//                    .setParameter("id", client.getClientType().getId())
+//                    .uniqueResult();
+//
+//            if (existingClientType != null) {
+//                client.setClientType(existingClientType);
+//            } else {
+//                session.save(client.getClientType());
+            //}
+            ClientType clientType = session.createQuery("FROM ClientType ct WHERE TYPE(ClientType) = :ClientType", client.getClientType().getClass())
+                    .setParameter("ClientType", client.getClientType().getClass())
                     .uniqueResult();
 
-            if (existingClientType != null) {
-                client.setClientType(existingClientType);
-            } else {
-                session.save(client.getClientType());
-            }
-
+            session.save(clientType);
             session.save(client);
             transaction.commit();
         } catch (Exception e) {

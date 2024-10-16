@@ -1,21 +1,17 @@
 package org.example;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 @Entity
 public abstract class ClientType {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     protected int maxRentedMachines;
 
     public ClientType() {
-    }
-
-    public ClientType(long id) {
-        this.id = id;
     }
 
     public String toString() {

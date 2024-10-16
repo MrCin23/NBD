@@ -75,8 +75,7 @@ public class Client implements RepoElement {
 
 
 
-    public Client(long clientID, String firstName, String surname, String emailAddress, ClientType clientType) {
-        clientID = clientID;
+    public Client(String firstName, String surname, String emailAddress, ClientType clientType) {
         this.firstName = firstName;
         this.surname = surname;
         this.emailAddress = emailAddress;
