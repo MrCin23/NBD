@@ -28,22 +28,17 @@ public class ClientRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
-//            //TODO żeby sprawdzało po nazwie klasy
-//            ClientType existingClientType = (ClientType) session
-//                    .createQuery("FROM ClientType WHERE id = :id")
-//                    .setParameter("id", client.getClientType().getId())
-//                    .uniqueResult();
-//
-//            if (existingClientType != null) {
-//                client.setClientType(existingClientType);
-//            } else {
-//                session.save(client.getClientType());
-            //}
-            ClientType clientType = session.createQuery("FROM ClientType ct WHERE TYPE(ClientType) = :ClientType", client.getClientType().getClass())
-                    .setParameter("ClientType", client.getClientType().getClass())
+            ClientType clientType = session.createQuery("FROM ClientType ct WHERE ct.name = :name", ClientType.class)
+                    .setParameter("name", client.getClientType().getClass().getSimpleName())
                     .uniqueResult();
 
-            session.save(clientType);
+
+            if(clientType == null) {
+                session.save(client.getClientType());
+            }
+            else {
+                client.setClientType(clientType);
+            }
             session.save(client);
             transaction.commit();
         } catch (Exception e) {
@@ -51,7 +46,7 @@ public class ClientRepository {
         }
     }
 
-        public void remove(Client client) {
+    public void remove(Client client) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             session.delete(client);
@@ -62,7 +57,7 @@ public class ClientRepository {
         clients.remove(client);
     }
 
-    public Long size() {
+    public long size() {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             Long count = (Long) session.createQuery("SELECT COUNT(c) FROM Client c").uniqueResult();
@@ -99,12 +94,7 @@ public class ClientRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        for (RepoElement element : clients) {
-//            if (element.getID() == ID) { //TODO to pewnie nie działa, wypada to jakoś naprawić (może interface)
-//                return element;
-//            }
-//        }
-//        return null;
+
     }
 
 

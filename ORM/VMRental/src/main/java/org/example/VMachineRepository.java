@@ -1,5 +1,10 @@
 package org.example;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,49 +13,73 @@ public class VMachineRepository {
     private final String url = "jdbc:postgresql://localhost:5432/vmrental";
     private final String user = "postgres";
     private final String password = "password";
+    SessionFactory sessionFactory;
 
     public VMachineRepository() {
         vMachines = new ArrayList<VMachine>();
+        sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     }
 
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
     public void add(VMachine vMachine) {
-//TODO
-//        String classPath = element.getClass().getName();
-//        String className = classPath.substring(classPath.lastIndexOf(".") + 1);
-//        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-//            connection.setAutoCommit(true);
-//            Statement statement = connection.createStatement();
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        vMachines.add(element);
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(vMachine);
+            transaction.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void remove(VMachine vMachine) {
-        //zwracanie elementu usuniętego
-        //TODO UPDATE jednak funkcja remove nie zwraca obiektu a jedynie boolean czy się powiodło xDDD
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(vMachine);
+            transaction.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         vMachines.remove(vMachine);
     }
 
-    public int size() {
-        return vMachines.size();
+    public long size() {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Long count = (Long) session.createQuery("SELECT COUNT(vm) FROM VMachine vm").uniqueResult();
+            transaction.commit();
+            return count;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<VMachine> getVMachines() {
-        return vMachines;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            vMachines = session.createQuery("FROM VMachine ", VMachine.class).getResultList();
+
+            transaction.commit();
+            return vMachines;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RepoElement getVMachineByID(long ID) {
-        for (RepoElement element : vMachines) {
-            if (element.getID() == ID) { //TODO to pewnie nie działa, wypada to jakoś naprawić (może interface)
-                return element;
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
+                    .setParameter("vMachineID", ID)
+                    .uniqueResult();
+
+            transaction.commit();
+            return vMachine;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

@@ -11,7 +11,10 @@ public abstract class ClientType {
 
     protected int maxRentedMachines;
 
+    protected String name;
+
     public ClientType() {
+        this.name = getClass().getSimpleName();
     }
 
     public String toString() {
@@ -24,5 +27,13 @@ public abstract class ClientType {
 
     public long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -16,10 +16,11 @@ public abstract class VMachine implements RepoElement {
     @NotNull
     private String ramSize;
     @NotNull
-    boolean isRented;
+    private boolean isRented;
+    @NotNull
+    protected float actualRentalPrice;
 
-    public VMachine(long vMachineID, int CPUNumber, String ramSize, boolean isRented) {
-        this.vMachineID = vMachineID;
+    public VMachine(int CPUNumber, String ramSize, boolean isRented) {
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
         this.isRented = isRented;

@@ -19,56 +19,18 @@ public class Main {
 //            session.save(clientType2);
 //            transaction.commit();
 //        }
-        ClientManager cm = new ClientManager();
-        //Client client = new Client("Michał", "Karbowańczyk", "m.karbowanczyk@p.lodz.pl", new Admin(69L));
-        //cm.unregisterClient(cm.getClient(1));
-        cm.registerClient("Mateusz", "Smoliński", "m.smolinski@p.lodz.pl", new Admin());
-        cm.registerClient("Bartosz", "Lis", "bartosz.lis@p.lodz.pl", new Admin());
+        AppleArch apple = new AppleArch(16, "64GB");
+        VMachineManager mgr = new VMachineManager();
+        mgr.registerExsistingVMachine(apple);
+        mgr.getVMachinesAmount();
+        System.out.println(mgr.getAllVMachinesReport());
+        //mgr.registerExsistingVMachine(normal);
+//        ClientManager cm = new ClientManager();
+//        Client client = new Client("Marcin", "Targoński", "247810@edu.p.lodz.pl", new Standard());
+//        //cm.unregisterClient(cm.getClient(1));
+//        cm.registerExsistingClient(client);
+//        cm.registerClient("Piotr", "Sokoliński", "247790@edu.p.lodz.pl", new Standard());
 
 
-
-//        System.out.println(cm.getClientsAmount());
-//
-//        System.out.println(cm.getClient(4L));
-//        System.out.println(cm.getClient(2137L));
-//        var sessionFactory = new Configuration()
-//                .addAnnotatedClass(Car.class)
-//                // use H2 in-memory database
-//                .setProperty(URL, "jdbc:postgresql://localhost:5432/vmrental")
-//                .setProperty(USER, "postgres")
-//                .setProperty(PASS, "password")
-//                // use Agroal connection pool
-//                .setProperty("hibernate.agroal.maxSize", 20)
-//                // display SQL in console
-//                .setProperty(SHOW_SQL, true)
-//                .setProperty(FORMAT_SQL, true)
-//                .setProperty(HIGHLIGHT_SQL, true)
-//                .buildSessionFactory();
-//
-//        // export the inferred database schema
-//        sessionFactory.getSchemaManager().exportMappedObjects(true);
-//
-//        // persist an entity
-//        sessionFactory.inTransaction(session -> {
-//            session.persist(new Car(1234L,"Hibernate in Action"));
-//        });
-//
-//        // query data using HQL
-//        sessionFactory.inSession(session -> {
-//            out.println(session.createSelectionQuery("select carId||': '||name from Car").getSingleResult());
-//        });
-//
-//        // query data using criteria API
-//        sessionFactory.inSession(session -> {
-//            var builder = sessionFactory.getCriteriaBuilder();
-//            var query = builder.createQuery(String.class);
-//            var car = query.from(Car.class);
-//           query.select(builder.concat(builder.concat(car.get("carId"), builder.literal(": ")),
-//                    car.get("name")));
-//
-////           query.select(builder.concat(builder.concat(car.get(Car_.carId), builder.literal(": ")),
-////                    car.get(Car_.name)));
-//            out.println(session.createSelectionQuery(query).getSingleResult());
-//        });
     }
 }

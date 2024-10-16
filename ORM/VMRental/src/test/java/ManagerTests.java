@@ -15,14 +15,14 @@ public class ManagerTests {
     @Test
     public void addElementTest() {
         //ClientManager
-        Assertions.assertEquals(cm.getElementsAmount(), 0);
+        Assertions.assertEquals(cm.getClientsAmount(), 0);
         cm.registerExsistingClient(c);
-        Assertions.assertEquals(cm.getElementsAmount(), 1);
+        Assertions.assertEquals(cm.getClientsAmount(), 1);
         Client cc = cm.getClient(c.getID());
         Assertions.assertEquals(c, cc);
         //VMachineManager
-        VMachine normalVMachine = new x86(1L, 8, "16GiB", "AMD");
-        VMachine appleVMachine = new AppleArch(2L, 8, "16GiB");
+        VMachine normalVMachine = new x86(8, "16GiB", "AMD");
+        VMachine appleVMachine = new AppleArch(8, "16GiB");
         Assertions.assertEquals(vmm.getElementsAmount(), 0);
         vmm.registerExsistingVMachine(normalVMachine);
         Assertions.assertEquals(vmm.getElementsAmount(), 1);
@@ -35,7 +35,7 @@ public class ManagerTests {
     @Test
     public void removeElementTest() {
         cm.unregisterClient(cm.getClient(c.getID()));
-        Assertions.assertEquals(cm.getElementsAmount(), 0);
+        Assertions.assertEquals(cm.getClientsAmount(), 0);
     }
 
 

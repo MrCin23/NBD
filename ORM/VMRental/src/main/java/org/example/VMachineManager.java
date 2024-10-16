@@ -6,10 +6,10 @@ package org.example;
 public final class VMachineManager {
 
     private static VMachineManager instance;
-    private Repository vMachinesRepository;
+    private final VMachineRepository vMachinesRepository;
 
     public VMachineManager() {
-        vMachinesRepository = new Repository();
+        vMachinesRepository = new VMachineRepository();
     }
 
     public static VMachineManager getInstance() {
@@ -23,13 +23,13 @@ public final class VMachineManager {
         vMachinesRepository.add(vm);
     }
 
-    public void registerX86(long vMachineID, int CPUNumber, String ramSize, String CPUManufacturer) {
-        VMachine vMachine = new x86(vMachineID, CPUNumber, ramSize, CPUManufacturer);
+    public void registerX86(int CPUNumber, String ramSize, String CPUManufacturer) {
+        VMachine vMachine = new x86(CPUNumber, ramSize, CPUManufacturer);
         registerExsistingVMachine(vMachine);
     }
 
-    public void registerAppleArch(long vMachineID, int CPUNumber, String ramSize) {
-        VMachine vMachine = new AppleArch(vMachineID, CPUNumber, ramSize);
+    public void registerAppleArch(int CPUNumber, String ramSize) {
+        VMachine vMachine = new AppleArch(CPUNumber, ramSize);
         registerExsistingVMachine(vMachine);
     }
 
@@ -40,13 +40,13 @@ public final class VMachineManager {
 //METHODS-----------------------------------
 //TODO
     public String getAllVMachinesReport() {
-        return this.vMachinesRepository.getElements().toString();
+        return this.vMachinesRepository.getVMachines().toString();
     }
     public VMachine getVMachine(long vMachineID) {
-        return (VMachine) vMachinesRepository.getElementByID(vMachineID);
+        return (VMachine) vMachinesRepository.getVMachineByID(vMachineID);
     }
 
-    public int getElementsAmount() {
-        return vMachinesRepository.getElements().size();
+    public int getVMachinesAmount() {
+        return vMachinesRepository.getVMachines().size();
     }
 }
