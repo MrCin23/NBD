@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 @Entity
@@ -18,8 +20,8 @@ public class Rent implements RepoElement {
     @ManyToOne
     @NotNull
     VMachine vMachine;
-    Time beginTime;
-    Time endTime;
+    LocalDateTime beginTime;
+    LocalDateTime endTime;
     double rentCost;
 
 
@@ -27,12 +29,23 @@ public class Rent implements RepoElement {
 
     }
 
+    public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
+        if(!vMachine.isRented()) {
+            this.client = client;
+            this.vMachine = vMachine;
+            beginRent(beginTime);
+        }
+        else {
+            throw new RuntimeException("This machine is already rented");
+        }
+    }
+
     //Methods
-    public void beginRent(Time beginTime) {
+    public void beginRent(LocalDateTime beginTime) {
         if(this.beginTime == null && !(getvMachine().isRented())){
             if(beginTime == null)
             {
-                this.setBeginTime(java.sql.Time.valueOf(LocalTime.now()));
+                this.setBeginTime(LocalDateTime.now());
             }
             this.setBeginTime(beginTime);
         }
@@ -44,13 +57,14 @@ public class Rent implements RepoElement {
         }
     }
 
-    public void endRent(Time endTime) {
+    public void endRent(LocalDateTime endTime) {
         if(this.endTime == null){
             if(endTime == null)
             {
-                this.setEndTime(java.sql.Time.valueOf(LocalTime.now()));
+                this.setEndTime(LocalDateTime.now());
             }
             this.setEndTime(endTime);
+            this.calculateRentalPrice();
             this.getvMachine().setRented(false);
         }
         else {
@@ -58,20 +72,10 @@ public class Rent implements RepoElement {
         }
     }
 
-    public Rent(Client client, VMachine vMachine, Time beginTime) {
-        if(!vMachine.isRented()) {
-            this.client = client;
-            this.vMachine = vMachine;
-            beginRent(beginTime);
-        }
-        else {
-            throw new RuntimeException("This machine is already rented");
-        }
-    }
-
-    public double calculateRentalPrice() {
-        //TODO add logic and code
-        return 0;
+    public void calculateRentalPrice() {
+        Duration d = Duration.between(beginTime, endTime);
+        int days = (int) d.toDays();
+        this.rentCost = days * vMachine.getActualRentalPrice();
     }
 
     public long getRentID() {
@@ -103,19 +107,19 @@ public class Rent implements RepoElement {
         this.vMachine = vMachine;
     }
 
-    public Time getBeginTime() {
+    public LocalDateTime getBeginTime() {
         return beginTime;
     }
 
-    public void setBeginTime(Time beginTime) {
+    public void setBeginTime(LocalDateTime beginTime) {
         this.beginTime = beginTime;
     }
 
-    public Time getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTIme) {
+    public void setEndTime(LocalDateTime endTIme) {
         this.endTime = endTIme;
     }
 

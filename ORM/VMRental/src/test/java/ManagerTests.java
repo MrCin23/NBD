@@ -23,11 +23,11 @@ public class ManagerTests {
         //VMachineManager
         VMachine normalVMachine = new x86(8, "16GiB", "AMD");
         VMachine appleVMachine = new AppleArch(8, "16GiB");
-        Assertions.assertEquals(vmm.getElementsAmount(), 0);
+        Assertions.assertEquals(vmm.getVMachinesAmount(), 0);
         vmm.registerExistingVMachine(normalVMachine);
-        Assertions.assertEquals(vmm.getElementsAmount(), 1);
+        Assertions.assertEquals(vmm.getVMachinesAmount(), 1);
         vmm.registerExistingVMachine(appleVMachine);
-        Assertions.assertEquals(vmm.getElementsAmount(), 2);
+        Assertions.assertEquals(vmm.getVMachinesAmount(), 2);
         VMachine vMachine = vmm.getVMachine(normalVMachine.getID());
         Assertions.assertEquals(vMachine, normalVMachine);
     }

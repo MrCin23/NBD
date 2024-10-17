@@ -1,12 +1,12 @@
 package org.example;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.DialectOverride;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="Architecture",discriminatorType=DiscriminatorType.STRING)
 public abstract class VMachine implements RepoElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,8 @@ public abstract class VMachine implements RepoElement {
     private boolean isRented;
     @NotNull
     protected float actualRentalPrice;
+    @Version
+    int version;
 
     public VMachine(int CPUNumber, String ramSize, boolean isRented) {
         this.CPUNumber = CPUNumber;
@@ -26,15 +28,12 @@ public abstract class VMachine implements RepoElement {
         this.isRented = isRented;
     }
 
-    public VMachine() {
-
-    }
+    public VMachine() {}
 
     public long getvMachineID() {
         return vMachineID;
     }
 
-    //REPO TEMPLATE
     public long getID() {
         return vMachineID;
     }
@@ -68,7 +67,6 @@ public abstract class VMachine implements RepoElement {
     }
 
     public float getActualRentalPrice() {
-        //TODO
         return 0;
     }
 };
