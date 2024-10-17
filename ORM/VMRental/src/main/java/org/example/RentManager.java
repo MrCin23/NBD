@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.Time;
+import java.util.Map;
 
 //RentManager jako Singleton
 public final class RentManager {
@@ -33,6 +34,15 @@ public final class RentManager {
         rent.endRent(endTime);
         //activeRentsRepository.remove(rent);
         archiveRentsRepository.add(rent);
+    }
+
+    public void updateField(long id, Map<String, Object> fieldsToUpdate, Boolean active) {
+        if(active) {
+            activeRentsRepository.update(id, fieldsToUpdate);
+        }
+        else {
+            archiveRentsRepository.update(id, fieldsToUpdate);
+        }
     }
 
     //METHODS-----------------------------------

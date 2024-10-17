@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ClientRepository {
             Transaction transaction = session.beginTransaction();
 
             // Retrieve the entity by its ID
-            Object entity = session.get(Rent.class, id);
+            Object entity = session.get(Client.class, id);
             if (entity == null) {
                 throw new IllegalArgumentException("Entity not found with id: " + id);
             }
@@ -47,10 +48,9 @@ public class ClientRepository {
 
                 // Use reflection to set the field value on the entity
                 try {
-                    Rent.class.getDeclaredField(fieldName)
-                            .setAccessible(true);
-                    Rent.class.getDeclaredField(fieldName)
-                            .set(entity, fieldValue);
+                    Field field = Client.class.getDeclaredField(fieldName);
+                    field.setAccessible(true);
+                    field.set(entity, fieldValue);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error updating field: " + fieldName, e);
                 }

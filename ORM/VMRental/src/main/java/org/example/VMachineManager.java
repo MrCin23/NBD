@@ -1,6 +1,7 @@
 package org.example;
 
 
+import java.util.Map;
 
 //Manager jako Singleton
 public final class VMachineManager {
@@ -37,8 +38,11 @@ public final class VMachineManager {
         vMachinesRepository.remove(vm);
     }
 
-//METHODS-----------------------------------
-//TODO
+    public void updateField(long id, Map<String, Object> fieldsToUpdate) {
+        vMachinesRepository.update(id, fieldsToUpdate);
+    }
+
+
     public String getAllVMachinesReport() {
         return this.vMachinesRepository.getVMachines().toString();
     }

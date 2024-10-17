@@ -1,6 +1,8 @@
 package org.example;
 
 
+import java.util.Map;
+
 //ClientManager jako Singleton
 public final class ClientManager {
     private static ClientManager instance;
@@ -28,6 +30,10 @@ public final class ClientManager {
 
     public void unregisterClient(Client client) {
         clientsRepository.remove(client);
+    }
+
+    public void updateField(long id, Map<String, Object> fieldsToUpdate) {
+        clientsRepository.update(id, fieldsToUpdate);
     }
 
     //METHODS-----------------------------------
