@@ -23,8 +23,9 @@ public class VMachineRepository {
     //TODO dorobić metody z diagramu
 
     public void update(long id, Map<String, Object> fieldsToUpdate) {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
 
             VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
                     .setParameter("vMachineID", id)
@@ -65,58 +66,80 @@ public class VMachineRepository {
             }
             transaction.commit();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
     }
 
     public void add(VMachine vMachine) {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(vMachine);
             transaction.commit();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
     }
 
     public void remove(VMachine vMachine) {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.delete(vMachine);
             transaction.commit();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
         vMachines.remove(vMachine);
     }
 
     public long size() {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             Long count = (Long) session.createQuery("SELECT COUNT(vm) FROM VMachine vm").uniqueResult();
             transaction.commit();
             return count;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return 0;
     }
 
     public List<VMachine> getVMachines() {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
 
             vMachines = session.createQuery("FROM VMachine ", VMachine.class).getResultList();
 
             transaction.commit();
             return vMachines;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return List.of();
     }
 
     public RepoElement getVMachineByID(long ID) {
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
 
             VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
                     .setParameter("vMachineID", ID)
@@ -125,7 +148,11 @@ public class VMachineRepository {
             transaction.commit();
             return vMachine;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+        return null;
     }
 }
