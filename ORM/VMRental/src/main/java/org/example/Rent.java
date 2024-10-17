@@ -22,6 +22,7 @@ public class Rent implements RepoElement {
     Time endTime;
     double rentCost;
 
+
     public Rent() {
 
     }
