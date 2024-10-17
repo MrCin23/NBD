@@ -38,10 +38,10 @@ public final class RentManager {
     //METHODS-----------------------------------
 //TODO
     public String getAllRentsReport() {
-        return this.activeRentsRepository.getElements().toString();
+        return this.activeRentsRepository.getRents().toString();
     }
     public Rent getRent(long rentID) {
-        return (Rent) activeRentsRepository.getElementByID(rentID);
+        return (Rent) activeRentsRepository.getRentByID(rentID);
     }
 }
 

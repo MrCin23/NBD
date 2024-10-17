@@ -53,26 +53,78 @@ public class RentRepository {
         }
     }
 
-
-
-    public int size() {
-        return rents.size();
-    }
-
-    public List<Rent> getElements() {
-        return rents;
-    }
-
-    public RepoElement getElementByID(long ID) {
-        for (RepoElement rents : rents) {
-            if (rents.getID() == ID) { //TODO to pewnie nie działa, wypada to jakoś naprawić (może interface)
-                return rents;
+    public long size(boolean active) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Long count;
+            if (active) {
+                count = (Long) session.createQuery("SELECT COUNT(rent.rentID) FROM Rent rent WHERE rent.endTime is null")
+                                .uniqueResult();
             }
+            else {
+                count = (Long) session.createQuery("SELECT COUNT(rent.rentID) FROM Rent rent WHERE rent.endTime is not null")
+                        .uniqueResult();
+            }
+            transaction.commit();
+            return count;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
+    public long size() {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Long count;
+            count = (Long) session.createQuery("SELECT COUNT(Rent.rentID) FROM Rent").uniqueResult();
+            transaction.commit();
+            return count;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-//-----------------------------------------------------------
+    public List<Rent> getRents(boolean active) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            List<Rent> rents;
+            if (active) {
+                rents = session.createQuery("FROM Rent rent WHERE rent.endTime is null", Rent.class).getResultList();
+            }
+            else {
+                rents = session.createQuery("FROM Rent rent WHERE rent.endTime is not null", Rent.class).getResultList();
+            }
+            transaction.commit();
+            return rents;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public List<Rent> getRents() {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            List<Rent> rents;
+            rents = session.createQuery("FROM Rent", Rent.class).getResultList();
+            transaction.commit();
+            return rents;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public RepoElement getRentByID(long ID) {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            Rent rent = session.createQuery("FROM Rent rent WHERE rent.rentID = :rent", Rent.class)
+                    .setParameter("rent", ID)
+                    .uniqueResult();
+
+            transaction.commit();
+            return rent;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -21,12 +21,12 @@ public class Main {
 //        mgr.registerExistingVMachine(apple);
 //        mgr.getVMachinesAmount();
 //        System.out.println(mgr.getAllVMachinesReport());
-        ClientManager cm = new ClientManager();
-//        cm.registerClient("XD", "xd", "balls", new Admin());
-        VMachineManager vmm = new VMachineManager();
-//        vmm.registerAppleArch(123213, "2GB");
-        RentManager rm = new RentManager();
-        rm.registerRent(new Client("aaaaaaaaaaa", "AAAAAAAAAAA", "ASDASDSAD", new Admin()), vmm.getVMachine(1), Time.valueOf(LocalTime.now()));
+//        ClientManager cm = new ClientManager();
+////        cm.registerClient("XD", "xd", "balls", new Admin());
+//        VMachineManager vmm = new VMachineManager();
+////        vmm.registerAppleArch(123213, "2GB");
+//        RentManager rm = new RentManager();
+//        rm.registerRent(new Client("aaaaaaaaaaa", "AAAAAAAAAAA", "ASDASDSAD", new Admin()), vmm.getVMachine(1), Time.valueOf(LocalTime.now()));
         //mgr.registerExsistingVMachine(normal);
 //        ClientManager cm = new ClientManager();
 //        Client client = new Client("Marcin", "Targoński", "247810@edu.p.lodz.pl", new Standard());
