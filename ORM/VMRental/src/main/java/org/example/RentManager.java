@@ -1,17 +1,16 @@
 package org.example;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 //RentManager jako Singleton
 public final class RentManager {
     private static RentManager instance;
-    private RentRepository activeRentsRepository;
-    private RentRepository archiveRentsRepository;
+    private final RentRepository rentRepository;
 
     public RentManager() {
-        activeRentsRepository = new RentRepository();
-        archiveRentsRepository = new RentRepository();
+        rentRepository = new RentRepository();
     }
 
     public static RentManager getInstance() {
@@ -22,36 +21,24 @@ public final class RentManager {
     }
 
     public void registerExistingRent(Rent rent) {
-        activeRentsRepository.add(rent);
+        rentRepository.add(rent);
     }
 
-    public void registerRent(Client client, VMachine vMachine, Time beginTime) {
+    public void registerRent(Client client, VMachine vMachine, LocalDateTime beginTime) {
         Rent rent = new Rent(client, vMachine, beginTime);
         registerExistingRent(rent);
     }
 
-    public void endRent(Rent rent, Time endTime) {
-        rent.endRent(endTime);
-        //activeRentsRepository.remove(rent);
-        archiveRentsRepository.add(rent);
-    }
-
-    public void updateField(long id, Map<String, Object> fieldsToUpdate, Boolean active) {
-        if(active) {
-            activeRentsRepository.update(id, fieldsToUpdate);
-        }
-        else {
-            archiveRentsRepository.update(id, fieldsToUpdate);
-        }
+    public void endRent(long id, LocalDateTime endTime) {
+        rentRepository.endRent(id, endTime);
     }
 
     //METHODS-----------------------------------
-//TODO
     public String getAllRentsReport() {
-        return this.activeRentsRepository.getRents().toString();
+        return this.rentRepository.getRents().toString();
     }
     public Rent getRent(long rentID) {
-        return (Rent) activeRentsRepository.getRentByID(rentID);
+        return (Rent) rentRepository.getRentByID(rentID);
     }
 }
 

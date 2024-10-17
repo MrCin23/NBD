@@ -3,6 +3,8 @@ package org.example;
 import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="ClientType",discriminatorType=DiscriminatorType.STRING)
 public abstract class ClientType {
 
     @Id
@@ -35,5 +37,9 @@ public abstract class ClientType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getMaxRentedMachines() {
+        return maxRentedMachines;
     }
 }

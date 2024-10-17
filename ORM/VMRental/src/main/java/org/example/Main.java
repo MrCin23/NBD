@@ -1,6 +1,12 @@
 package org.example;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -13,6 +19,23 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+//        long ID = 1;
+//
+//        try (SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory()) {
+//            try (Session session = sessionFactory.openSession()){
+//                Transaction transaction = session.beginTransaction();
+//
+//                VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
+//                        .setParameter("vMachineID", ID)
+//                        .uniqueResult();
+//
+//                vMachine.setCPUNumber(4);
+//
+//                session.save(vMachine);
+//                transaction.commit();
+//            }
+//        }
+
         while (true) {
             System.out.println("\nWelcome to the System! Choose an option:");
             System.out.println("1. Manage Virtual Machines");
@@ -236,7 +259,7 @@ public class Main {
         String time = scanner.nextLine();
 
         if (client != null && vMachine != null) {
-            rentManager.registerRent(client, vMachine, Time.valueOf(time + ":00"));
+            rentManager.registerRent(client, vMachine, LocalDateTime.now());
             System.out.println("Rent registered successfully!");
         } else {
             System.out.println("Client or Machine not found.");
@@ -251,7 +274,7 @@ public class Main {
         if (rent != null) {
             System.out.println("Enter end time (HH:mm):");
             String time = scanner.nextLine();
-            rentManager.endRent(rent, Time.valueOf(time + ":00"));
+            rentManager.endRent(rentId, LocalDateTime.now());
             System.out.println("Rent ended successfully!");
         } else {
             System.out.println("Rent not found.");
