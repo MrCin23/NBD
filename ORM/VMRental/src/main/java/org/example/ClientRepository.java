@@ -31,10 +31,9 @@ public class ClientRepository {
         if (fieldsToUpdate == null || fieldsToUpdate.isEmpty()) {
             throw new IllegalArgumentException("No fields to update.");
         }
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             // Start the transaction
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
 
             // Retrieve the entity by its ID
             Object entity = session.get(Client.class, id);
@@ -64,17 +63,13 @@ public class ClientRepository {
             transaction.commit();
             System.out.println("Entity updated successfully.");
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public void add(Client client) {
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
 
             ClientType clientType = session.createQuery("FROM ClientType ct WHERE ct.name = :name", ClientType.class)
                     .setParameter("name", client.getClientType().getClass().getSimpleName())
@@ -89,66 +84,48 @@ public class ClientRepository {
             session.save(client);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     public void remove(Client client) {
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             session.delete(client);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         clients.remove(client);
     }
 
     public long size() {
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             Long count = (Long) session.createQuery("SELECT COUNT(c) FROM Client c").uniqueResult();
             transaction.commit();
             return count;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return 0;
     }
 
     public List<Client> getClients() {
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
 
             clients = session.createQuery("FROM Client", Client.class).getResultList();
 
             transaction.commit();
             return clients;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return List.of();
     }
 
     public Client getClientByID(long ID) {
-        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
 
             Client client = session.createQuery("FROM Client c WHERE c.clientID = :clientID", Client.class)
                     .setParameter("clientID", ID)
@@ -157,13 +134,9 @@ public class ClientRepository {
             transaction.commit();
             return client;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return null;
     }
 
 

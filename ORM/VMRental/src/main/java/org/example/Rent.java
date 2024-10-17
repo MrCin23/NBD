@@ -74,7 +74,7 @@ public class Rent implements RepoElement {
 
     public void calculateRentalPrice() {
         Duration d = Duration.between(beginTime, endTime);
-        int days = (int) d.toDays() + 1;
+        int days = (int) d.toDays();
         this.rentCost = days * vMachine.getActualRentalPrice();
     }
 
