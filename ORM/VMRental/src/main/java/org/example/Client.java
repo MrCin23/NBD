@@ -17,6 +17,8 @@ public class Client implements RepoElement {
     private String emailAddress;
     @ManyToOne
     private ClientType clientType;
+    @Version
+    int version;
 
 
     public long getclientID() {

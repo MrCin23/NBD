@@ -23,46 +23,47 @@ public class VMachineRepository {
     //TODO dorobić metody z diagramu
 
     public void update(long id, Map<String, Object> fieldsToUpdate) {
-        // Check if there are fields to update
-        if (fieldsToUpdate == null || fieldsToUpdate.isEmpty()) {
-            throw new IllegalArgumentException("No fields to update.");
-        }
         try (Session session = sessionFactory.openSession()) {
-            // Start the transaction
             Transaction transaction = session.beginTransaction();
 
-            // Retrieve the entity by its ID
-            Object entity = session.get(VMachine.class, id);
-            if (entity == null) {
-                throw new IllegalArgumentException("Entity not found with id: " + id);
-            }
+            VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
+                    .setParameter("vMachineID", id)
+                    .uniqueResult();
 
-            // Update the fields dynamically (use reflection)
             for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
                 String fieldName = entry.getKey();
-                Object fieldValue = entry.getValue();
-
-                // Use reflection to set the field value on the entity
+                Object fieldValuee = entry.getValue();
                 try {
                     Field field = VMachine.class.getDeclaredField(fieldName);
                     field.setAccessible(true);
-                    if(field.getType() == String.class){
-                        field.set(entity, fieldValue);
+                    Class<?> type = field.getType();
+                    String fieldValue = (String)fieldValuee;
+                    if (type == String.class) {
+                        field.set(vMachine, fieldValue);
+                    }
+                    else if (type == int.class || type == Integer.class) {
+                        field.set(vMachine, Integer.parseInt(fieldValue));
+                    }
+                    else if (type == boolean.class || type == Boolean.class) {
+                        field.set(vMachine, Boolean.parseBoolean(fieldValue));
+                    }
+                    else if (type == long.class || type == Long.class) {
+                        field.set(vMachine, Long.parseLong(fieldValue));
+                    }
+                    else if (type == double.class || type == Double.class) {
+                        field.set(vMachine, Double.parseDouble(fieldValue));
+                    }
+                    else if (type == float.class || type == Float.class) {
+                        field.set(vMachine, Float.parseFloat(fieldValue));
                     }
                     else {
-                        field.set(entity, fieldValue);
+                        field.set(vMachine, type.cast(fieldValue));
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error updating field: " + fieldName, e);
                 }
             }
-
-            // Save or update the entity
-            session.update(entity);
-
-            // Commit the transaction
             transaction.commit();
-            System.out.println("Entity updated successfully.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

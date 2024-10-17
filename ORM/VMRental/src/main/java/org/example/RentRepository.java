@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,14 @@ public class RentRepository {
 
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
+
+    public void endRent(long id, LocalDateTime endTime){
+        if(endTime == null){
+            endTime = LocalDateTime.now();
+        }
+        Rent rent = getRentByID(id);
+        rent.endRent(endTime);
+    }
 
     public void update(long id, Map<String, Object> fieldsToUpdate) {
         // Check if there are fields to update
@@ -66,11 +75,20 @@ public class RentRepository {
 
     public void add(Rent rent) {
         try (Session session = sessionFactory.openSession()) {
-
             Transaction transaction = session.beginTransaction();
+
+            long currentlyRented = (long) session.createQuery("SELECT COUNT(rent.rentID) FROM Rent rent WHERE rent.endTime is null AND rent.client.clientID = :rentID")
+                    .setParameter("rentID", rent.getClient().getclientID())
+                    .uniqueResult();
+            boolean rented = (boolean) session.createQuery("SELECT vm.isRented FROM VMachine vm WHERE vm.vMachineID = :rentID")
+                    .setParameter("rentID", rent.getvMachine().getvMachineID())
+                    .uniqueResult();
             ClientType clientType = session.createQuery("FROM ClientType ct WHERE ct.name = :name", ClientType.class)
                     .setParameter("name", rent.getClient().getClientType().getName())
                     .uniqueResult();
+            if (rented){
+                throw new RuntimeException("Virtual Machine is already rented.");
+            }
 
             if(clientType == null) {
                 session.save(rent.getClient().getClientType());
@@ -79,6 +97,9 @@ public class RentRepository {
                 rent.getClient().setClientType(clientType);
             }
 
+            if (currentlyRented >= clientType.getMaxRentedMachines()){
+                throw new RuntimeException("Client has reached their maximum active rent amount.");
+            }
             Client c = session.createQuery("FROM Client c WHERE c.emailAddress = :mail", Client.class)
                     .setParameter("mail", rent.getClient().getEmailAddress())
                     .uniqueResult();
@@ -156,7 +177,7 @@ public class RentRepository {
         }
     }
 
-    public RepoElement getRentByID(long ID) {
+    public Rent getRentByID(long ID) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
