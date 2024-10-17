@@ -34,8 +34,8 @@ public final class VMachineManager {
         registerExistingVMachine(vMachine);
     }
 
-    public void unregisterVMachine(VMachine vm) {
-        vMachinesRepository.remove(vm);
+    public void unregisterVMachine(long id) {
+        vMachinesRepository.remove(getVMachine(id));
     }
 
     public void updateField(long id, Map<String, Object> fieldsToUpdate) {

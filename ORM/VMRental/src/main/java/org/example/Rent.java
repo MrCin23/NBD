@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 @Entity
-public class Rent implements RepoElement {
+public class Rent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long rentID;
@@ -79,11 +79,6 @@ public class Rent implements RepoElement {
     }
 
     public long getRentID() {
-        return rentID;
-    }
-
-    //REPO TEMPLATE
-    public long getID() {
         return rentID;
     }
 

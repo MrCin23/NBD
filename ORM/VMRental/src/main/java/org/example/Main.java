@@ -125,7 +125,7 @@ public class Main {
 
         VMachine vm = vMachineManager.getVMachine(id);
         if (vm != null) {
-            vMachineManager.unregisterVMachine(vm);
+            vMachineManager.unregisterVMachine(id);
             System.out.println("Machine unregistered successfully!");
         } else {
             System.out.println("Machine not found.");
@@ -198,7 +198,7 @@ public class Main {
 
         Client client = clientManager.getClient(id);
         if (client != null) {
-            clientManager.unregisterClient(client);
+            clientManager.unregisterClient(id);
             System.out.println("Client unregistered successfully!");
         } else {
             System.out.println("Client not found.");

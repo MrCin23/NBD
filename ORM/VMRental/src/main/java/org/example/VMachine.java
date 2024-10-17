@@ -7,7 +7,7 @@ import org.hibernate.annotations.DialectOverride;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="Architecture",discriminatorType=DiscriminatorType.STRING)
-public abstract class VMachine implements RepoElement {
+public abstract class VMachine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long vMachineID;
@@ -31,10 +31,6 @@ public abstract class VMachine implements RepoElement {
     public VMachine() {}
 
     public long getvMachineID() {
-        return vMachineID;
-    }
-
-    public long getID() {
         return vMachineID;
     }
 

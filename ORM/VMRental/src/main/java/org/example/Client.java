@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 
 @Entity
-public class Client implements RepoElement {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long clientID;
@@ -22,11 +22,6 @@ public class Client implements RepoElement {
 
 
     public long getclientID() {
-        return clientID;
-    }
-
-    //REPO TEMPLATE
-    public long getID() {
         return clientID;
     }
 

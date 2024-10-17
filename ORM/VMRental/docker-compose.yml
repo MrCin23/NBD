@@ -19,7 +19,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vmrental_test
-    container_name: testdb_postgres
+    container_name: vmrental_test
     ports:
       - "5434:5432"
     volumes:

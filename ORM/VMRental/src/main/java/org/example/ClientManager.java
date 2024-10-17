@@ -28,8 +28,8 @@ public final class ClientManager {
         registerExistingClient(client);
     }
 
-    public void unregisterClient(Client client) {
-        clientsRepository.remove(client);
+    public void unregisterClient(long id) {
+        clientsRepository.remove(getClient(id));
     }
 
     public void updateField(long id, Map<String, Object> fieldsToUpdate) {

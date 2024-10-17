@@ -136,7 +136,7 @@ public class VMachineRepository {
         return List.of();
     }
 
-    public RepoElement getVMachineByID(long ID) {
+    public VMachine getVMachineByID(long ID) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
