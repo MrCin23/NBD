@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 public abstract class AbstractEntityMgd implements Serializable {
     @BsonProperty("_id")
-    private final UniqueIdMgd entityId;
-    public UniqueIdMgd getEntityId() { return entityId; }
-    public AbstractEntityMgd(UniqueIdMgd entityId) { this.entityId = entityId; }
+    private final MongoUUID entityId;
+    public MongoUUID getEntityId() { return entityId; }
+    public AbstractEntityMgd(MongoUUID entityId) { this.entityId = entityId; }
 
 }
