@@ -1,23 +1,12 @@
 package org.example;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
-
-
-@Entity
-public class Client implements RepoElement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Client  {
     private long clientID;
-    @NotNull
     private String firstName;
     private String surname;
-    @NotNull
     private String emailAddress;
-    @ManyToOne
     private ClientType clientType;
-    @Version
     int version;
 
 

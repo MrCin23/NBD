@@ -1,14 +1,7 @@
 package org.example;
 
-import jakarta.persistence.*;
-
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="ClientType",discriminatorType=DiscriminatorType.STRING)
 public abstract class ClientType {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     protected int maxRentedMachines;

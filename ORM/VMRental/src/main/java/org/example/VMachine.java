@@ -1,25 +1,13 @@
 package org.example;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.DialectOverride;
 
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="Architecture",discriminatorType=DiscriminatorType.STRING)
-public abstract class VMachine implements RepoElement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public abstract class VMachine{
+
     private long vMachineID;
-    @NotNull
     private int CPUNumber;
-    @NotNull
     private String ramSize;
-    @NotNull
     private boolean isRented;
-    @NotNull
     protected float actualRentalPrice;
-    @Version
     int version;
 
     public VMachine(int CPUNumber, String ramSize, boolean isRented) {

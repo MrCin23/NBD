@@ -1,8 +1,5 @@
 package org.example;
 
-import jakarta.persistence.Entity;
-
-@Entity
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {
         super(CPUNumber, ramSize, false);

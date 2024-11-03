@@ -1,24 +1,14 @@
 package org.example;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-
 import java.io.Serializable;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-@Entity
-public class Rent implements RepoElement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Rent  {
     long rentID;
-    @ManyToOne
-    @NotNull
     Client client;
-    @ManyToOne
-    @NotNull
     VMachine vMachine;
     LocalDateTime beginTime;
     LocalDateTime endTime;
