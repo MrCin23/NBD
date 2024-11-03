@@ -39,12 +39,6 @@
             <version>4.0.2</version>
         </dependency>
 
-        <!-- Agroal connection pool -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-agroal</artifactId>-->
-<!--            <version>6.6.1.Final</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.agroal</groupId>
             <artifactId>agroal-pool</artifactId>
@@ -58,19 +52,20 @@
             <version>2.20.0</version>
         </dependency>
 
-        <!-- JPA Metamodel Generator (for annotation processing) -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-jpamodelgen</artifactId>-->
-<!--            <version>6.6.1.Final</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
-
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.2</version>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-crypt</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.12</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -81,26 +76,6 @@
 
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <version>3.8.1</version>-->
-<!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--&lt;!&ndash;                    <annotationProcessorPaths>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <path>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <groupId>org.hibernate</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <artifactId>hibernate-jpamodelgen</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <version>6.0.0</version>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </path>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </annotationProcessorPaths>&ndash;&gt;-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
 
     <properties>
