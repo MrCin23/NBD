@@ -1,75 +1,62 @@
 package org.example;
 
 
-public class Client  {
-    private long clientID;
+import lombok.Getter;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
+
+
+@Getter
+public class Client implements Serializable {
+    @BsonProperty("clientID")
+    private UUID clientID;
+    @Setter
+    @BsonProperty("firstName")
     private String firstName;
+    @Setter
+    @BsonProperty("surname")
     private String surname;
+    @Setter
+    @BsonProperty("emailAddress")
     private String emailAddress;
+    @Setter
+    @BsonProperty("clientType")
     private ClientType clientType;
-    int version;
 
-
-    public long getclientID() {
-        return clientID;
-    }
-
-    //REPO TEMPLATE
-    public long getID() {
-        return clientID;
-    }
-
-    public void setclientID(long clientID) {
-        clientID = clientID;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public ClientType getClientType() {
-        return clientType;
-    }
-
-    public void setClientType(ClientType clientType) {
-        this.clientType = clientType;
-    }
 
 
     public String toString() {
         return "Client: " + getFirstName() + " " + getSurname() + ", " + getEmailAddress() + " " + getClientType().toString();
     }
 
-    //TODO zobaczyć czy aż tyle konstruktorów jest potrzebnych
-    public Client() {
-    }
-
-
-
     public Client(String firstName, String surname, String emailAddress, ClientType clientType) {
+        this.clientID = UUID.randomUUID();
         this.firstName = firstName;
         this.surname = surname;
         this.emailAddress = emailAddress;
         this.clientType = clientType;
+    }
+
+    @BsonCreator
+    public Client(@BsonProperty("clientID") UUID clientID, @BsonProperty("firstName") String firstName,
+                  @BsonProperty("surname") String surname, @BsonProperty("emailAddress") String emailAddress,
+                  @BsonProperty("clientTypeID") UUID clientTypeID, @BsonProperty("name") String name, @BsonProperty("maxRentedMachines") int maxRentedMachines) {
+                  //@BsonProperty("clientType") ClientType clientType) { //TODO Tak mamy zrobić potem
+        this.clientID = clientID;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.emailAddress = emailAddress;
+        if(Objects.equals(name, "Admin")) {
+            this.clientType = new Admin();
+        }
+        else {
+            this.clientType = new Standard();
+        }
     }
 }

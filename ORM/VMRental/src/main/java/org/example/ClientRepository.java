@@ -1,20 +1,32 @@
 package org.example;
 
-import java.lang.reflect.Field;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+
+
 import java.util.List;
 import java.util.Map;
 
-public class ClientRepository {
-    List<Client> clients;
-//    private final String url = "jdbc:postgresql://localhost:5432/vmrental";
-//    private final String user = "postgres";
-//    private final String password = "password";
+public class ClientRepository extends AbstractMongoRepository {
+    private final String collectionName = "clients";
+    private final MongoCollection<Client> clients;
 
 
     public ClientRepository() {
-        clients = new ArrayList<Client>();
+        super.initDbConnection();
+        MongoIterable<String> list = this.getDatabase().listCollectionNames();
+        for (String name : list) {
+            if (name.equals(collectionName)) {
+                this.getDatabase().getCollection(name).drop();
+                break;
+            }
+        }
+
+        this.getDatabase().createCollection(collectionName);
+
+        this.clients = this.getDatabase().getCollection(collectionName, Client.class);
     }
 
     //-------------METHODS---------------------------------------
@@ -62,35 +74,12 @@ public class ClientRepository {
     }
 
     public void add(Client client) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            ClientType clientType = session.createQuery("FROM ClientType ct WHERE ct.name = :name", ClientType.class)
-//                    .setParameter("name", client.getClientType().getClass().getSimpleName())
-//                    .uniqueResult();
-//
-//            if(clientType == null) {
-//                session.save(client.getClientType());
-//            }
-//            else {
-//                client.setClientType(clientType);
-//            }
-//            session.save(client);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+        clients.insertOne(client);
     }
 
     public void remove(Client client) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            session.delete(client);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        clients.remove(client);
+        Bson filter = Filters.eq("clientID", client.getClientID());
+        Client deletedClient = clients.findOneAndDelete(filter);
     }
 
     public long size() {
