@@ -1,7 +1,10 @@
 package org.example;
 
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
+@NoArgsConstructor
 public class MongoUUID {
 
     private UUID uuid;

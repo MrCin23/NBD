@@ -6,6 +6,7 @@ import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +18,14 @@ public class ClientRepository extends AbstractMongoRepository {
     public ClientRepository() {
         super.initDbConnection();
         MongoIterable<String> list = this.getDatabase().listCollectionNames();
-        for (String name : list) {
-            if (name.equals(collectionName)) {
-                this.getDatabase().getCollection(name).drop();
-                break;
-            }
-        }
-
-        this.getDatabase().createCollection(collectionName);
+//        for (String name : list) {
+//            if (name.equals(collectionName)) {
+//                this.getDatabase().getCollection(name).drop();
+//                break;
+//            }
+//        }
+//
+//        this.getDatabase().createCollection(collectionName);
 
         this.clients = this.getDatabase().getCollection(collectionName, Client.class);
     }
@@ -78,7 +79,7 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public void remove(Client client) {
-        Bson filter = Filters.eq("clientID", client.getClientID());
+        Bson filter = Filters.eq("clientID", client.getEntityId());
         Client deletedClient = clients.findOneAndDelete(filter);
     }
 
@@ -95,17 +96,7 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public List<Client> getClients() {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            clients = session.createQuery("FROM Client", Client.class).getResultList();
-//
-//            transaction.commit();
-//            return clients;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        return clients.find().into(new ArrayList<Client>());
     }
 
     public Client getClientByID(long ID) {

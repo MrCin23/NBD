@@ -1,13 +1,22 @@
 package org.example;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
 public abstract class AbstractEntityMgd implements Serializable {
     @BsonProperty("_id")
+    @BsonId
     private final MongoUUID entityId;
-    public MongoUUID getEntityId() { return entityId; }
-    public AbstractEntityMgd(MongoUUID entityId) { this.entityId = entityId; }
 
+    @BsonCreator
+    public AbstractEntityMgd(@BsonProperty MongoUUID entityId) {
+        this.entityId = entityId;
+    }
 }
