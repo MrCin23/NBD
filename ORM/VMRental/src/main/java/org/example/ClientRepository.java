@@ -1,7 +1,9 @@
 package org.example;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import org.bson.conversions.Bson;
 
@@ -9,6 +11,7 @@ import org.bson.conversions.Bson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 public class ClientRepository extends AbstractMongoRepository {
     private final String collectionName = "clients";
@@ -18,14 +21,14 @@ public class ClientRepository extends AbstractMongoRepository {
     public ClientRepository() {
         super.initDbConnection();
         MongoIterable<String> list = this.getDatabase().listCollectionNames();
-//        for (String name : list) {
-//            if (name.equals(collectionName)) {
-//                this.getDatabase().getCollection(name).drop();
-//                break;
-//            }
-//        }
-//
-//        this.getDatabase().createCollection(collectionName);
+        for (String name : list) {
+            if (name.equals(collectionName)) {
+                this.getDatabase().getCollection(name).drop();
+                break;
+            }
+        }
+
+        this.getDatabase().createCollection(collectionName);
 
         this.clients = this.getDatabase().getCollection(collectionName, Client.class);
     }
@@ -96,7 +99,10 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public List<Client> getClients() {
-        return clients.find().into(new ArrayList<Client>());
+//        FindIterable<Client> kurwa = clients.find();
+//        kurwa.into(new ArrayList<>());
+//        return null;
+        return clients.find().into(new ArrayList<>());
     }
 
     public Client getClientByID(long ID) {

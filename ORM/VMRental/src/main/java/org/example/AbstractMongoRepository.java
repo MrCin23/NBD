@@ -23,8 +23,14 @@ private final ConnectionString connectionString = new ConnectionString(
         "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_single"); //&authSource=admin
     private final MongoCredential credential = MongoCredential.createCredential(
             "admin", "admin", "adminpassword".toCharArray());
+//    private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
+//            PojoCodecProvider.builder().automatic(true)
+//                    .register(ClientType.class, Admin.class, Standard.class)
+//                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
     private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
-            PojoCodecProvider.builder().automatic(true).conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
+            PojoCodecProvider.builder().automatic(true)
+                    .register(ClientType.class, Admin.class, Standard.class)
+                    .conventions(Conventions.DEFAULT_CONVENTIONS).build());
     private MongoClient mongoClient;
     private MongoDatabase database;
 
@@ -34,11 +40,14 @@ private final ConnectionString connectionString = new ConnectionString(
                 .credential(credential)
                 .applyConnectionString(connectionString)
                 .uuidRepresentation(UuidRepresentation.STANDARD)
-                .codecRegistry(CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-                        pojoCodecRegistry))
+                .codecRegistry(CodecRegistries.fromRegistries(
+                        CodecRegistries.fromProviders(new MongoUUIDCodecProvider()),
+                        MongoClientSettings.getDefaultCodecRegistry(),
+                        pojoCodecRegistry
+                        ))
                 .build();
         mongoClient = MongoClients.create(settings);
-        database = mongoClient.getDatabase("mongodb");
+        database = mongoClient.getDatabase("vmrental");
     }
 
     @Override

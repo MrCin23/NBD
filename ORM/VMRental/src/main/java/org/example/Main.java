@@ -19,7 +19,7 @@ public class Main {
 //    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-//        clientManager.registerClient("Bartosz", "Lis", "bartosz.lis@p.lodz.pl", new Admin());
+        clientManager.registerClient("Bartosz", "Lis", "bartosz.lis@p.lodz.pl", new Admin());
         System.out.println(clientManager.getAllClientsReport());
     }
 }

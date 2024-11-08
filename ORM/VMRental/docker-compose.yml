@@ -11,7 +11,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=shop
+      - MONGO_INITDB_DATABASE=vmrental
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
       test: [ "CMD","mongosh","--port", "27017", "--eval", "db.adminCommand('ping')" ]
@@ -31,7 +31,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=shop
+      - MONGO_INITDB_DATABASE=vmrental
     command: --config /etc/mongod.conf --port 27018
     healthcheck:
       test: [ "CMD","mongosh","--port", "27018", "--eval", "db.adminCommand('ping')" ]
@@ -50,7 +50,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=shop
+      - MONGO_INITDB_DATABASE=vmrental
     command: --config /etc/mongod.conf --port 27019 --replSet replica_set_single
     healthcheck:
       test: [ "CMD","mongosh","--port", "27019", "--eval", "db.adminCommand('ping')" ]

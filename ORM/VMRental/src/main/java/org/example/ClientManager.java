@@ -1,6 +1,7 @@
 package org.example;
 
 
+import java.util.List;
 import java.util.Map;
 
 //ClientManager jako Singleton
@@ -40,6 +41,9 @@ public final class ClientManager {
 //TODO
     public String getAllClientsReport() {
         return this.clientsRepository.getClients().toString();
+    }
+    public List<Client> getAllClients() {
+        return this.clientsRepository.getClients();
     }
     public Client getClient(long clientID) {
         return (Client) clientsRepository.getClientByID(clientID);
