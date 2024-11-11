@@ -1,6 +1,7 @@
 package org.example;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@BsonDiscriminator(key="_clazz")
+//@BsonDiscriminator(key="_clazz")
 public class ClientType extends AbstractEntityMgd {
 
     @BsonProperty("maxRentedMachines")
@@ -19,21 +20,21 @@ public class ClientType extends AbstractEntityMgd {
     @BsonProperty("name")
     protected String name;
 
-    public ClientType() {
-        super(new MongoUUID(UUID.randomUUID()));
-        this.name = getClass().getSimpleName();
-    }
-
-//    @BsonCreator
-//    public ClientType(@BsonProperty("_id") MongoUUID uuid,
-//                      @BsonProperty("maxRentedMachines") int maxRentedMachines,
-//                      @BsonProperty("name") String name){
-//        super(uuid);
-//        this.maxRentedMachines = maxRentedMachines;
-//        this.name = name;
+//    protected ClientType() {
+//        super(new MongoUUID(UUID.randomUUID()));
+//        this.name = getClass().getSimpleName();
 //    }
 
+    @BsonCreator
+    public ClientType(@BsonProperty("_id") MongoUUID uuid,
+                      @BsonProperty("maxRentedMachines") int maxRentedMachines,
+                      @BsonProperty("name") String name){
+        super(uuid);
+        this.maxRentedMachines = maxRentedMachines;
+        this.name = name;
+    }
+
     public String toString() {
-        return "Abstract ClientType " + this.getClass().getSimpleName() + " " + this.getMaxRentedMachines() + " " + this.getName();
+        return "Class: " + this.getClass().getSimpleName() + " " + this.getMaxRentedMachines() + " " + this.getName();
     }
 }

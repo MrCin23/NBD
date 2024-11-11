@@ -29,7 +29,7 @@ private final ConnectionString connectionString = new ConnectionString(
 //                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
     private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
             PojoCodecProvider.builder().automatic(true)
-                    .register(Admin.class, Standard.class)
+                    .register(Admin.class).register(Standard.class)
                     .conventions(Conventions.DEFAULT_CONVENTIONS).build());
     private MongoClient mongoClient;
     private MongoDatabase database;
@@ -41,7 +41,7 @@ private final ConnectionString connectionString = new ConnectionString(
                 .applyConnectionString(connectionString)
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(CodecRegistries.fromRegistries(
-                        CodecRegistries.fromProviders(new MongoUUIDCodecProvider()),
+                        CodecRegistries.fromProviders(new MongoUUIDCodecProvider(), new ClientTypeCodecProvider()),
                         MongoClientSettings.getDefaultCodecRegistry(),
                         pojoCodecRegistry
                         ))
