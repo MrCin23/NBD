@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@BsonDiscriminator(key = "_clazz")
-public abstract class ClientType extends AbstractEntityMgd {
+@BsonDiscriminator(key="_clazz")
+public class ClientType extends AbstractEntityMgd {
 
     @BsonProperty("maxRentedMachines")
     protected int maxRentedMachines;
@@ -24,16 +24,16 @@ public abstract class ClientType extends AbstractEntityMgd {
         this.name = getClass().getSimpleName();
     }
 
-    @BsonCreator
-    public ClientType(@BsonProperty("_id") MongoUUID uuid,
-                      @BsonProperty("maxRentedMachines") int maxRentedMachines,
-                      @BsonProperty("name") String name){
-        super(uuid);
-        this.maxRentedMachines = maxRentedMachines;
-        this.name = name;
-    }
+//    @BsonCreator
+//    public ClientType(@BsonProperty("_id") MongoUUID uuid,
+//                      @BsonProperty("maxRentedMachines") int maxRentedMachines,
+//                      @BsonProperty("name") String name){
+//        super(uuid);
+//        this.maxRentedMachines = maxRentedMachines;
+//        this.name = name;
+//    }
 
     public String toString() {
-        return "";
+        return "Abstract ClientType " + this.getClass().getSimpleName() + " " + this.getMaxRentedMachines() + " " + this.getName();
     }
 }

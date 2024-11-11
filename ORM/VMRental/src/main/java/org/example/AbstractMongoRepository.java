@@ -29,7 +29,7 @@ private final ConnectionString connectionString = new ConnectionString(
 //                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
     private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
             PojoCodecProvider.builder().automatic(true)
-                    .register(ClientType.class, Admin.class, Standard.class)
+                    .register(Admin.class, Standard.class)
                     .conventions(Conventions.DEFAULT_CONVENTIONS).build());
     private MongoClient mongoClient;
     private MongoDatabase database;

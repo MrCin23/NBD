@@ -4,7 +4,7 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@BsonDiscriminator(key = "_clazz", value = "admin")
+@BsonDiscriminator(value="admin", key="_clazz")
 public class Admin extends ClientType{
 
     public Admin() {
@@ -23,7 +23,8 @@ public class Admin extends ClientType{
         this.name = name;
     }
 
+    @Override
     public String toString() {
-        return "Admin";
+        return "Admin " + this.getClass().getSimpleName();
     }
 }
