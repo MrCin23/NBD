@@ -11,8 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-//@BsonDiscriminator(key="_clazz")
-public class ClientType extends AbstractEntityMgd {
+public abstract class ClientType extends AbstractEntityMgd {
 
     @BsonProperty("maxRentedMachines")
     protected int maxRentedMachines;
@@ -20,10 +19,6 @@ public class ClientType extends AbstractEntityMgd {
     @BsonProperty("name")
     protected String name;
 
-//    protected ClientType() {
-//        super(new MongoUUID(UUID.randomUUID()));
-//        this.name = getClass().getSimpleName();
-//    }
 
     @BsonCreator
     public ClientType(@BsonProperty("_id") MongoUUID uuid,
