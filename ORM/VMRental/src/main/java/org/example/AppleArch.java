@@ -16,9 +16,10 @@ public class AppleArch extends VMachine{
     }
 
     @BsonCreator
-    public AppleArch(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented) {
-        super(uuid, CPUNumber, ramSize, isRented);
-        this.actualRentalPrice = getActualRentalPrice();
+    public AppleArch(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
+                     @BsonProperty("isRented") boolean isRented, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
+        super(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
+        this.actualRentalPrice = actualRentalPrice;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.example;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,13 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RentRepository {
-    List<Rent> rents;
-    SessionFactory sessionFactory;
+public class RentRepository extends AbstractMongoRepository {
+    private final String collectionName = "rents";
+    private final MongoCollection<Rent> rents;
 
     public RentRepository() {
-        rents = new ArrayList<Rent>();
-        sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        super.initDbConnection();
+        MongoIterable<String> list = this.getDatabase().listCollectionNames();
+        for (String name : list) {
+            if (name.equals(collectionName)) {
+                this.getDatabase().getCollection(name).drop();
+                break;
+            }
+        }
+
+        this.getDatabase().createCollection(collectionName);
+
+        this.rents = this.getDatabase().getCollection(collectionName, Rent.class);
     }
 
     //-------------METHODS---------------------------------------
@@ -74,6 +86,7 @@ public class RentRepository {
     }
 
     public void add(Rent rent) {
+        rents.insertOne(rent);
 //        try (Session session = sessionFactory.openSession()) {
 //            Transaction transaction = session.beginTransaction();
 //
@@ -151,34 +164,12 @@ public class RentRepository {
     }
 
     public List<Rent> getRents(boolean active) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            List<Rent> rents;
-//            if (active) {
-//                rents = session.createQuery("FROM Rent rent WHERE rent.endTime is null", Rent.class).getResultList();
-//            }
-//            else {
-//                rents = session.createQuery("FROM Rent rent WHERE rent.endTime is not null", Rent.class).getResultList();
-//            }
-//            transaction.commit();
-//            return rents;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        return rents.find().into(new ArrayList<>());
+        //TODO
     }
 
     public List<Rent> getRents() {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            List<Rent> rents;
-//            rents = session.createQuery("FROM Rent", Rent.class).getResultList();
-//            transaction.commit();
-//            return rents;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        return rents.find().into(new ArrayList<>());
     }
 
     public Rent getRentByID(long ID) {

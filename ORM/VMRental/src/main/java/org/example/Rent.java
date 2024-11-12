@@ -1,24 +1,34 @@
 package org.example;
 
-import java.io.Serializable;
-import java.sql.Time;
+import lombok.Getter;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-public class Rent  {
-    long rentID;
+import java.util.UUID;
+
+@Setter
+@Getter
+public class Rent extends AbstractEntityMgd {
+    @BsonProperty("client")
     Client client;
+    @BsonProperty("vMachine")
     VMachine vMachine;
+    @BsonProperty("beginTime")
     LocalDateTime beginTime;
+    @BsonProperty("endTime")
     LocalDateTime endTime;
+    @BsonProperty("rentCost")
     double rentCost;
 
     public Rent() {
-
+        super(new MongoUUID(UUID.randomUUID()));
     }
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
+        super(new MongoUUID(UUID.randomUUID()));
         if(!vMachine.isRented()) {
             this.client = client;
             this.vMachine = vMachine;
@@ -27,6 +37,17 @@ public class Rent  {
         else {
             throw new RuntimeException("This machine is already rented");
         }
+    }
+
+    @BsonCreator
+    public Rent(@BsonProperty("_id") MongoUUID uuid,@BsonProperty("client") Client client, @BsonProperty("vMachine") VMachine vMachine,
+                @BsonProperty("beginTime") LocalDateTime beginTime, @BsonProperty("endTime") LocalDateTime endTime, @BsonProperty("rentCost") double rentCost) {
+        super(uuid);
+        this.client = client;
+        this.vMachine = vMachine;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.rentCost = rentCost;
     }
 
     //Methods
@@ -67,56 +88,31 @@ public class Rent  {
         this.rentCost = days * vMachine.getActualRentalPrice();
     }
 
-    public long getRentID() {
-        return rentID;
-    }
-
-    //REPO TEMPLATE
-    public long getID() {
-        return rentID;
-    }
-
-    public void setRentID(long rentID) {
-        this.rentID = rentID;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    @Override
+    public String toString() {
+        return "Rent{" +
+                "client=" + client +
+                ", vMachine=" + vMachine +
+                ", beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                ", rentCost=" + rentCost +
+                '}';
     }
 
     public VMachine getvMachine() {
         return vMachine;
     }
 
-    public void setvMachine(VMachine vMachine) {
-        this.vMachine = vMachine;
-    }
-
     public LocalDateTime getBeginTime() {
         return beginTime;
-    }
-
-    public void setBeginTime(LocalDateTime beginTime) {
-        this.beginTime = beginTime;
     }
 
     public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTIme) {
-        this.endTime = endTIme;
-    }
-
     public double getRentCost() {
         return rentCost;
     }
 
-    public void setRentCost(double rentCost) {
-        this.rentCost = rentCost;
-    }
 }

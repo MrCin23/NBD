@@ -2,7 +2,6 @@ package org.example;
 
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class VMachine extends AbstractEntityMgd{
+public abstract class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")
     private int CPUNumber;
@@ -35,11 +34,13 @@ public abstract class VMachine extends AbstractEntityMgd{
     }
 
     @BsonCreator
-    public VMachine(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented) {
+    public VMachine(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber,
+                    @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
         super(uuid);
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
         this.isRented = isRented;
+        this.actualRentalPrice = actualRentalPrice;
     }
 
     public boolean isRented() {

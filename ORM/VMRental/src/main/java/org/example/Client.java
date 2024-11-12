@@ -3,12 +3,10 @@ package org.example;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-import java.io.Serializable;
-import java.util.Objects;
+
 import java.util.UUID;
 
 

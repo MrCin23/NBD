@@ -31,10 +31,10 @@ public class VMachineCodec implements Codec<VMachine> {
         }
         bsonReader.readEndDocument();
         if(type.equals("x86")) {
-            return new x86(uuid, CPUNumber, ramSize, isRented, CPUManufacturer);
+            return new x86(uuid, CPUNumber, ramSize, isRented, CPUManufacturer, actualRentalPrice);
         }
         else if(type.equals("applearch")) {
-            return new AppleArch(uuid, CPUNumber, ramSize, isRented);
+            return new AppleArch(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
         }
         else {
             throw new RuntimeException("Unknown VMachine type: " + type);

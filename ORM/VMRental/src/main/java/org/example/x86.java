@@ -23,8 +23,9 @@ public class x86 extends VMachine {
     }
 
     @BsonCreator
-    public x86(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer) {
-        super(uuid, CPUNumber, ramSize, isRented);
+    public x86(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
+               @BsonProperty("isRented") boolean isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
+        super(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
         this.CPUManufacturer = CPUManufacturer;
         this.actualRentalPrice = getActualRentalPrice();
     }
