@@ -1,7 +1,15 @@
 package org.example;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
+@Getter
+@Setter
 public class x86 extends VMachine {
+    @BsonProperty("CPUManufacturer")
     private String CPUManufacturer;
 
     public x86(int CPUNumber, String ramSize, String CPUManufacturer) {
@@ -11,7 +19,14 @@ public class x86 extends VMachine {
     }
 
     public x86() {
+        super();
+    }
 
+    @BsonCreator
+    public x86(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer) {
+        super(uuid, CPUNumber, ramSize, isRented);
+        this.CPUManufacturer = CPUManufacturer;
+        this.actualRentalPrice = getActualRentalPrice();
     }
 
     @Override
@@ -36,5 +51,9 @@ public class x86 extends VMachine {
         }
 
         return basePrice * threadMultiplier * manufacturerMultiplier;
+    }
+
+    public String toString() {
+        return "x86 architecture: " + this.getEntityId().toString() + " " + this.getCPUNumber() + " " + this.getRamSize() + " " + this.isRented() + " " + this.getCPUManufacturer() + " " + this.getActualRentalPrice();
     }
 }

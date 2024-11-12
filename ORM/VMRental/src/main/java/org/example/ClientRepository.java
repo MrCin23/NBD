@@ -82,7 +82,7 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public void remove(Client client) {
-        Bson filter = Filters.eq("clientID", client.getEntityId());
+        Bson filter = Filters.eq("_id", client.getEntityId());
         Client deletedClient = clients.findOneAndDelete(filter);
     }
 

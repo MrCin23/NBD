@@ -1,49 +1,45 @@
 package org.example;
 
 
-public abstract class VMachine{
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
-    private long vMachineID;
+import java.util.UUID;
+
+@Getter
+@Setter
+public abstract class VMachine extends AbstractEntityMgd{
+
+    @BsonProperty("CPUNumber")
     private int CPUNumber;
+    @BsonProperty("ramSize")
     private String ramSize;
+    @BsonProperty("isRented")
     private boolean isRented;
+    @BsonProperty("actualRentalPrice")
     protected float actualRentalPrice;
-    int version;
 
     public VMachine(int CPUNumber, String ramSize, boolean isRented) {
+        super(new MongoUUID(UUID.randomUUID()));
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
         this.isRented = isRented;
     }
 
-    public VMachine() {}
-
-    public long getvMachineID() {
-        return vMachineID;
+    public VMachine() {
+        super(new MongoUUID(UUID.randomUUID()));
     }
 
-    public long getID() {
-        return vMachineID;
-    }
-
-    public void setvMachineID(long vMachineID) {
-        this.vMachineID = vMachineID;
-    }
-
-    public int getCPUNumber() {
-        return CPUNumber;
-    }
-
-    public void setCPUNumber(int CPUNumber) {
+    @BsonCreator
+    public VMachine(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented) {
+        super(uuid);
         this.CPUNumber = CPUNumber;
-    }
-
-    public String getRamSize() {
-        return ramSize;
-    }
-
-    public void setRamSize(String ramSize) {
         this.ramSize = ramSize;
+        this.isRented = isRented;
     }
 
     public boolean isRented() {

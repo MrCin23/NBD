@@ -41,7 +41,7 @@ private final ConnectionString connectionString = new ConnectionString(
                 .applyConnectionString(connectionString)
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(CodecRegistries.fromRegistries(
-                        CodecRegistries.fromProviders(new MongoUUIDCodecProvider(), new ClientTypeCodecProvider()),
+                        CodecRegistries.fromProviders(new MongoUUIDCodecProvider(), new ClientTypeCodecProvider(), new VMachineCodecProvider()),
                         MongoClientSettings.getDefaultCodecRegistry(),
                         pojoCodecRegistry
                         ))

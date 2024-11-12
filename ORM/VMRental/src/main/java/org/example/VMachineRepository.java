@@ -1,17 +1,32 @@
 package org.example;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
+import org.bson.conversions.Bson;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class VMachineRepository {
-    List<VMachine> vMachines;
-
+public class VMachineRepository extends AbstractMongoRepository {
+    private final String collectionName = "vMachines";
+    private final MongoCollection<VMachine> vMachines;
 
     public VMachineRepository() {
-        vMachines = new ArrayList<VMachine>();
-//        sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        super.initDbConnection();
+        MongoIterable<String> list = this.getDatabase().listCollectionNames();
+        for (String name : list) {
+            if (name.equals(collectionName)) {
+                this.getDatabase().getCollection(name).drop();
+                break;
+            }
+        }
+
+        this.getDatabase().createCollection(collectionName);
+
+        this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
     }
 
     //-------------METHODS---------------------------------------
@@ -65,24 +80,12 @@ public class VMachineRepository {
     }
 
     public void add(VMachine vMachine) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            session.save(vMachine);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+        vMachines.insertOne(vMachine);
     }
 
     public void remove(VMachine vMachine) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            session.delete(vMachine);
-//            transaction.commit();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        vMachines.remove(vMachine);
+        Bson filter = Filters.eq("_id", vMachine.getEntityId());
+        VMachine deletedVMachine = vMachines.findOneAndDelete(filter);
     }
 
     public long size() {
@@ -98,17 +101,7 @@ public class VMachineRepository {
     }
 
     public List<VMachine> getVMachines() {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            vMachines = session.createQuery("FROM VMachine ", VMachine.class).getResultList();
-//
-//            transaction.commit();
-//            return vMachines;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        return vMachines.find().into(new ArrayList<>());
     }
 
     public VMachine getVMachineByID(long ID) {

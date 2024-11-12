@@ -25,7 +25,7 @@ public class Client extends AbstractEntityMgd {
     private ClientType clientType;
 
     public String toString() {
-        return "Client: " + getFirstName() + " " + getSurname() + ", " + getEmailAddress() + " " + getClientType().toString();
+        return "Client: " + getFirstName() + " " + getSurname() + ", " + getEmailAddress() + " " + getClientType().toString() + " UUID: " + this.getEntityId().toString();
     }
 
     public Client(String firstName, String surname, String emailAddress, ClientType clientType) {

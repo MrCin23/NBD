@@ -1,5 +1,10 @@
 package org.example;
 
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
+
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {
         super(CPUNumber, ramSize, false);
@@ -7,7 +12,13 @@ public class AppleArch extends VMachine{
     }
 
     public AppleArch() {
+        super();
+    }
 
+    @BsonCreator
+    public AppleArch(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented) {
+        super(uuid, CPUNumber, ramSize, isRented);
+        this.actualRentalPrice = getActualRentalPrice();
     }
 
     @Override
@@ -25,5 +36,9 @@ public class AppleArch extends VMachine{
         float threadMultiplier = getCPUNumber() / 2.0f;
 
         return 10 * basePrice * threadMultiplier;
+    }
+
+    public String toString() {
+        return "AppleArch: " + this.getEntityId().toString() + " " + this.getCPUNumber() + " " + this.getRamSize() + " " + this.isRented() + " " + this.getActualRentalPrice();
     }
 }
