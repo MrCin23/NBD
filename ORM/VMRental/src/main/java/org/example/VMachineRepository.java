@@ -1,14 +1,18 @@
 package org.example;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.*;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class VMachineRepository extends AbstractMongoRepository {
     private final String collectionName = "vMachines";
@@ -24,7 +28,47 @@ public class VMachineRepository extends AbstractMongoRepository {
             }
         }
 
-        this.getDatabase().createCollection(collectionName);
+        ValidationOptions validationOptions = new ValidationOptions().validator(
+            Document.parse("""
+            {
+                $jsonSchema: {
+                    "bsonType": "object",
+                    "required": [ "_id", "_clazz", "CPUNumber", "ramSize", "isRented", "actualRentalPrice" ],
+                    "properties": {
+                        "_id" : {
+                            "bsonType": "string",
+                            "minLength": 36,
+                            "maxLength": 36
+                        }
+                        "_clazz" : {
+                            "bsonType": "string"
+                        }
+                        "CPUNumber" : {
+                            "bsonType": "int"
+                            "minimum" : 1
+                        }
+                        "ramSize" : {
+                            "bsonType": "string"
+                        }
+                        "isRented" : {
+                            "bsonType": "int",
+                            "minimum" : 0,
+                            "maximum" : 1,
+                            "description": "must be 1 for rented and for available"
+                        }
+                        "actualRentalPrice" : {
+                            "bsonType": "double"
+                        }
+                        "CPUManufacturer" : {
+                            "bsonType": "string"
+                        }
+                    }
+                }
+            }
+        """))
+        .validationAction (ValidationAction.ERROR);
+        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
+        this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
         this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
     }
@@ -32,51 +76,56 @@ public class VMachineRepository extends AbstractMongoRepository {
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
-    public void update(long id, Map<String, Object> fieldsToUpdate) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
-//                    .setParameter("vMachineID", id)
-//                    .uniqueResult();
-//
-//            for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
-//                String fieldName = entry.getKey();
-//                Object fieldValuee = entry.getValue();
-//                try {
-//                    Field field = VMachine.class.getDeclaredField(fieldName);
-//                    field.setAccessible(true);
-//                    Class<?> type = field.getType();
-//                    String fieldValue = (String)fieldValuee;
-//                    if (type == String.class) {
-//                        field.set(vMachine, fieldValue);
-//                    }
-//                    else if (type == int.class || type == Integer.class) {
-//                        field.set(vMachine, Integer.parseInt(fieldValue));
-//                    }
-//                    else if (type == boolean.class || type == Boolean.class) {
-//                        field.set(vMachine, Boolean.parseBoolean(fieldValue));
-//                    }
-//                    else if (type == long.class || type == Long.class) {
-//                        field.set(vMachine, Long.parseLong(fieldValue));
-//                    }
-//                    else if (type == double.class || type == Double.class) {
-//                        field.set(vMachine, Double.parseDouble(fieldValue));
-//                    }
-//                    else if (type == float.class || type == Float.class) {
-//                        field.set(vMachine, Float.parseFloat(fieldValue));
-//                    }
-//                    else {
-//                        field.set(vMachine, type.cast(fieldValue));
-//                    }
-//                } catch (NoSuchFieldException | IllegalAccessException e) {
-//                    throw new RuntimeException("Error updating field: " + fieldName, e);
-//                }
-//            }
-//            transaction.commit();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+    public void update(MongoUUID uuid, Map<String, Object> fieldsToUpdate) {
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson update;
+            for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
+                String fieldName = entry.getKey();
+                Object fieldValue = entry.getValue();
+                if(Objects.equals(fieldName, "isRented")){
+                    if((int)fieldValue == 1) {
+                        update = Updates.inc("isRented", 1);
+                    } else {
+                        update = Updates.inc("isRented", -1);
+                    }
+                } else {
+                    update = Updates.set(fieldName,fieldValue);
+                }
+                vMachines.updateOne(session, filter, update);
+            }
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void update(MongoUUID uuid, String field, Object value) {
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson update;
+            if(Objects.equals(field, "isRented")){
+                if((int)value == 1) {
+                    update = Updates.inc("isRented", 1);
+                } else {
+                    update = Updates.inc("isRented", -1);
+                }
+            } else {
+                update = Updates.set(field,value);
+            }
+            vMachines.updateOne(session, filter, update);
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
     }
 
     public void add(VMachine vMachine) {

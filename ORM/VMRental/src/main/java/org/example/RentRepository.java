@@ -1,7 +1,12 @@
 package org.example;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.*;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -10,38 +15,63 @@ import org.hibernate.cfg.Configuration;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RentRepository extends AbstractMongoRepository {
-    private final String collectionName = "rents";
     private final MongoCollection<Rent> rents;
+    private final MongoCollection<VMachine> vMachines;
+    private final MongoCollection<Client> clients;
 
     public RentRepository() {
         super.initDbConnection();
         MongoIterable<String> list = this.getDatabase().listCollectionNames();
         for (String name : list) {
-            if (name.equals(collectionName)) {
+            if (name.equals("rents") || name.equals("vMachines") || name.equals("clients")) {
                 this.getDatabase().getCollection(name).drop();
                 break;
             }
         }
+        this.getDatabase().createCollection("rents");
 
-        this.getDatabase().createCollection(collectionName);
-
-        this.rents = this.getDatabase().getCollection(collectionName, Rent.class);
+        this.rents = this.getDatabase().getCollection("rents", Rent.class);
+        this.vMachines = this.getDatabase().getCollection("vMachines", VMachine.class);
+        this.clients = this.getDatabase().getCollection("clients", Client.class);
     }
 
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
-    public void endRent(long id, LocalDateTime endTime){
-        if(endTime == null){
-            endTime = LocalDateTime.now();
+    public void endRent(MongoUUID uuid, LocalDateTime endTime){
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+
+            Bson filter1 = Filters.eq("_id", uuid.getUuid());
+            Rent rent = rents.find(filter1).first();
+            if(rent == null){
+                throw new RuntimeException("Rent not found");
+            } else if(rent.getEndTime() == null) {
+                rent.endRent(endTime);
+                Bson update1 = Updates.set("endTime", rent.getEndTime());
+                rents.updateOne(session, filter1, update1);
+                update1 = Updates.set("rentCost", rent.getRentCost());
+                rents.updateOne(session, filter1, update1);
+            }
+
+            Bson filter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
+            Bson update = Updates.inc("isRented", -1);
+            vMachines.updateOne(session, filter, update);
+
+            Bson filter2 = Filters.eq("_id", rent.getClient().getEntityId().getUuid().toString());
+            Bson update2 = Updates.inc("currentRents", -1);
+            vMachines.updateOne(session, filter2, update2);
+
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
         }
-        Rent rent = getRentByID(id);
-        rent.endRent(endTime);
     }
 
     public void update(long id, Map<String, Object> fieldsToUpdate) {
@@ -86,7 +116,19 @@ public class RentRepository extends AbstractMongoRepository {
     }
 
     public void add(Rent rent) {
-        rents.insertOne(rent);
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
+            Bson update = Updates.inc("isRented", 1);
+            vMachines.updateOne(session, filter, update);
+            rents.insertOne(rent);
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
 //        try (Session session = sessionFactory.openSession()) {
 //            Transaction transaction = session.beginTransaction();
 //

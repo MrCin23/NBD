@@ -7,7 +7,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {
-        super(CPUNumber, ramSize, false);
+        super(CPUNumber, ramSize, 0);
         this.actualRentalPrice = getActualRentalPrice();
     }
 
@@ -17,9 +17,10 @@ public class AppleArch extends VMachine{
 
     @BsonCreator
     public AppleArch(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
-                     @BsonProperty("isRented") boolean isRented, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
-        super(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
-        this.actualRentalPrice = actualRentalPrice;
+                     @BsonProperty("isRented") int isRented) {
+        super(uuid, CPUNumber, ramSize, isRented);
+
+        this.actualRentalPrice = getActualRentalPrice();
     }
 
     @Override

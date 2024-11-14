@@ -1,17 +1,16 @@
 package org.example;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.*;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 public class ClientRepository extends AbstractMongoRepository {
     private final String collectionName = "clients";
@@ -27,8 +26,51 @@ public class ClientRepository extends AbstractMongoRepository {
                 break;
             }
         }
-
-        this.getDatabase().createCollection(collectionName);
+        ValidationOptions validationOptions = new ValidationOptions().validator(
+                        Document.parse("""
+            {
+                $jsonSchema: {
+                    "bsonType": "object",
+                    "required": [ "_id", "clientType", "currentRents", "emailAddress", "firstName", "surname" ],
+                    "properties": {
+                        "_id" : {
+                        }
+                        "clientType" : {
+                            "bsonType": "object"
+                            "required": [ "_clazz", "maxRentedMachines", "name" ],
+                            "properties": {
+                                "_clazz" : {
+                                    "bsonType" : "string"
+                                }
+                                "maxRentedMachines" : {
+                                    "bsonType": "int"
+                                }
+                                "name" : {
+                                    "bsonType": "string"
+                                }
+                            }
+                        }
+                        "currentRents" : {
+                            "bsonType": "int",
+                            "minimum" : 0,
+                            "maximum" : 10
+                        }
+                        "emailAddress" : {
+                            "bsonType": "string"
+                        }
+                        "firstName" : {
+                            "bsonType": "string"
+                        }
+                        "surname" : {
+                            "bsonType": "string"
+                        }
+                    }
+                }
+            }
+        """))
+                .validationAction (ValidationAction.ERROR);
+        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
+        this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
         this.clients = this.getDatabase().getCollection(collectionName, Client.class);
     }
@@ -36,45 +78,56 @@ public class ClientRepository extends AbstractMongoRepository {
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
-    public void update(long id, Map<String, Object> fieldsToUpdate) {
-//        // Check if there are fields to update
-//        if (fieldsToUpdate == null || fieldsToUpdate.isEmpty()) {
-//            throw new IllegalArgumentException("No fields to update.");
-//        }
-//        try (Session session = sessionFactory.openSession()) {
-//            // Start the transaction
-//            Transaction transaction = session.beginTransaction();
-//
-//            // Retrieve the entity by its ID
-//            Object entity = session.get(Client.class, id);
-//            if (entity == null) {
-//                throw new IllegalArgumentException("Entity not found with id: " + id);
-//            }
-//
-//            // Update the fields dynamically (use reflection)
-//            for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
-//                String fieldName = entry.getKey();
-//                Object fieldValue = entry.getValue();
-//
-//                // Use reflection to set the field value on the entity
-//                try {
-//                    Field field = Client.class.getDeclaredField(fieldName);
-//                    field.setAccessible(true);
-//                    field.set(entity, fieldValue);
-//                } catch (NoSuchFieldException | IllegalAccessException e) {
-//                    throw new RuntimeException("Error updating field: " + fieldName, e);
-//                }
-//            }
-//
-//            // Save or update the entity
-//            session.update(entity);
-//
-//            // Commit the transaction
-//            transaction.commit();
-//            System.out.println("Entity updated successfully.");
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+    public void update(MongoUUID uuid, Map<String, Object> fieldsToUpdate) {
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson update;
+            for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
+                String fieldName = entry.getKey();
+                Object fieldValue = entry.getValue();
+                if(Objects.equals(fieldName, "currentRents")){
+                    if((int)fieldValue == 1) {
+                        update = Updates.inc("currentRents", 1);
+                    } else {
+                        update = Updates.inc("currentRents", -1);
+                    }
+                } else {
+                    update = Updates.set(fieldName,fieldValue);
+                }
+                clients.updateOne(session, filter, update);
+            }
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void update(MongoUUID uuid, String field, Object value) {
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson update;
+            if(Objects.equals(field, "currentRents")){
+                if((int)value == 1) {
+                    update = Updates.inc("currentRents", 1);
+                } else {
+                    update = Updates.inc("currentRents", -1);
+                }
+            } else {
+                update = Updates.set(field,value);
+            }
+            clients.updateOne(session, filter, update);
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
     }
 
     public void add(Client client) {

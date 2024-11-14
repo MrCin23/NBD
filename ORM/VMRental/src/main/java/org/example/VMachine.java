@@ -18,11 +18,11 @@ public abstract class VMachine extends AbstractEntityMgd {
     @BsonProperty("ramSize")
     private String ramSize;
     @BsonProperty("isRented")
-    private boolean isRented;
+    private int isRented;
     @BsonProperty("actualRentalPrice")
     protected float actualRentalPrice;
 
-    public VMachine(int CPUNumber, String ramSize, boolean isRented) {
+    public VMachine(int CPUNumber, String ramSize, int isRented) {
         super(new MongoUUID(UUID.randomUUID()));
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
@@ -35,19 +35,18 @@ public abstract class VMachine extends AbstractEntityMgd {
 
     @BsonCreator
     public VMachine(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber,
-                    @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") boolean isRented, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
+                    @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") int isRented) {
         super(uuid);
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
         this.isRented = isRented;
-        this.actualRentalPrice = actualRentalPrice;
     }
 
-    public boolean isRented() {
+    public int isRented() {
         return isRented;
     }
 
-    public void setRented(boolean rented) {
+    public void setRented(int rented) {
         isRented = rented;
     }
 

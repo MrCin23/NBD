@@ -38,10 +38,13 @@ public final class VMachineManager {
         vMachinesRepository.remove(vm);
     }
 
-    public void updateField(long id, Map<String, Object> fieldsToUpdate) {
-        vMachinesRepository.update(id, fieldsToUpdate);
+    public void update(MongoUUID uuid, Map<String, Object> fieldsToUpdate) {
+        vMachinesRepository.update(uuid, fieldsToUpdate);
     }
 
+    public void update(MongoUUID uuid, String field, Object value) {
+        vMachinesRepository.update(uuid, field, value);
+    }
 
     public String getAllVMachinesReport() {
         return this.vMachinesRepository.getVMachines().toString();

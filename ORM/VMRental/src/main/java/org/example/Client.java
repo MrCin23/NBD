@@ -21,9 +21,18 @@ public class Client extends AbstractEntityMgd {
     private String emailAddress;
     @BsonProperty("clientType")
     private ClientType clientType;
+    @BsonProperty("currentRents")
+    private int currentRents;
 
+    @Override
     public String toString() {
-        return "Client: " + getFirstName() + " " + getSurname() + ", " + getEmailAddress() + " " + getClientType().toString() + " UUID: " + this.getEntityId().toString();
+        return "Client{" +
+                "firstName='" + firstName + '\'' +
+                ", surname='" + surname + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", clientType=" + clientType +
+                ", currentRents=" + currentRents +
+                '}';
     }
 
     public Client(String firstName, String surname, String emailAddress, ClientType clientType) {
@@ -32,17 +41,19 @@ public class Client extends AbstractEntityMgd {
         this.surname = surname;
         this.emailAddress = emailAddress;
         this.clientType = clientType;
+        this.currentRents = 0;
     }
 
     @BsonCreator
     public Client(@BsonProperty("_id") MongoUUID clientID, @BsonProperty("firstName") String firstName,
                   @BsonProperty("surname") String surname, @BsonProperty("emailAddress") String emailAddress,
-                  @BsonProperty("clientType") ClientType clientType) {
+                  @BsonProperty("clientType") ClientType clientType, @BsonProperty("currentRents") int currentRents) {
 
         super(clientID);
         this.firstName = firstName;
         this.surname = surname;
         this.emailAddress = emailAddress;
         this.clientType = clientType;
+        this.currentRents = currentRents;
     }
 }

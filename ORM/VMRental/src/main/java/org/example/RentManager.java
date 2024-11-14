@@ -29,7 +29,7 @@ public final class RentManager {
         registerExistingRent(rent);
     }
 
-    public void endRent(long id, LocalDateTime endTime) {
+    public void endRent(MongoUUID id, LocalDateTime endTime) {
         rentRepository.endRent(id, endTime);
     }
 

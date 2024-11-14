@@ -7,21 +7,26 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Setter
 @Getter
 public class Rent extends AbstractEntityMgd {
     @BsonProperty("client")
-    Client client;
+    private Client client;
+    @Getter
     @BsonProperty("vMachine")
-    VMachine vMachine;
+    private VMachine vMachine;
+    @Getter
     @BsonProperty("beginTime")
-    LocalDateTime beginTime;
+    private LocalDateTime beginTime;
+    @Getter
     @BsonProperty("endTime")
-    LocalDateTime endTime;
+    private LocalDateTime endTime;
+    @Getter
     @BsonProperty("rentCost")
-    double rentCost;
+    private double rentCost;
 
     public Rent() {
         super(new MongoUUID(UUID.randomUUID()));
@@ -29,7 +34,7 @@ public class Rent extends AbstractEntityMgd {
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
         super(new MongoUUID(UUID.randomUUID()));
-        if(!vMachine.isRented()) {
+        if(vMachine.isRented() == 0) {
             this.client = client;
             this.vMachine = vMachine;
             beginRent(beginTime);
@@ -52,12 +57,9 @@ public class Rent extends AbstractEntityMgd {
 
     //Methods
     public void beginRent(LocalDateTime beginTime) {
-        if(this.beginTime == null && !(getvMachine().isRented())){
-            if(beginTime == null)
-            {
-                this.setBeginTime(LocalDateTime.now());
-            }
-            this.setBeginTime(beginTime);
+        if(this.beginTime == null && getVMachine().isRented()==0){
+            this.setBeginTime(Objects.requireNonNullElseGet(beginTime, LocalDateTime::now));
+            vMachine.setIsRented(vMachine.getIsRented()+1);
         }
         else if(beginTime == null){
             throw new RuntimeException("beginRent() called twice");
@@ -75,7 +77,7 @@ public class Rent extends AbstractEntityMgd {
             }
             this.setEndTime(endTime);
             this.calculateRentalPrice();
-            this.getvMachine().setRented(false);
+            this.getVMachine().setRented(0);
         }
         else {
             throw new RuntimeException("endRent() called twice");
@@ -84,7 +86,7 @@ public class Rent extends AbstractEntityMgd {
 
     public void calculateRentalPrice() {
         Duration d = Duration.between(beginTime, endTime);
-        int days = (int) d.toDays();
+        int days = (int) d.toDays() + 1;
         this.rentCost = days * vMachine.getActualRentalPrice();
     }
 
@@ -97,22 +99,6 @@ public class Rent extends AbstractEntityMgd {
                 ", endTime=" + endTime +
                 ", rentCost=" + rentCost +
                 '}';
-    }
-
-    public VMachine getvMachine() {
-        return vMachine;
-    }
-
-    public LocalDateTime getBeginTime() {
-        return beginTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public double getRentCost() {
-        return rentCost;
     }
 
 }

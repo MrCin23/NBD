@@ -23,7 +23,7 @@ public class VMachineCodec implements Codec<VMachine> {
         String type = bsonReader.readString("_clazz");
         int CPUNumber = bsonReader.readInt32("CPUNumber");
         String ramSize = bsonReader.readString("ramSize");
-        boolean isRented = bsonReader.readBoolean("isRented");
+        int isRented = bsonReader.readInt32("isRented");
         float actualRentalPrice = (float) bsonReader.readDouble("actualRentalPrice");
         String CPUManufacturer = "";
         if(type.equals("x86")) {
@@ -31,10 +31,10 @@ public class VMachineCodec implements Codec<VMachine> {
         }
         bsonReader.readEndDocument();
         if(type.equals("x86")) {
-            return new x86(uuid, CPUNumber, ramSize, isRented, CPUManufacturer, actualRentalPrice);
+            return new x86(uuid, CPUNumber, ramSize, isRented, CPUManufacturer);
         }
         else if(type.equals("applearch")) {
-            return new AppleArch(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
+            return new AppleArch(uuid, CPUNumber, ramSize, isRented);
         }
         else {
             throw new RuntimeException("Unknown VMachine type: " + type);
@@ -48,7 +48,7 @@ public class VMachineCodec implements Codec<VMachine> {
         bsonWriter.writeString("_clazz", vMachine.getClass().getSimpleName().toLowerCase());
         bsonWriter.writeInt32("CPUNumber", vMachine.getCPUNumber());
         bsonWriter.writeString("ramSize", vMachine.getRamSize());
-        bsonWriter.writeBoolean("isRented", vMachine.isRented());
+        bsonWriter.writeInt32("isRented", vMachine.isRented());
         bsonWriter.writeDouble("actualRentalPrice", vMachine.getActualRentalPrice());
         if(vMachine.getClass().getSimpleName().equals("x86")) {
             x86 pom = (x86) vMachine;

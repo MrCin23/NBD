@@ -13,7 +13,7 @@ public class x86 extends VMachine {
     private String CPUManufacturer;
 
     public x86(int CPUNumber, String ramSize, String CPUManufacturer) {
-        super(CPUNumber, ramSize, false);
+        super(CPUNumber, ramSize, 0);
         this.CPUManufacturer = CPUManufacturer;
         this.actualRentalPrice = getActualRentalPrice();
     }
@@ -24,8 +24,8 @@ public class x86 extends VMachine {
 
     @BsonCreator
     public x86(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
-               @BsonProperty("isRented") boolean isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer, @BsonProperty("actualRentalPrice") float actualRentalPrice) {
-        super(uuid, CPUNumber, ramSize, isRented, actualRentalPrice);
+               @BsonProperty("isRented") int isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer) {
+        super(uuid, CPUNumber, ramSize, isRented);
         this.CPUManufacturer = CPUManufacturer;
         this.actualRentalPrice = getActualRentalPrice();
     }
