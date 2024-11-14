@@ -153,19 +153,8 @@ public class VMachineRepository extends AbstractMongoRepository {
         return vMachines.find().into(new ArrayList<>());
     }
 
-    public VMachine getVMachineByID(long ID) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            VMachine vMachine = session.createQuery("FROM VMachine vm WHERE vm.vMachineID = :vMachineID", VMachine.class)
-//                    .setParameter("vMachineID", ID)
-//                    .uniqueResult();
-//
-//            transaction.commit();
-//            return vMachine;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+    public VMachine getVMachineByID(MongoUUID uuid) {
+        Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+        return vMachines.find(filter).first();
     }
 }

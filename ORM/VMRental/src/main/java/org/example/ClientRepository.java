@@ -6,6 +6,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
+import org.bson.BsonType;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -26,6 +27,10 @@ public class ClientRepository extends AbstractMongoRepository {
                 break;
             }
         }
+//        Bson currentRentsType = Filters.type("currentRents", BsonType.INT32);
+//        Bson currentRentsMin  = Filters.gte("currentRents", 0);
+//        Bson currentRentsMax  = Filters.expr(Filters.lte("$currentRents", "$clientType.maxRentedMachines"));
+
         ValidationOptions validationOptions = new ValidationOptions().validator(
                         Document.parse("""
             {
@@ -67,7 +72,7 @@ public class ClientRepository extends AbstractMongoRepository {
                     }
                 }
             }
-        """))
+        """))//.validator(Filters.and(currentRentsType, currentRentsMin, currentRentsMax))
                 .validationAction (ValidationAction.ERROR);
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
         this.getDatabase().createCollection(collectionName, createCollectionOptions);
@@ -82,7 +87,7 @@ public class ClientRepository extends AbstractMongoRepository {
         ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
-            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson filter = Filters.eq("_id", uuid.getUuid());
             Bson update;
             for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
                 String fieldName = entry.getKey();
@@ -110,7 +115,7 @@ public class ClientRepository extends AbstractMongoRepository {
         ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
-            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+            Bson filter = Filters.eq("_id", uuid.getUuid());
             Bson update;
             if(Objects.equals(field, "currentRents")){
                 if((int)value == 1) {
@@ -152,26 +157,13 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public List<Client> getClients() {
-//        FindIterable<Client> kurwa = clients.find();
-//        kurwa.into(new ArrayList<>());
-//        return null;
+
         return clients.find().into(new ArrayList<>());
     }
 
-    public Client getClientByID(long ID) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            Client client = session.createQuery("FROM Client c WHERE c.clientID = :clientID", Client.class)
-//                    .setParameter("clientID", ID)
-//                    .uniqueResult();
-//
-//            transaction.commit();
-//            return client;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+    public Client getClientByID(MongoUUID uuid) {
+        Bson filter = Filters.eq("_id", uuid.getUuid());
+        return clients.find(filter).first();
     }
 
 

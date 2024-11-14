@@ -49,8 +49,8 @@ public final class ClientManager {
     public List<Client> getAllClients() {
         return this.clientsRepository.getClients();
     }
-    public Client getClient(long clientID) {
-        return (Client) clientsRepository.getClientByID(clientID);
+    public Client getClient(MongoUUID uuid) {
+        return (Client) clientsRepository.getClientByID(uuid);
     }
 
     public int getClientsAmount() {

@@ -49,8 +49,8 @@ public final class VMachineManager {
     public String getAllVMachinesReport() {
         return this.vMachinesRepository.getVMachines().toString();
     }
-    public VMachine getVMachine(long vMachineID) {
-        return (VMachine) vMachinesRepository.getVMachineByID(vMachineID);
+    public VMachine getVMachine(MongoUUID uuid) {
+        return (VMachine) vMachinesRepository.getVMachineByID(uuid);
     }
 
     public int getVMachinesAmount() {

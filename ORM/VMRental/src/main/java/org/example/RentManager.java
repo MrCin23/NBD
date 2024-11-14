@@ -37,8 +37,8 @@ public final class RentManager {
     public String getAllRentsReport() {
         return this.rentRepository.getRents().toString();
     }
-    public Rent getRent(long rentID) {
-        return (Rent) rentRepository.getRentByID(rentID);
+    public Rent getRent(MongoUUID uuid) {
+        return rentRepository.getRentByID(uuid);
     }
 }
 
