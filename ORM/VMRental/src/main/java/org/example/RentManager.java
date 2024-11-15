@@ -40,5 +40,8 @@ public final class RentManager {
     public Rent getRent(MongoUUID uuid) {
         return rentRepository.getRentByID(uuid);
     }
+    public int size(){
+        return rentRepository.getRents().size();
+    }
 }
 

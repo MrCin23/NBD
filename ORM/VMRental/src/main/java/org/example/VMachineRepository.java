@@ -133,7 +133,7 @@ public class VMachineRepository extends AbstractMongoRepository {
     }
 
     public void remove(VMachine vMachine) {
-        Bson filter = Filters.eq("_id", vMachine.getEntityId());
+        Bson filter = Filters.eq("_id", vMachine.getEntityId().getUuid().toString());
         VMachine deletedVMachine = vMachines.findOneAndDelete(filter);
     }
 

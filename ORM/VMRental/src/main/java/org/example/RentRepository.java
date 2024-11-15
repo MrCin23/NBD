@@ -111,8 +111,8 @@ public class RentRepository extends AbstractMongoRepository {
     }
 
     public long size() {
-
-        return 0;
+        List<Rent> chuj = rents.find().into(new ArrayList<>());
+        return chuj.size();
     }
 
     public List<Rent> getRents(boolean active) {
@@ -126,6 +126,6 @@ public class RentRepository extends AbstractMongoRepository {
 
     public Rent getRentByID(MongoUUID uuid) {
         Bson filter = Filters.eq("_id", uuid.getUuid());
-        return null;
+        return rents.find(filter).first();
     }
 }
