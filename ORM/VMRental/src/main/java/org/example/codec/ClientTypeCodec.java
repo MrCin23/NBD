@@ -1,4 +1,4 @@
-package org.example;
+package org.example.codec;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -6,6 +6,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.example.model.Admin;
+import org.example.model.ClientType;
+import org.example.model.Standard;
 
 public class ClientTypeCodec implements Codec<ClientType> {
     private final CodecRegistry codecRegistry;

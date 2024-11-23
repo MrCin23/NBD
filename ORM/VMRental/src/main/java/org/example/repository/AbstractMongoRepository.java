@@ -1,4 +1,4 @@
-package org.example;
+package org.example.repository;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -12,6 +12,11 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.example.codec.CodecProvider;
+import org.example.model.Admin;
+import org.example.model.AppleArch;
+import org.example.model.Standard;
+import org.example.model.x86;
 
 @Getter
 public abstract class AbstractMongoRepository implements AutoCloseable {

@@ -1,13 +1,11 @@
-package org.example;
+package org.example.model;
 
-import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.UUID;
 
 @BsonDiscriminator(value="admin", key="_clazz")
-public class Admin extends ClientType{
+public class Admin extends ClientType {
 
 
     public Admin() {

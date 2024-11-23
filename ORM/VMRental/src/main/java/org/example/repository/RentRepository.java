@@ -1,20 +1,16 @@
-package org.example;
+package org.example.repository;
 
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
-import org.bson.BsonType;
-import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.example.model.Client;
+import org.example.model.MongoUUID;
+import org.example.model.Rent;
+import org.example.model.VMachine;
 
-import java.lang.reflect.Field;
-import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 

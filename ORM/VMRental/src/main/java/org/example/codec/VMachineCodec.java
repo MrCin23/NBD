@@ -1,4 +1,4 @@
-package org.example;
+package org.example.codec;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -6,6 +6,10 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.example.model.AppleArch;
+import org.example.model.MongoUUID;
+import org.example.model.VMachine;
+import org.example.model.x86;
 
 import java.util.UUID;
 

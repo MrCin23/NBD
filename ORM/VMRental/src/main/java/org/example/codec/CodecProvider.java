@@ -1,7 +1,10 @@
-package org.example;
+package org.example.codec;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.example.model.ClientType;
+import org.example.model.MongoUUID;
+import org.example.model.VMachine;
 
 public class CodecProvider implements org.bson.codecs.configuration.CodecProvider {
     public CodecProvider() {

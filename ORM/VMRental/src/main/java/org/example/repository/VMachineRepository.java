@@ -1,24 +1,25 @@
-package org.example;
+package org.example.repository;
 
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
-import org.bson.BsonType;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.example.model.MongoUUID;
+import org.example.model.VMachine;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import java.util.*;
+public class VMachineRepository extends AbstractMongoRepository {
+    private final String collectionName = "vMachines";
+    private final MongoCollection<VMachine> vMachines;
 
-public class ClientRepository extends AbstractMongoRepository {
-    private final String collectionName = "clients";
-    private final MongoCollection<Client> clients;
-
-
-    public ClientRepository() {
+    public VMachineRepository() {
         super.initDbConnection();
         MongoIterable<String> list = this.getDatabase().listCollectionNames();
         for (String name : list) {
@@ -27,57 +28,50 @@ public class ClientRepository extends AbstractMongoRepository {
                 break;
             }
         }
-//        Bson currentRentsType = Filters.type("currentRents", BsonType.INT32);
-//        Bson currentRentsMin  = Filters.gte("currentRents", 0);
-//        Bson currentRentsMax  = Filters.expr(Filters.lte("$currentRents", "$clientType.maxRentedMachines"));
 
         ValidationOptions validationOptions = new ValidationOptions().validator(
-                        Document.parse("""
+            Document.parse("""
             {
                 $jsonSchema: {
                     "bsonType": "object",
-                    "required": [ "_id", "clientType", "currentRents", "emailAddress", "firstName", "surname" ],
+                    "required": [ "_id", "_clazz", "CPUNumber", "ramSize", "isRented", "actualRentalPrice" ],
                     "properties": {
                         "_id" : {
+                            "bsonType": "string",
+                            "minLength": 36,
+                            "maxLength": 36
                         }
-                        "clientType" : {
-                            "bsonType": "object"
-                            "required": [ "_clazz", "maxRentedMachines", "name" ],
-                            "properties": {
-                                "_clazz" : {
-                                    "bsonType" : "string"
-                                }
-                                "maxRentedMachines" : {
-                                    "bsonType": "int"
-                                }
-                                "name" : {
-                                    "bsonType": "string"
-                                }
-                            }
+                        "_clazz" : {
+                            "bsonType": "string"
                         }
-                        "currentRents" : {
+                        "CPUNumber" : {
+                            "bsonType": "int"
+                            "minimum" : 1
+                        }
+                        "ramSize" : {
+                            "bsonType": "string"
+                        }
+                        "isRented" : {
                             "bsonType": "int",
                             "minimum" : 0,
-                            "maximum" : 10
+                            "maximum" : 1,
+                            "description": "must be 1 for rented and for available"
                         }
-                        "emailAddress" : {
-                            "bsonType": "string"
+                        "actualRentalPrice" : {
+                            "bsonType": "double"
                         }
-                        "firstName" : {
-                            "bsonType": "string"
-                        }
-                        "surname" : {
+                        "CPUManufacturer" : {
                             "bsonType": "string"
                         }
                     }
                 }
             }
-        """))//.validator(Filters.and(currentRentsType, currentRentsMin, currentRentsMax))
-                .validationAction (ValidationAction.ERROR);
+        """))
+        .validationAction (ValidationAction.ERROR);
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
         this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
-        this.clients = this.getDatabase().getCollection(collectionName, Client.class);
+        this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
     }
 
     //-------------METHODS---------------------------------------
@@ -87,21 +81,21 @@ public class ClientRepository extends AbstractMongoRepository {
         ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
-            Bson filter = Filters.eq("_id", uuid.getUuid());
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
             Bson update;
             for (Map.Entry<String, Object> entry : fieldsToUpdate.entrySet()) {
                 String fieldName = entry.getKey();
                 Object fieldValue = entry.getValue();
-                if(Objects.equals(fieldName, "currentRents")){
+                if(Objects.equals(fieldName, "isRented")){
                     if((int)fieldValue == 1) {
-                        update = Updates.inc("currentRents", 1);
+                        update = Updates.inc("isRented", 1);
                     } else {
-                        update = Updates.inc("currentRents", -1);
+                        update = Updates.inc("isRented", -1);
                     }
                 } else {
                     update = Updates.set(fieldName,fieldValue);
                 }
-                clients.updateOne(session, filter, update);
+                vMachines.updateOne(session, filter, update);
             }
             session.commitTransaction();
         } catch (MongoCommandException ex) {
@@ -115,18 +109,18 @@ public class ClientRepository extends AbstractMongoRepository {
         ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
-            Bson filter = Filters.eq("_id", uuid.getUuid());
+            Bson filter = Filters.eq("_id", uuid.getUuid().toString());
             Bson update;
-            if(Objects.equals(field, "currentRents")){
+            if(Objects.equals(field, "isRented")){
                 if((int)value == 1) {
-                    update = Updates.inc("currentRents", 1);
+                    update = Updates.inc("isRented", 1);
                 } else {
-                    update = Updates.inc("currentRents", -1);
+                    update = Updates.inc("isRented", -1);
                 }
             } else {
                 update = Updates.set(field,value);
             }
-            clients.updateOne(session, filter, update);
+            vMachines.updateOne(session, filter, update);
             session.commitTransaction();
         } catch (MongoCommandException ex) {
             session.abortTransaction();
@@ -135,19 +129,19 @@ public class ClientRepository extends AbstractMongoRepository {
         }
     }
 
-    public void add(Client client) {
-        clients.insertOne(client);
+    public void add(VMachine vMachine) {
+        vMachines.insertOne(vMachine);
     }
 
-    public void remove(Client client) {
-        Bson filter = Filters.eq("_id", client.getEntityId());
-        Client deletedClient = clients.findOneAndDelete(filter);
+    public void remove(VMachine vMachine) {
+        Bson filter = Filters.eq("_id", vMachine.getEntityId().getUuid().toString());
+        VMachine deletedVMachine = vMachines.findOneAndDelete(filter);
     }
 
     public long size() {
 //        try (Session session = sessionFactory.openSession()) {
 //            Transaction transaction = session.beginTransaction();
-//            Long count = (Long) session.createQuery("SELECT COUNT(c) FROM Client c").uniqueResult();
+//            Long count = (Long) session.createQuery("SELECT COUNT(vm) FROM VMachine vm").uniqueResult();
 //            transaction.commit();
 //            return count;
 //        } catch (Exception e) {
@@ -156,15 +150,12 @@ public class ClientRepository extends AbstractMongoRepository {
         return 0;
     }
 
-    public List<Client> getClients() {
-
-        return clients.find().into(new ArrayList<>());
+    public List<VMachine> getVMachines() {
+        return vMachines.find().into(new ArrayList<>());
     }
 
-    public Client getClientByID(MongoUUID uuid) {
-        Bson filter = Filters.eq("_id", uuid.getUuid());
-        return clients.find(filter).first();
+    public VMachine getVMachineByID(MongoUUID uuid) {
+        Bson filter = Filters.eq("_id", uuid.getUuid().toString());
+        return vMachines.find(filter).first();
     }
-
-
 }

@@ -1,5 +1,10 @@
-package org.example;
+package org.example.manager;
 
+
+import org.example.model.Client;
+import org.example.model.ClientType;
+import org.example.model.MongoUUID;
+import org.example.repository.ClientRepository;
 
 import java.util.List;
 import java.util.Map;

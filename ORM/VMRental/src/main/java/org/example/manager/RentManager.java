@@ -1,8 +1,12 @@
-package org.example;
+package org.example.manager;
 
-import java.sql.Time;
+import org.example.model.Client;
+import org.example.model.MongoUUID;
+import org.example.model.Rent;
+import org.example.model.VMachine;
+import org.example.repository.RentRepository;
+
 import java.time.LocalDateTime;
-import java.util.Map;
 
 //RentManager jako Singleton
 public final class RentManager {
