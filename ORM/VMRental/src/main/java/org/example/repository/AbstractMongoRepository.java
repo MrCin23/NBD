@@ -17,16 +17,20 @@ import org.example.model.Admin;
 import org.example.model.AppleArch;
 import org.example.model.Standard;
 import org.example.model.x86;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisClientConfig;
+import redis.clients.jedis.JedisPooled;
 
 @Getter
 public abstract class AbstractMongoRepository implements AutoCloseable {
-//    private final ConnectionString connectionString = new ConnectionString(
+    //    private final ConnectionString connectionString = new ConnectionString(
 //            "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=replica_set_single");
-private final ConnectionString connectionString = new ConnectionString(
-        "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_single"); //&authSource=admin
+    private final ConnectionString connectionString = new ConnectionString(
+            "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_single"); //&authSource=admin
     private final MongoCredential credential = MongoCredential.createCredential(
             "admin", "admin", "adminpassword".toCharArray());
-//    private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
+    //    private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
 //            PojoCodecProvider.builder().automatic(true)
 //                    .register(ClientType.class, Admin.class, Standard.class)
 //                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
@@ -47,7 +51,7 @@ private final ConnectionString connectionString = new ConnectionString(
                         CodecRegistries.fromProviders(new CodecProvider()),
                         MongoClientSettings.getDefaultCodecRegistry(),
                         pojoCodecRegistry
-                        ))
+                ))
                 .build();
         mongoClient = MongoClients.create(settings);
         database = mongoClient.getDatabase("vmrental");
