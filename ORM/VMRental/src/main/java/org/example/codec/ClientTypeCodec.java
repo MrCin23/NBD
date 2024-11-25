@@ -40,8 +40,8 @@ public class ClientTypeCodec implements Codec<ClientType> {
     public void encode(BsonWriter bsonWriter, ClientType clientType, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
         bsonWriter.writeString("_clazz", clientType.getClass().getSimpleName().toLowerCase());
-        bsonWriter.writeInt32("maxRentedMachines" ,clientType.maxRentedMachines);
-        bsonWriter.writeString("name", clientType.name);
+        bsonWriter.writeInt32("maxRentedMachines" ,clientType.getMaxRentedMachines());
+        bsonWriter.writeString("name", clientType.getName());
         bsonWriter.writeEndDocument();
     }
 

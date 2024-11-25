@@ -4,6 +4,7 @@ import org.example.manager.ClientManager;
 import org.example.manager.RentManager;
 import org.example.manager.VMachineManager;
 import org.example.model.*;
+import org.example.repository.RentRedisRepository;
 
 import java.time.LocalDateTime;
 
@@ -26,35 +27,42 @@ public class Main {
         vMachineManager.registerExistingVMachine(vMachine);
         Rent rent = new Rent(client, vMachine, LocalDateTime.now());
         rentManager.registerExistingRent(rent);
-        vMachine = new x86(16, "32GB", "AMD");
-        vMachineManager.registerExistingVMachine(vMachine);
-        rent = new Rent(client, vMachine, LocalDateTime.now());
-        rentManager.registerExistingRent(rent);
-        vMachine = new AppleArch(8, "16GB");
-        vMachineManager.registerExistingVMachine(vMachine);
-        rent = new Rent(client, vMachine, LocalDateTime.now());
-        rentManager.registerExistingRent(rent);
-        vMachine = new x86(16, "32GB", "AMD");
-        vMachineManager.registerExistingVMachine(vMachine);
-        rent = new Rent(client, vMachine, null);
-        rentManager.registerExistingRent(rent);
+        RentRedisRepository redisRepository = new RentRedisRepository();
+        redisRepository.add(rent);
+        Rent newRent = redisRepository.getRent(rent.getEntityId());
+        System.out.println(newRent);
+        System.out.println(rent.getEntityId());
+        ///
+//        vMachine = new x86(16, "32GB", "AMD");
+//        vMachineManager.registerExistingVMachine(vMachine);
+//        rent = new Rent(client, vMachine, LocalDateTime.now());
+//        rentManager.registerExistingRent(rent);
+//        vMachine = new AppleArch(8, "16GB");
+//        vMachineManager.registerExistingVMachine(vMachine);
+//        rent = new Rent(client, vMachine, LocalDateTime.now());
+//        rentManager.registerExistingRent(rent);
+//        vMachine = new x86(16, "32GB", "AMD");
+//        vMachineManager.registerExistingVMachine(vMachine);
+//        rent = new Rent(client, vMachine, null);
+//        rentManager.registerExistingRent(rent);
 //        System.out.println(rentManager.getAllRentsReport());
 //        rentManager.endRent(rent.getEntityId(),LocalDateTime.of(2024,11,16,14,45));
 //        System.out.println(rentManager.getAllRentsReport());
-////        Map<String, Object> update = new HashMap<>();
-////        update.put("CPUNumber", 2137);
-////        update.put("ramSize", "128GB");
-////        //update.put("isRented", 1);
-////        //System.out.println(vMachineManager.getAllVMachinesReport());
-////        //vMachineManager.update(vMachine.getEntityId(), update);
-////        //System.out.println(vMachineManager.getAllVMachinesReport());
-////        System.out.println(rentManager.getAllRentsReport());
-////        //System.out.println(vMachineManager.getAllVMachinesReport());
-////
-////
-////        rentManager.registerRent(client, vMachine, LocalDateTime.now());
-////        //rent.endRent(LocalDateTime.of(2024,11,15,14,45));
-////        //rentManager.registerExistingRent(rent);
+        ///
+//        Map<String, Object> update = new HashMap<>();
+//        update.put("CPUNumber", 2137);
+//        update.put("ramSize", "128GB");
+//        //update.put("isRented", 1);
+//        //System.out.println(vMachineManager.getAllVMachinesReport());
+//        //vMachineManager.update(vMachine.getEntityId(), update);
+//        //System.out.println(vMachineManager.getAllVMachinesReport());
+//        System.out.println(rentManager.getAllRentsReport());
+//        //System.out.println(vMachineManager.getAllVMachinesReport());
+//
+//
+//        rentManager.registerRent(client, vMachine, LocalDateTime.now());
+//        //rent.endRent(LocalDateTime.of(2024,11,15,14,45));
+//        //rentManager.registerExistingRent(rent);
 //        //System.out.println(rentManager.getAllRentsReport());
 
     }
