@@ -30,8 +30,9 @@ public class Main {
         RentRedisRepository redisRepository = new RentRedisRepository();
         redisRepository.add(rent);
         Rent newRent = redisRepository.getRent(rent.getEntityId());
-        System.out.println(newRent);
-        System.out.println(rent.getEntityId());
+//        Rent newRent = rentManager.getRent(rent.getEntityId());
+        System.out.println(newRent.toString());
+        System.out.println(rent.toString());
         ///
 //        vMachine = new x86(16, "32GB", "AMD");
 //        vMachineManager.registerExistingVMachine(vMachine);

@@ -3,7 +3,6 @@ package org.example.repository;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.example.model.MongoUUID;
 import org.example.model.Rent;
 import redis.clients.jedis.*;
@@ -51,9 +50,9 @@ public class RentRedisRepository {
         }
     }
 
-    public void remove(Rent rent) {
+    public void remove(MongoUUID uuid) {
         try (Jedis jedis = pool.getResource()) {
-            jedis.del(rent.getEntityId().getUuid().toString());
+            jedis.del(uuid.getUuid().toString());
             jedis.disconnect();
         }
         catch (Exception e) {
@@ -67,12 +66,19 @@ public class RentRedisRepository {
             System.out.println("Key type: " + jedis.type(uuid.getUuid().toString()));
             String rentString = jedis.get(uuid.getUuid().toString());
             jedis.disconnect();
+            if (rentString.isEmpty()) {
+                throw new RuntimeException("There is no rent for uuid: " + uuid.getUuid().toString());
+            }
             return jsonb.fromJson(rentString, Rent.class);
 
+        }
+        catch (RuntimeException e) {
+            System.out.println("Rent not found: " + uuid.getUuid().toString());
         }
         catch (Exception e) {
             throw new RuntimeException("Redis connection error", e);
         }
+        return null;
     }
 
     public void addAllRentsFromMongo() {

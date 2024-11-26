@@ -1,13 +1,17 @@
 package org.example.model;
 
 
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Getter
 @Setter
+@BsonDiscriminator(key = "_clazz", value = "x86")
 public class x86 extends VMachine {
     @BsonProperty("CPUManufacturer")
     private String CPUManufacturer;
@@ -23,8 +27,12 @@ public class x86 extends VMachine {
     }
 
     @BsonCreator
-    public x86(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
-               @BsonProperty("isRented") int isRented, @BsonProperty("CPUManufacturer") String CPUManufacturer) {
+    @JsonbCreator
+    public x86(@BsonProperty("_id") @JsonbProperty("_id") MongoUUID uuid,
+               @BsonProperty("CPUNumber") @JsonbProperty("CPUNumber") int CPUNumber,
+               @BsonProperty("ramSize") @JsonbProperty("ramSize") String ramSize,
+               @BsonProperty("isRented") @JsonbProperty("isRented") int isRented,
+               @BsonProperty("CPUManufacturer") @JsonbProperty("CPUManufacturer") String CPUManufacturer) {
         super(uuid, CPUNumber, ramSize, isRented);
         this.CPUManufacturer = CPUManufacturer;
         this.actualRentalPrice = getActualRentalPrice();

@@ -1,6 +1,8 @@
 package org.example.model;
 
 import java.util.UUID;
+
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

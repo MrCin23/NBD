@@ -1,5 +1,7 @@
 package org.example.model;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -45,8 +47,13 @@ public class Rent extends AbstractEntityMgd {
     }
 
     @BsonCreator
-    public Rent(@BsonProperty("_id") MongoUUID uuid,@BsonProperty("client") Client client, @BsonProperty("vMachine") VMachine vMachine,
-                @BsonProperty("beginTime") LocalDateTime beginTime, @BsonProperty("endTime") LocalDateTime endTime, @BsonProperty("rentCost") double rentCost) {
+    @JsonbCreator
+    public Rent(@BsonProperty("_id") @JsonbProperty("_id") MongoUUID uuid,
+                @BsonProperty("client") @JsonbProperty("client") Client client,
+                @BsonProperty("vMachine") @JsonbProperty("vMachine") VMachine vMachine,
+                @BsonProperty("beginTime") @JsonbProperty("beginTime") LocalDateTime beginTime,
+                @BsonProperty("endTime") @JsonbProperty("endTime") LocalDateTime endTime,
+                @BsonProperty("rentCost") @JsonbProperty("rentCost") double rentCost) {
         super(uuid);
         this.client = client;
         this.vMachine = vMachine;

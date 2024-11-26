@@ -1,9 +1,12 @@
 package org.example.model;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-
+@BsonDiscriminator(key = "_clazz", value = "applearch")
 public class AppleArch extends VMachine {
     public AppleArch(int CPUNumber, String ramSize) {
         super(CPUNumber, ramSize, 0);
@@ -15,8 +18,11 @@ public class AppleArch extends VMachine {
     }
 
     @BsonCreator
-    public AppleArch(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber, @BsonProperty("ramSize") String ramSize,
-                     @BsonProperty("isRented") int isRented) {
+    @JsonbCreator
+    public AppleArch(@BsonProperty("_id") @JsonbProperty("_id") MongoUUID uuid,
+                     @BsonProperty("CPUNumber") @JsonbProperty("CPUNumber") int CPUNumber,
+                     @BsonProperty("ramSize") @JsonbProperty("ramSize") String ramSize,
+                     @BsonProperty("isRented") @JsonbProperty("isRented") int isRented) {
         super(uuid, CPUNumber, ramSize, isRented);
 
         this.actualRentalPrice = getActualRentalPrice();
