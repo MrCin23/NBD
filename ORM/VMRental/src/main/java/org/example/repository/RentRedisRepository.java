@@ -10,27 +10,27 @@ import redis.clients.jedis.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputFilter;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
 @AllArgsConstructor
-public class RentRedisRepository {
+public class RentRedisRepository implements RentDataSource{
     Properties configFile = new Properties();
     private static final JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
     private JedisPool pool;
     private final Jsonb jsonb = JsonbBuilder.create();
-    private RentRepository rentRepository;
 
-    public RentRedisRepository(){
+    public RentRedisRepository() {
         try {
             configFile.load(this.getClass().getClassLoader().
                     getResourceAsStream("config.properties"));
             pool = new JedisPool(new JedisPoolConfig(), configFile.getProperty("redisUrl"));
+            clearAllCache();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        rentRepository = new RentRepository();
     }
 
 
@@ -60,47 +60,71 @@ public class RentRedisRepository {
         }
     }
 
-    public Rent getRent(MongoUUID uuid) {
+    @Override
+    public void endRent(MongoUUID uuid, LocalDateTime endTime) {
         try (Jedis jedis = pool.getResource()) {
-            System.out.println("Key exists: " + jedis.exists(uuid.getUuid().toString()));
-            System.out.println("Key type: " + jedis.type(uuid.getUuid().toString()));
+            jedis.del(uuid.getUuid().toString());
+            jedis.disconnect();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Redis connection error", e);
+        }
+    }
+
+    @Override
+    public List<Rent> getRents() {
+        try (Jedis jedis = pool.getResource()) {
+            Set<String> keys = jedis.keys("*");
+            List<Rent> rents = new ArrayList<>();
+            for (String key : keys) {
+                String rentJson = jedis.get(key);
+                if (rentJson != null) {
+                    rents.add(jsonb.fromJson(rentJson, Rent.class));
+                }
+            }
+            return rents;
+        } catch (Exception e) {
+            throw new RuntimeException("Redis connection error", e);
+        }
+    }
+
+    @Override
+    public Rent getRentByID(MongoUUID uuid) {
+        try (Jedis jedis = pool.getResource()) {
             String rentString = jedis.get(uuid.getUuid().toString());
             jedis.disconnect();
             if (rentString.isEmpty()) {
                 throw new RuntimeException("There is no rent for uuid: " + uuid.getUuid().toString());
             }
             return jsonb.fromJson(rentString, Rent.class);
-
-        }
-        catch (RuntimeException e) {
-            System.out.println("Rent not found: " + uuid.getUuid().toString());
         }
         catch (Exception e) {
             throw new RuntimeException("Redis connection error", e);
         }
-        return null;
     }
 
-    public void addAllRentsFromMongo() {
+    @Override
+    public long size() {
+        try (Jedis jedis = pool.getResource()) {
+            return jedis.dbSize();
+        } catch (Exception e) {
+            throw new RuntimeException("Redis connection error", e);
+        }
+    }
+
+    public void clearCache(){
+        try (Jedis jedis = pool.getResource()) {
+            jedis.flushDB();
+        } catch (Exception e) {
+            throw new RuntimeException("Redis connection error while clearing cache", e);
+        }
+    }
+
+    public void clearAllCache(){
         try (Jedis jedis = pool.getResource()) {
             jedis.flushAll();
-            List<Rent> rents = rentRepository.getRents();
-            for(Rent rent : rents) {
-                jedis.set(rent.getEntityId().getUuid().toString(), jsonb.toJson(rent));
-            }
-            jedis.disconnect();
+        } catch (Exception e) {
+            throw new RuntimeException("Redis connection error while clearing cache", e);
         }
-        catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
-        }
-
     }
-
-    public long size() {
-        return 0;//TODO
-    }
-
-
-
-
 }

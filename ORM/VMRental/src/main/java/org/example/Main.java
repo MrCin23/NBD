@@ -5,6 +5,7 @@ import org.example.manager.RentManager;
 import org.example.manager.VMachineManager;
 import org.example.model.*;
 import org.example.repository.RentRedisRepository;
+import org.example.repository.RentRepository;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public class Main {
         rentManager.registerExistingRent(rent);
         RentRedisRepository redisRepository = new RentRedisRepository();
         redisRepository.add(rent);
-        Rent newRent = redisRepository.getRent(rent.getEntityId());
+        Rent newRent = redisRepository.getRentByID(rent.getEntityId());
 //        Rent newRent = rentManager.getRent(rent.getEntityId());
         System.out.println(newRent.toString());
         System.out.println(rent.toString());

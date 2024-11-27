@@ -14,7 +14,7 @@ public final class ClientManager {
     private static ClientManager instance;
     private final ClientRepository clientsRepository;
 
-    public ClientManager() {
+    private ClientManager() {
         clientsRepository = new ClientRepository();
     }
 

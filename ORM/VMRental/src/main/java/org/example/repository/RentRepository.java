@@ -14,7 +14,7 @@ import org.example.model.VMachine;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class RentRepository extends AbstractMongoRepository {
+public class RentRepository extends AbstractMongoRepository implements RentDataSource{
     private final MongoCollection<Rent> rents;
     private final MongoCollection<VMachine> vMachines;
     private final MongoCollection<Client> clients;
@@ -35,9 +35,7 @@ public class RentRepository extends AbstractMongoRepository {
         this.clients = this.getDatabase().getCollection("clients", Client.class);
     }
 
-    //-------------METHODS---------------------------------------
-    //TODO dorobić metody z diagramu
-
+    @Override
     public void endRent(MongoUUID uuid, LocalDateTime endTime){
         ClientSession session = getMongoClient().startSession();
         try {
@@ -71,10 +69,7 @@ public class RentRepository extends AbstractMongoRepository {
         }
     }
 
-    public void update(long id, Map<String, Object> fieldsToUpdate) {
-
-    }
-
+    @Override
     public void add(Rent rent) {
         ClientSession session = getMongoClient().startSession();
         Client client;
@@ -101,25 +96,27 @@ public class RentRepository extends AbstractMongoRepository {
 
     }
 
-    public long size(boolean active) {
-
-        return 0;
+    @Override
+    public void remove(MongoUUID uuid) {
+        throw new RuntimeException("This should never be called");
     }
 
+    @Override
     public long size() {
-        List<Rent> chuj = rents.find().into(new ArrayList<>());
-        return chuj.size();
+        return rents.countDocuments();
     }
 
-    public List<Rent> getRents(boolean active) {
-        return rents.find().into(new ArrayList<>());
-        //TODO
-    }
+//    public List<Rent> getRents(boolean active) {
+//        return rents.find().into(new ArrayList<>());
+//        //TODO
+//    }
 
+    @Override
     public List<Rent> getRents() {
         return rents.find().into(new ArrayList<>());
     }
 
+    @Override
     public Rent getRentByID(MongoUUID uuid) {
         Bson filter = Filters.eq("_id", uuid.getUuid());
         return rents.find(filter).first();

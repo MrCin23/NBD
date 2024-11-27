@@ -4,17 +4,19 @@ import org.example.model.Client;
 import org.example.model.MongoUUID;
 import org.example.model.Rent;
 import org.example.model.VMachine;
+import org.example.repository.RentRedisRepository;
 import org.example.repository.RentRepository;
+import org.example.repository.RentRepositoryDecorator;
 
 import java.time.LocalDateTime;
 
 //RentManager jako Singleton
 public final class RentManager {
     private static RentManager instance;
-    private final RentRepository rentRepository;
+    private final RentRepositoryDecorator rentRepository;
 
-    public RentManager() {
-        rentRepository = new RentRepository();
+    private RentManager() {
+        rentRepository = new RentRepositoryDecorator(new RentRepository(), new RentRedisRepository());
     }
 
     public static RentManager getInstance() {
@@ -46,6 +48,10 @@ public final class RentManager {
     }
     public int size(){
         return rentRepository.getRents().size();
+    }
+
+    public long cacheSize(){
+        return rentRepository.cacheSize();
     }
 }
 

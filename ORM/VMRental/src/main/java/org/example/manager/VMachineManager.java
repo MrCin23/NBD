@@ -15,7 +15,7 @@ public final class VMachineManager {
     private static VMachineManager instance;
     private final VMachineRepository vMachinesRepository;
 
-    public VMachineManager() {
+    private VMachineManager() {
         vMachinesRepository = new VMachineRepository();
     }
 
