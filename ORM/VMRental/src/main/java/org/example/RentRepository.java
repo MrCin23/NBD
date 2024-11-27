@@ -111,8 +111,7 @@ public class RentRepository extends AbstractMongoRepository {
     }
 
     public long size() {
-        List<Rent> chuj = rents.find().into(new ArrayList<>());
-        return chuj.size();
+        return rents.find().into(new ArrayList<>()).size();
     }
 
     public List<Rent> getRents(boolean active) {
