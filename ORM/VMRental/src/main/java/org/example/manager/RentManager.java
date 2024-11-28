@@ -53,5 +53,13 @@ public final class RentManager {
     public long cacheSize(){
         return rentRepository.cacheSize();
     }
+
+    public void dropAndCreate(){
+        rentRepository.dropAndCreate();
+    }
+
+    public void clearAllCache(){
+        rentRepository.clearAllCache();
+    }
 }
 

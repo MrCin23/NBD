@@ -46,6 +46,11 @@ public class AppleArch extends VMachine {
     }
 
     public String toString() {
-        return "AppleArch: " + this.getEntityId().toString() + " " + this.getCPUNumber() + " " + this.getRamSize() + " " + this.isRented() + " " + this.getActualRentalPrice();
+        return "AppleArch: " +
+                //this.getEntityId().toString() + " " +
+                this.getCPUNumber() + " " +
+                this.getRamSize() + " " +
+                this.isRented() + " " +
+                this.getActualRentalPrice();
     }
 }

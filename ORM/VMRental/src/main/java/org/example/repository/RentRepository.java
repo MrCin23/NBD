@@ -121,4 +121,9 @@ public class RentRepository extends AbstractMongoRepository implements RentDataS
         Bson filter = Filters.eq("_id", uuid.getUuid());
         return rents.find(filter).first();
     }
+
+    public void dropAndCreate(){
+        this.getDatabase().getCollection("rents").drop();
+        this.getDatabase().createCollection("rents");
+    }
 }

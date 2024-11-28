@@ -85,4 +85,12 @@ public class RentRepositoryDecorator implements RentDataSource{
             throw new RuntimeException("Redis connection error", e);
         }
     }
+
+    public void dropAndCreate(){
+        rentRepository.dropAndCreate();
+    }
+
+    public void clearAllCache(){
+        rentRedisRepository.clearAllCache();
+    }
 }

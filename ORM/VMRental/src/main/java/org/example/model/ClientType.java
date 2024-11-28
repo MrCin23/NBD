@@ -46,6 +46,6 @@ public abstract class ClientType extends AbstractEntityMgd {
     }
 
     public String toString() {
-        return " " + this.getMaxRentedMachines() + ", UUID: " + super.getEntityId().getUuid().toString();
+        return " " + this.getMaxRentedMachines();// + ", UUID: " + super.getEntityId().getUuid().toString();
     }
 }

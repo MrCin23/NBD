@@ -62,4 +62,8 @@ public final class VMachineManager {
     public int getVMachinesAmount() {
         return vMachinesRepository.getVMachines().size();
     }
+
+    public void dropAndCreate(){
+        vMachinesRepository.dropAndCreate();
+    }
 }

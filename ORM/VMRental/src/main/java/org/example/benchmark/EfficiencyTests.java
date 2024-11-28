@@ -1,4 +1,4 @@
-package benchmark;
+package org.example.benchmark;
 
 import org.example.manager.ClientManager;
 import org.example.manager.RentManager;
@@ -7,7 +7,6 @@ import org.example.model.*;
 import org.example.repository.RentRedisRepository;
 import org.example.repository.RentRepository;
 import org.example.repository.RentRepositoryDecorator;
-import org.junit.jupiter.api.*;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.BufferedReader;
@@ -33,8 +32,8 @@ public class EfficiencyTests {
     Rent rent3;
     Rent rent4;
     Rent rent5;
-    @BeforeEach
-    void setup(){
+    @Setup
+    public void setup(){
         clients.add(new Client("Bart", "Fox", "BFox@tul.com", new Admin()));
         clients.add(new Client("Michael", "Corrugated", "MCorrugated@ias.pas.p.lodz.pl", new Admin()));
         clients.add(new Client("Matthew", "Tar", "MTar@TarVSCorrugated.com", new Admin()));
@@ -62,39 +61,35 @@ public class EfficiencyTests {
         rent3 = new Rent(clients.get(2), vms.get(2), LocalDateTime.of(2024,11,11,11,11));
         rent4 = new Rent(clients.get(3), vms.get(3), LocalDateTime.of(2024,11,11,11,11));
         rent5 = new Rent(clients.get(4), vms.get(4), LocalDateTime.of(2024,11,11,11,11));
+        rrd.clearAllCache();
         rrr.add(rent1);
         rrr.add(rent2);
         rr.add(rent3);
         rr.add(rent4);
     }
 
-    @Test
     @Benchmark
-    @Fork(value=10, warmups=0)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public void cacheHitTest(){
         rrd.getRentByID(rent1.getEntityId());
     }
-    @Test
+
     @Benchmark
-    @Fork(value=10, warmups=0)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public void cacheMissTest(){
         rrd.getRentByID(rent3.getEntityId());
     }
-    @Test
+
     @Benchmark
-    @Fork(value=10, warmups=0)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public void mongoTest(){
         rr.getRentByID(rent3.getEntityId());
     }
-    @Test
+
     @Benchmark
-    @Fork(value=10, warmups=0)
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public void mongoMissingTest(){

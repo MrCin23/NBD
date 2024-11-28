@@ -63,6 +63,12 @@ public class x86 extends VMachine {
     }
 
     public String toString() {
-        return "x86 architecture: " + this.getEntityId().toString() + " " + this.getCPUNumber() + " " + this.getRamSize() + " " + this.isRented() + " " + this.getCPUManufacturer() + " " + this.getActualRentalPrice();
+        return "x86 architecture: " +
+                //this.getEntityId().toString() + " " +
+                this.getCPUNumber() + " " +
+                this.getRamSize() + " " +
+                this.isRented() + " " +
+                this.getCPUManufacturer() + " " +
+                this.getActualRentalPrice();
     }
 }

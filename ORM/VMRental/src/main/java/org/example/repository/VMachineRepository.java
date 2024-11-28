@@ -18,6 +18,7 @@ import java.util.Objects;
 public class VMachineRepository extends AbstractMongoRepository {
     private final String collectionName = "vMachines";
     private final MongoCollection<VMachine> vMachines;
+    private final ValidationOptions validationOptions;
 
     public VMachineRepository() {
         super.initDbConnection();
@@ -29,7 +30,7 @@ public class VMachineRepository extends AbstractMongoRepository {
             }
         }
 
-        ValidationOptions validationOptions = new ValidationOptions().validator(
+        this.validationOptions = new ValidationOptions().validator(
             Document.parse("""
             {
                 $jsonSchema: {
@@ -68,7 +69,7 @@ public class VMachineRepository extends AbstractMongoRepository {
             }
         """))
         .validationAction (ValidationAction.ERROR);
-        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
+        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions().validationOptions(validationOptions);
         this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
         this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
@@ -157,5 +158,11 @@ public class VMachineRepository extends AbstractMongoRepository {
     public VMachine getVMachineByID(MongoUUID uuid) {
         Bson filter = Filters.eq("_id", uuid.getUuid().toString());
         return vMachines.find(filter).first();
+    }
+
+    public void dropAndCreate(){
+        this.getDatabase().getCollection("vMachines").drop();
+        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions().validationOptions(validationOptions);
+        this.getDatabase().createCollection(collectionName, createCollectionOptions);
     }
 }

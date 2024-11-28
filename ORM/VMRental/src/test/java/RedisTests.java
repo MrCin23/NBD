@@ -44,6 +44,7 @@ public class RedisTests {
         vmm.registerExistingVMachine(vms.get(3));
         vmm.registerExistingVMachine(vms.get(4));
         vmm.registerExistingVMachine(vms.get(5));
+        rm.clearAllCache();
     }
 
     @Test

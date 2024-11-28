@@ -46,8 +46,6 @@ public final class ClientManager {
         clientsRepository.update(uuid, field, value);
     }
 
-    //METHODS-----------------------------------
-//TODO
     public String getAllClientsReport() {
         return this.clientsRepository.getClients().toString();
     }
@@ -60,6 +58,10 @@ public final class ClientManager {
 
     public int getClientsAmount() {
         return clientsRepository.getClients().size();
+    }
+
+    public void dropAndCreate(){
+        clientsRepository.dropAndCreate();
     }
 }
 

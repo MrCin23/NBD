@@ -36,7 +36,7 @@ public class Client extends AbstractEntityMgd {
                 ", emailAddress='" + emailAddress + '\'' +
                 ", clientType=" + clientType.toString() +
                 ", currentRents=" + currentRents +
-                ", uuid = " + super.getEntityId().getUuid().toString() +
+                //", uuid = " + super.getEntityId().getUuid().toString() +
                 '}';
     }
 

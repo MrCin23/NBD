@@ -16,7 +16,7 @@ import java.util.*;
 public class ClientRepository extends AbstractMongoRepository {
     private final String collectionName = "clients";
     private final MongoCollection<Client> clients;
-
+    private final ValidationOptions validationOptions;
 
     public ClientRepository() {
         super.initDbConnection();
@@ -31,7 +31,7 @@ public class ClientRepository extends AbstractMongoRepository {
 //        Bson currentRentsMin  = Filters.gte("currentRents", 0);
 //        Bson currentRentsMax  = Filters.expr(Filters.lte("$currentRents", "$clientType.maxRentedMachines"));
 
-        ValidationOptions validationOptions = new ValidationOptions().validator(
+        this.validationOptions = new ValidationOptions().validator(
                         Document.parse("""
             {
                 $jsonSchema: {
@@ -166,5 +166,9 @@ public class ClientRepository extends AbstractMongoRepository {
         return clients.find(filter).first();
     }
 
-
+    public void dropAndCreate(){
+        this.getDatabase().getCollection("clients").drop();
+        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions().validationOptions(validationOptions);
+        this.getDatabase().createCollection(collectionName, createCollectionOptions);
+    }
 }
