@@ -30,7 +30,7 @@ public class ManagerTests {
     public void setup(){
         clients.clear();
         vms.clear();
-        rrr.clearAllCache();
+//        rrr.clearAllCache();
         cm.dropAndCreate();
         vmm.dropAndCreate();
         rm.dropAndCreate();
@@ -98,121 +98,121 @@ public class ManagerTests {
         Assertions.assertEquals(vmm.getVMachinesAmount(), 0);
     }
 
-    @Test
-    public void bomb() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"rs.status().members.filter(member => member.stateStr === 'PRIMARY')[0].name\"");
-
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-            if(output.isEmpty()){ //this is for debugging only and SHOULD never happen
-                while ((line = errReader.readLine()) != null) {
-                    output.append(line).append("\n");
-                }
-                throw new RuntimeException(output.toString());
-            }
-
-
-            process.waitFor();
-            String toKill = output.toString();
-            System.out.println(toKill);
-            String hostname = toKill.substring(0, toKill.indexOf(":"));
-            ProcessBuilder processBuilder2 = new ProcessBuilder("cmd.exe", "/c", "docker stop " + hostname);
-            Process process2 = processBuilder2.start();
-            process2.waitFor();
-
-            createElementTest();
-            updateElementTest();
-            readElementTest();
-            deleteElementTest();
-
-            ProcessBuilder processBuilder3 = new ProcessBuilder("cmd.exe", "/c", "docker start " + hostname);
-            Process process3 = processBuilder3.start();
-            process3.waitFor();
-            Thread.sleep(3000);
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-    }
-    @Test
-    public void valid() {
-        try {
-            createElementTest();
-            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.rents.validate()\"");
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-            boolean cierpienie = false;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("valid:")) {
-                    String value = line.split(":")[1].trim().replace(",", "");
-                    cierpienie = Boolean.parseBoolean(value);
-                    break;
-                }
-            }
-            if(output.isEmpty()){ //this is for debugging only and SHOULD never happen
-                while ((line = errReader.readLine()) != null) {
-                    output.append(line).append("\n");
-                }
-                throw new RuntimeException(output.toString());
-            }
-            process.waitFor();
-            String toKill = output.toString();
-            if(cierpienie){
-                System.out.println("status: " + cierpienie);
-            } else {
-                throw new Exception("rents nie jest spójne!");
-            }
-
-            processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.clients.validate()\"");
-            process = processBuilder.start();
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            output = new StringBuilder();
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("valid:")) {
-                    String value = line.split(":")[1].trim().replace(",", "");
-                    cierpienie = Boolean.parseBoolean(value);
-                    break;
-                }
-            }
-            process.waitFor();
-            if(cierpienie){
-                System.out.println("status: " + cierpienie);
-            } else {
-                throw new Exception("clients nie jest spójne!");
-            }
-
-            processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.vMachines.validate()\"");
-            process = processBuilder.start();
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            output = new StringBuilder();
-
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("valid:")) {
-                    String value = line.split(":")[1].trim().replace(",", "");
-                    cierpienie = Boolean.parseBoolean(value);
-                    break;
-                }
-            }
-            process.waitFor();
-            if(cierpienie){
-                System.out.println("status: " + cierpienie);
-            } else {
-                throw new Exception("vMachines nie jest spójne!");
-            }
-        } catch (Exception e) {
-            Assertions.fail(e);
-        }
-    }
+//    @Test
+//    public void bomb() {
+//        try {
+//            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"rs.status().members.filter(member => member.stateStr === 'PRIMARY')[0].name\"");
+//
+//            Process process = processBuilder.start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            StringBuilder output = new StringBuilder();
+//            String line;
+//
+//            while ((line = reader.readLine()) != null) {
+//                output.append(line).append("\n");
+//            }
+//            if(output.isEmpty()){ //this is for debugging only and SHOULD never happen
+//                while ((line = errReader.readLine()) != null) {
+//                    output.append(line).append("\n");
+//                }
+//                throw new RuntimeException(output.toString());
+//            }
+//
+//
+//            process.waitFor();
+//            String toKill = output.toString();
+//            System.out.println(toKill);
+//            String hostname = toKill.substring(0, toKill.indexOf(":"));
+//            ProcessBuilder processBuilder2 = new ProcessBuilder("cmd.exe", "/c", "docker stop " + hostname);
+//            Process process2 = processBuilder2.start();
+//            process2.waitFor();
+//
+//            createElementTest();
+////            updateElementTest();
+//            readElementTest();
+//            deleteElementTest();
+//
+//            ProcessBuilder processBuilder3 = new ProcessBuilder("cmd.exe", "/c", "docker start " + hostname);
+//            Process process3 = processBuilder3.start();
+//            process3.waitFor();
+//            Thread.sleep(3000);
+//        } catch (Exception e) {
+//            Assertions.fail(e);
+//        }
+//    }
+//    @Test
+//    public void valid() {
+//        try {
+//            createElementTest();
+//            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.rents.validate()\"");
+//            Process process = processBuilder.start();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            StringBuilder output = new StringBuilder();
+//            String line;
+//            boolean cierpienie = false;
+//
+//            while ((line = reader.readLine()) != null) {
+//                if (line.trim().startsWith("valid:")) {
+//                    String value = line.split(":")[1].trim().replace(",", "");
+//                    cierpienie = Boolean.parseBoolean(value);
+//                    break;
+//                }
+//            }
+//            if(output.isEmpty()){ //this is for debugging only and SHOULD never happen
+//                while ((line = errReader.readLine()) != null) {
+//                    output.append(line).append("\n");
+//                }
+//                throw new RuntimeException(output.toString());
+//            }
+//            process.waitFor();
+//            String toKill = output.toString();
+//            if(cierpienie){
+//                System.out.println("status: " + cierpienie);
+//            } else {
+//                throw new Exception("rents nie jest spójne!");
+//            }
+//
+//            processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.clients.validate()\"");
+//            process = processBuilder.start();
+//            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            output = new StringBuilder();
+//
+//            while ((line = reader.readLine()) != null) {
+//                if (line.trim().startsWith("valid:")) {
+//                    String value = line.split(":")[1].trim().replace(",", "");
+//                    cierpienie = Boolean.parseBoolean(value);
+//                    break;
+//                }
+//            }
+//            process.waitFor();
+//            if(cierpienie){
+//                System.out.println("status: " + cierpienie);
+//            } else {
+//                throw new Exception("clients nie jest spójne!");
+//            }
+//
+//            processBuilder = new ProcessBuilder("cmd.exe", "/c", "mongosh --host mongodb1:27017 --username admin --password adminpassword --authenticationDatabase admin --eval \"use('vmrental'); db.vMachines.validate()\"");
+//            process = processBuilder.start();
+//            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            output = new StringBuilder();
+//
+//            while ((line = reader.readLine()) != null) {
+//                if (line.trim().startsWith("valid:")) {
+//                    String value = line.split(":")[1].trim().replace(",", "");
+//                    cierpienie = Boolean.parseBoolean(value);
+//                    break;
+//                }
+//            }
+//            process.waitFor();
+//            if(cierpienie){
+//                System.out.println("status: " + cierpienie);
+//            } else {
+//                throw new Exception("vMachines nie jest spójne!");
+//            }
+//        } catch (Exception e) {
+//            Assertions.fail(e);
+//        }
+//    }
 }

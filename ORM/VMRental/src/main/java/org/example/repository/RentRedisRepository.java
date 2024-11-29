@@ -18,7 +18,7 @@ import java.util.*;
 public class RentRedisRepository implements RentDataSource{
     Properties configFile = new Properties();
     private static final JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
-    private JedisPool pool;
+    private JedisPool pool;//JedisPooled
     private final Jsonb jsonb = JsonbBuilder.create();
 
     public RentRedisRepository() {
@@ -29,7 +29,8 @@ public class RentRedisRepository implements RentDataSource{
             clearAllCache();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Redis disconnected");
+//            e.printStackTrace();
         }
     }
 
