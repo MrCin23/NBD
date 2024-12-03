@@ -1,5 +1,6 @@
 package org.example.benchmark;
 
+import org.example.exception.RedisConnectionError;
 import org.example.manager.ClientManager;
 import org.example.manager.RentManager;
 import org.example.manager.VMachineManager;
@@ -24,9 +25,9 @@ public class EfficiencyTests {
     VMachineManager vmm = VMachineManager.getInstance();
     List<Client> clients = new ArrayList<>();
     List<VMachine> vms = new ArrayList<>();
-    RentRedisRepository rrr = new RentRedisRepository();
-    RentRepository rr = new RentRepository();
-    RentRepositoryDecorator rrd = new RentRepositoryDecorator(rr, rrr);
+    RentRedisRepository rrr;
+    RentRepository rr;
+    RentRepositoryDecorator rrd;
     Rent rent1;
     Rent rent2;
     Rent rent3;
@@ -34,6 +35,13 @@ public class EfficiencyTests {
     Rent rent5;
     @Setup
     public void setup(){
+        try {
+            rrr = new RentRedisRepository();
+        } catch (RedisConnectionError e){
+            rrr = null;
+        }
+        rr = new RentRepository();
+        rrd = new RentRepositoryDecorator(rr, rrr);
         clients.add(new Client("Bart", "Fox", "BFox@tul.com", new Admin()));
         clients.add(new Client("Michael", "Corrugated", "MCorrugated@ias.pas.p.lodz.pl", new Admin()));
         clients.add(new Client("Matthew", "Tar", "MTar@TarVSCorrugated.com", new Admin()));
@@ -62,8 +70,12 @@ public class EfficiencyTests {
         rent4 = new Rent(clients.get(3), vms.get(3), LocalDateTime.of(2024,11,11,11,11));
         rent5 = new Rent(clients.get(4), vms.get(4), LocalDateTime.of(2024,11,11,11,11));
         rrd.clearAllCache();
-        rrr.add(rent1);
-        rrr.add(rent2);
+        try {
+            rrr.add(rent1);
+        } catch (RedisConnectionError ignored) {}
+        try {
+            rrr.add(rent2);
+        } catch (RedisConnectionError ignored) {}
         rr.add(rent3);
         rr.add(rent4);
     }

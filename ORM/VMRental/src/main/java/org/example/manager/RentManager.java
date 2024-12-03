@@ -1,9 +1,11 @@
 package org.example.manager;
 
+import org.example.exception.RedisConnectionError;
 import org.example.model.Client;
 import org.example.model.MongoUUID;
 import org.example.model.Rent;
 import org.example.model.VMachine;
+import org.example.repository.RentDataSource;
 import org.example.repository.RentRedisRepository;
 import org.example.repository.RentRepository;
 import org.example.repository.RentRepositoryDecorator;
@@ -16,7 +18,13 @@ public final class RentManager {
     private final RentRepositoryDecorator rentRepository;
 
     private RentManager() {
-        rentRepository = new RentRepositoryDecorator(new RentRepository(), new RentRedisRepository());
+        RentRedisRepository r;
+        try {
+            r = new RentRedisRepository();
+        } catch (RedisConnectionError e) {
+            r = null;
+        }
+        rentRepository = new RentRepositoryDecorator(new RentRepository(), r);
     }
 
     public static RentManager getInstance() {

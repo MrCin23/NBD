@@ -3,6 +3,7 @@ package org.example.repository;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import lombok.AllArgsConstructor;
+import org.example.exception.RedisConnectionError;
 import org.example.model.MongoUUID;
 import org.example.model.Rent;
 import redis.clients.jedis.*;
@@ -18,10 +19,10 @@ import java.util.*;
 public class RentRedisRepository implements RentDataSource{
     Properties configFile = new Properties();
     private static final JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
-    private JedisPool pool;//JedisPooled
+    private JedisPool pool;
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    public RentRedisRepository() {
+    public RentRedisRepository() throws RedisConnectionError {
         try {
             configFile.load(this.getClass().getClassLoader().
                     getResourceAsStream("config.properties"));
@@ -29,8 +30,18 @@ public class RentRedisRepository implements RentDataSource{
             clearAllCache();
         }
         catch (Exception e) {
+            System.out.println("redis disconnected");
+            throw new RedisConnectionError("Redis disconnected", e);
+        }
+    }
+
+    public RentRedisRepository(String redisHost, int redisPort) throws RedisConnectionError {
+        try {
+            pool = new JedisPool(new JedisPoolConfig(), redisHost, redisPort);
+            clearAllCache();
+        } catch (Exception e) {
             System.out.println("Redis disconnected");
-//            e.printStackTrace();
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
@@ -41,39 +52,36 @@ public class RentRedisRepository implements RentDataSource{
      *
      * @param rent obiekt wypożyczenia
      */
-    public void add(Rent rent) {
+    public void add(Rent rent) throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             jedis.set(rent.getEntityId().getUuid().toString(), jsonb.toJson(rent));
-            jedis.disconnect();
         }
         catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
-    public void remove(MongoUUID uuid) {
+    public void remove(MongoUUID uuid) throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             jedis.del(uuid.getUuid().toString());
-            jedis.disconnect();
         }
         catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
     @Override
-    public void endRent(MongoUUID uuid, LocalDateTime endTime) {
+    public void endRent(MongoUUID uuid, LocalDateTime endTime) throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             jedis.del(uuid.getUuid().toString());
-            jedis.disconnect();
         }
         catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
     @Override
-    public List<Rent> getRents() {
+    public List<Rent> getRents() throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             Set<String> keys = jedis.keys("*");
             List<Rent> rents = new ArrayList<>();
@@ -85,47 +93,46 @@ public class RentRedisRepository implements RentDataSource{
             }
             return rents;
         } catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
     @Override
-    public Rent getRentByID(MongoUUID uuid) {
+    public Rent getRentByID(MongoUUID uuid) throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             String rentString = jedis.get(uuid.getUuid().toString());
-            jedis.disconnect();
             if (rentString.isEmpty()) {
                 throw new RuntimeException("There is no rent for uuid: " + uuid.getUuid().toString());
             }
             return jsonb.fromJson(rentString, Rent.class);
         }
         catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
     @Override
-    public long size() {
+    public long size() throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             return jedis.dbSize();
         } catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
-    public void clearCache(){
+    public void clearCache() throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             jedis.flushDB();
         } catch (Exception e) {
-            throw new RuntimeException("Redis connection error while clearing cache", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 
-    public void clearAllCache(){
+    public void clearAllCache() throws RedisConnectionError {
         try (Jedis jedis = pool.getResource()) {
             jedis.flushAll();
         } catch (Exception e) {
-            throw new RuntimeException("Redis connection error while clearing cache", e);
+            throw new RedisConnectionError("Redis disconnected", e);
         }
     }
 }

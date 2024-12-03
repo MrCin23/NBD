@@ -1,14 +1,20 @@
 package org.example.repository;
 
+import jakarta.validation.constraints.Null;
+import lombok.Getter;
+import org.example.exception.RedisConnectionError;
 import org.example.model.MongoUUID;
 import org.example.model.Rent;
 import redis.clients.jedis.Jedis;
 
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class RentRepositoryDecorator implements RentDataSource{
     private final RentRepository rentRepository;
+    //DELETE THIS LATER
+    @Getter
     private final RentRedisRepository rentRedisRepository;
 
     public RentRepositoryDecorator(RentRepository rentRepository, RentRedisRepository rentRedisRepository) {
@@ -21,8 +27,8 @@ public class RentRepositoryDecorator implements RentDataSource{
         try {
             rentRedisRepository.add(rent);
             rentRepository.add(rent);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (NullPointerException | RedisConnectionError e) {
+            rentRepository.add(rent);
         }
     }
 
@@ -30,8 +36,8 @@ public class RentRepositoryDecorator implements RentDataSource{
     public void remove(MongoUUID uuid) {
         try {
             rentRedisRepository.remove(uuid);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (NullPointerException | RedisConnectionError e) {
+            System.out.println("Redis disconnected. Removing from cache is not possible");
         }
     }
 
@@ -39,29 +45,28 @@ public class RentRepositoryDecorator implements RentDataSource{
     public Rent getRentByID(MongoUUID uuid) {
         try {
             return rentRedisRepository.getRentByID(uuid);
-        } catch (Exception e) {
+        } catch (NullPointerException | RedisConnectionError e) {
             return rentRepository.getRentByID(uuid);
         }
     }
 
     @Override
     public void endRent(MongoUUID uuid, LocalDateTime endTime) {
-        rentRedisRepository.endRent(uuid, endTime);
-        rentRepository.endRent(uuid, endTime);
+        try {
+            rentRedisRepository.endRent(uuid, endTime);
+            rentRepository.endRent(uuid, endTime);
+        } catch (NullPointerException | RedisConnectionError e){
+            rentRepository.endRent(uuid, endTime);
+        }
     }
 
     @Override
     public List<Rent> getRents() {
-        List<Rent> rents;
         try {
-            rents = rentRedisRepository.getRents();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        if(rents == null || rents.isEmpty()) {
+            return rentRedisRepository.getRents();
+        } catch (NullPointerException | RedisConnectionError e) {
             return rentRepository.getRents();
         }
-        return rents;
     }
 
     @Override
@@ -70,19 +75,24 @@ public class RentRepositoryDecorator implements RentDataSource{
     }
 
     public long cacheSize() {
-        return rentRedisRepository.size();
+        try {
+            return rentRedisRepository.size();
+        } catch (NullPointerException | RedisConnectionError e) {
+            System.out.println("Redis disconnected. Cache size cannot be determined");
+            return -1;
+        }
     }
 
     public void addAllRentsFromMongo() {
-        rentRedisRepository.clearAllCache();
         try {
+            rentRedisRepository.clearAllCache();
             List<Rent> rents = rentRepository.getRents();
             for(Rent rent : rents) {
                 rentRedisRepository.add(rent);
             }
         }
-        catch (Exception e) {
-            throw new RuntimeException("Redis connection error", e);
+        catch (NullPointerException | RedisConnectionError e) {
+            System.out.println("Redis disconnected. Adding rents to cache is not possible");
         }
     }
 
@@ -91,6 +101,10 @@ public class RentRepositoryDecorator implements RentDataSource{
     }
 
     public void clearAllCache(){
-        rentRedisRepository.clearAllCache();
+        try {
+            rentRedisRepository.clearAllCache();
+        } catch (NullPointerException | RedisConnectionError e) {
+            System.out.println("Redis disconnected. Cache cannot be cleared");
+        }
     }
 }
