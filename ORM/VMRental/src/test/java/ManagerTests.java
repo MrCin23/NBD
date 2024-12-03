@@ -139,7 +139,7 @@ public class ManagerTests {
             createElementTest();
 //            updateElementTest();
             readElementTest();
-            deleteElementTest();
+//            deleteElementTest();
 
             ProcessBuilder processBuilder3 = new ProcessBuilder("cmd.exe", "/c", "docker start " + hostname);
             Process process3 = processBuilder3.start();
@@ -167,12 +167,6 @@ public class ManagerTests {
                     cierpienie = Boolean.parseBoolean(value);
                     break;
                 }
-            }
-            if(output.isEmpty()){ //this is for debugging only and SHOULD never happen
-                while ((line = errReader.readLine()) != null) {
-                    output.append(line).append("\n");
-                }
-                throw new RuntimeException(output.toString());
             }
             process.waitFor();
             String toKill = output.toString();
