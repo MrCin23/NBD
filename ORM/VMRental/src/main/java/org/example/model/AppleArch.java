@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {

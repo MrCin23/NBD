@@ -1,11 +1,8 @@
-package org.example;
+package org.example.model;
 
-import java.io.Serializable;
-import java.sql.Time;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 public class Rent  {
     long rentID;
     Client client;

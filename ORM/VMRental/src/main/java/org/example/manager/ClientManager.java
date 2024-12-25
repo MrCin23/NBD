@@ -1,5 +1,9 @@
-package org.example;
+package org.example.manager;
 
+
+import org.example.model.Client;
+import org.example.model.ClientType;
+import org.example.repository.ClientRepository;
 
 import java.util.Map;
 

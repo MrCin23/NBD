@@ -1,5 +1,10 @@
-package org.example;
+package org.example.manager;
 
+
+import org.example.model.AppleArch;
+import org.example.model.VMachine;
+import org.example.repository.VMachineRepository;
+import org.example.model.x86;
 
 import java.util.Map;
 

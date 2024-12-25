@@ -1,14 +1,9 @@
 package org.example;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.example.manager.ClientManager;
+import org.example.manager.RentManager;
+import org.example.manager.VMachineManager;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {

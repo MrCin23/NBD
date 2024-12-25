@@ -1,6 +1,7 @@
-package org.example;
+package org.example.repository;
 
-import java.lang.reflect.Field;
+import org.example.model.VMachine;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

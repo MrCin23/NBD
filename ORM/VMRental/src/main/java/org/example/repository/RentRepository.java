@@ -1,12 +1,9 @@
-package org.example;
+package org.example.repository;
 
-import org.hibernate.Session;
+import org.example.model.Rent;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.lang.reflect.Field;
-import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

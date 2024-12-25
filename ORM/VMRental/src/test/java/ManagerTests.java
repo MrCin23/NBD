@@ -1,5 +1,10 @@
-import org.example.*;
-import org.junit.jupiter.api.Assertions;
+import org.example.manager.ClientManager;
+import org.example.manager.RentManager;
+import org.example.manager.VMachineManager;
+import org.example.model.Admin;
+import org.example.model.Client;
+import org.example.model.ClientType;
+import org.example.model.Standard;
 import org.junit.jupiter.api.Test;
 
 

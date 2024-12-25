@@ -1,7 +1,7 @@
-package org.example;
+package org.example.repository;
 
-import java.lang.reflect.Field;
-import java.sql.SQLException;
+import org.example.model.Client;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
