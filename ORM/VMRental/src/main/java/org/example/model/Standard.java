@@ -7,6 +7,7 @@ public class Standard extends ClientType{
         this.maxRentedMachines = 3;
     }
 
+    @Override
     public String toString() {
         return "Standard";
     }

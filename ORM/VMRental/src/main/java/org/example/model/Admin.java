@@ -6,6 +6,7 @@ public class Admin extends ClientType{
         this.maxRentedMachines = 10;
     }
 
+    @Override
     public String toString() {
         return "Admin";
     }

@@ -1,5 +1,9 @@
 package org.example.model;
 
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
+import com.datastax.oss.driver.api.mapper.entity.naming.GetterStyle;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +15,10 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client  {
+@Entity(defaultKeyspace = "vmrental")
+@CqlName("clients")
+@PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
+public class Client {
     private UUID clientID;
     private String firstName;
     private String surname;

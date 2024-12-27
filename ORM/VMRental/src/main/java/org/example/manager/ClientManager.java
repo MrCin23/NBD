@@ -6,6 +6,7 @@ import org.example.model.ClientType;
 import org.example.repository.ClientRepository;
 
 import java.util.Map;
+import java.util.UUID;
 
 //ClientManager jako Singleton
 public final class ClientManager {
@@ -36,12 +37,10 @@ public final class ClientManager {
         clientsRepository.remove(client);
     }
 
-    public void updateField(long id, Map<String, Object> fieldsToUpdate) {
+    public void updateField(UUID id, Map<String, Object> fieldsToUpdate) {
         clientsRepository.update(id, fieldsToUpdate);
     }
 
-    //METHODS-----------------------------------
-//TODO
     public String getAllClientsReport() {
         return this.clientsRepository.getClients().toString();
     }

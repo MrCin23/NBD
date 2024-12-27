@@ -1,5 +1,11 @@
 package org.example.model;
 
+import com.datastax.oss.driver.api.core.type.DataType;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public abstract class ClientType {
 
     private long id;
@@ -12,27 +18,13 @@ public abstract class ClientType {
         this.name = getClass().getSimpleName();
     }
 
-    public String toString() {
-        return "";
-    }
+    public abstract String toString();
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getMaxRentedMachines() {
-        return maxRentedMachines;
+    public static ClientType fromString(String type) {
+        return switch (type) {
+            case "Admin" -> new Admin();
+            case "Standard" -> new Standard();
+            default -> throw new IllegalArgumentException("Unknown type: " + type);
+        };
     }
 }
