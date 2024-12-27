@@ -8,69 +8,34 @@
     <artifactId>VMRental</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.datastax.oss</groupId>
+                <artifactId>java-driver-bom</artifactId>
+                <version>4.17.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.4.1.Final</version>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <!-- Hibernate Core (the GOAT ORM) -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-core</artifactId>-->
-<!--            <version>6.6.1.Final</version>-->
-<!--        </dependency>-->
-
-        <!-- Hibernate Validator -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>8.0.0.Final</version>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-query-builder</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>4.0.2</version>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-mapper-runtime</artifactId>
         </dependency>
-
-        <!-- Agroal connection pool -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-agroal</artifactId>-->
-<!--            <version>6.6.1.Final</version>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>io.agroal</groupId>
-            <artifactId>agroal-pool</artifactId>
-            <version>2.1</version>
-        </dependency>
-
-        <!-- Logging via Log4j -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.20.0</version>
-        </dependency>
-
-        <!-- JPA Metamodel Generator (for annotation processing) -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-jpamodelgen</artifactId>-->
-<!--            <version>6.6.1.Final</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.2</version>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-mapper-processor</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -78,30 +43,12 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+        </dependency>
     </dependencies>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <version>3.8.1</version>-->
-<!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--&lt;!&ndash;                    <annotationProcessorPaths>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <path>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <groupId>org.hibernate</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <artifactId>hibernate-jpamodelgen</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <version>6.0.0</version>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </path>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </annotationProcessorPaths>&ndash;&gt;-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
