@@ -1,19 +1,27 @@
 package org.example.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Rent  {
-    long rentID;
+    //to to jest chyba w ogole do przerobienia pod same uuid a nie cale obiekty
+    //bo mi sie nie chce pisac 20 codecow xd
+    UUID rentID;
     Client client;
     VMachine vMachine;
     LocalDateTime beginTime;
     LocalDateTime endTime;
     double rentCost;
-
-    public Rent() {
-
-    }
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
         if(!vMachine.isRented()) {
@@ -28,7 +36,7 @@ public class Rent  {
 
     //Methods
     public void beginRent(LocalDateTime beginTime) {
-        if(this.beginTime == null && !(getvMachine().isRented())){
+        if(this.beginTime == null && !(getVMachine().isRented())){
             if(beginTime == null)
             {
                 this.setBeginTime(LocalDateTime.now());
@@ -51,7 +59,7 @@ public class Rent  {
             }
             this.setEndTime(endTime);
             this.calculateRentalPrice();
-            this.getvMachine().setRented(false);
+            this.getVMachine().setRented(false);
         }
         else {
             throw new RuntimeException("endRent() called twice");
@@ -62,58 +70,5 @@ public class Rent  {
         Duration d = Duration.between(beginTime, endTime);
         int days = (int) d.toDays();
         this.rentCost = days * vMachine.getActualRentalPrice();
-    }
-
-    public long getRentID() {
-        return rentID;
-    }
-
-    //REPO TEMPLATE
-    public long getID() {
-        return rentID;
-    }
-
-    public void setRentID(long rentID) {
-        this.rentID = rentID;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public VMachine getvMachine() {
-        return vMachine;
-    }
-
-    public void setvMachine(VMachine vMachine) {
-        this.vMachine = vMachine;
-    }
-
-    public LocalDateTime getBeginTime() {
-        return beginTime;
-    }
-
-    public void setBeginTime(LocalDateTime beginTime) {
-        this.beginTime = beginTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTIme) {
-        this.endTime = endTIme;
-    }
-
-    public double getRentCost() {
-        return rentCost;
-    }
-
-    public void setRentCost(double rentCost) {
-        this.rentCost = rentCost;
     }
 }

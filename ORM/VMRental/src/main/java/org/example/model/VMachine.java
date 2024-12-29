@@ -1,61 +1,51 @@
 package org.example.model;
 
+import com.datastax.oss.driver.api.mapper.annotations.CqlName;
+import com.datastax.oss.driver.api.mapper.annotations.Entity;
+import com.datastax.oss.driver.api.mapper.annotations.NamingStrategy;
+import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
+import com.datastax.oss.driver.api.mapper.entity.naming.GetterStyle;
+import com.datastax.oss.driver.api.mapper.entity.naming.NamingConvention;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public abstract class VMachine{
+import java.util.UUID;
 
-    private long vMachineID;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(defaultKeyspace = "vmrental")
+@CqlName("vmachines")
+@PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
+@NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
+public class VMachine extends AbstractEntity {
+    @CqlName("CPUNumber")
     private int CPUNumber;
+    @CqlName("ramSize")
     private String ramSize;
+    @CqlName("rented")
     private boolean isRented;
+    @CqlName("actualRentalPrice")
     protected float actualRentalPrice;
-    int version;
+    private String discriminator;
 
-    public VMachine(int CPUNumber, String ramSize, boolean isRented) {
+    public VMachine(int CPUNumber, String ramSize, boolean isRented, String discriminator) {
+        super(UUID.randomUUID());
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;
         this.isRented = isRented;
+        this.discriminator = discriminator;
     }
 
-    public VMachine() {}
-
-    public long getvMachineID() {
-        return vMachineID;
-    }
-
-    public long getID() {
-        return vMachineID;
-    }
-
-    public void setvMachineID(long vMachineID) {
-        this.vMachineID = vMachineID;
-    }
-
-    public int getCPUNumber() {
-        return CPUNumber;
-    }
-
-    public void setCPUNumber(int CPUNumber) {
+    public VMachine(UUID uuid ,int CPUNumber, String ramSize, boolean isRented, String discriminator) {
+        super(uuid);
         this.CPUNumber = CPUNumber;
-    }
-
-    public String getRamSize() {
-        return ramSize;
-    }
-
-    public void setRamSize(String ramSize) {
         this.ramSize = ramSize;
-    }
-
-    public boolean isRented() {
-        return isRented;
-    }
-
-    public void setRented(boolean rented) {
-        isRented = rented;
-    }
-
-    public float getActualRentalPrice() {
-        return 0;
+        this.isRented = isRented;
+        this.discriminator = discriminator;
     }
 };
 
