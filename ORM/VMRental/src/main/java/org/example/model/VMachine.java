@@ -47,6 +47,17 @@ public class VMachine extends AbstractEntity {
         this.isRented = isRented;
         this.discriminator = discriminator;
     }
+
+    @Override
+    public String toString() {
+        return "VMachine{" +
+                "CPUNumber=" + CPUNumber +
+                ", ramSize='" + ramSize + '\'' +
+                ", isRented=" + isRented +
+                ", actualRentalPrice=" + actualRentalPrice +
+                ", discriminator='" + discriminator + '\'' +
+                '}';
+    }
 };
 
 

@@ -60,4 +60,11 @@ public class x86 extends VMachine {
 
         return basePrice * threadMultiplier * manufacturerMultiplier;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "x86{" +
+                "CPUManufacturer='" + CPUManufacturer + '\'' +
+                '}';
+    }
 }

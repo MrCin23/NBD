@@ -39,4 +39,9 @@ public class AppleArch extends VMachine{
 
         return 10 * basePrice * threadMultiplier;
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+"AppleArch{}";
+    }
 }
