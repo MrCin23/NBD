@@ -2,13 +2,12 @@ package org.example;
 
 import com.datastax.oss.driver.api.core.PagingIterable;
 import org.example.dao.ClientDao;
+import org.example.dao.RentDao;
 import org.example.dao.VMachineDao;
-import org.example.mapper.ClientMapper;
-import org.example.mapper.ClientMapperBuilder;
-import org.example.mapper.VMachineMapper;
-import org.example.mapper.VMachineMapperBuilder;
+import org.example.mapper.*;
 import org.example.model.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +17,17 @@ public class Main {
         db.initSession();
 //        db.createClientTable();
 //        db.createVMachineTable();
+        db.createRentTables();
+        x86 vm = new x86("AMD", 16, "32GB");
+        Client client = new Client("firstname", "lastname", "email", new Standard());
+
+        RentMapper mapper = new RentMapperBuilder(db.getSession()).build();
+        RentDao dao = mapper.rentDao();
+        dao.create(new Rent(client, vm, LocalDateTime.now()));
+
 //
 //        VMachineMapper vMachineMapper = new VMachineMapperBuilder(db.getSession()).build();
 //        VMachineDao vMachineDao = vMachineMapper.vMachineDao();
-//        x86 vm = new x86("AMD", 16, "32GB");
 ////        AppleArch vm = new AppleArch(16, "32GB");
 //        vMachineDao.create(vm);
 //        List<VMachine> vms = vMachineDao.getAll();
@@ -36,13 +42,13 @@ public class Main {
 //        ClientMapper clientMapper = new ClientMapperBuilder(db.getSession()).build();
 //        ClientDao clientDao = clientMapper.clientDao();
 //
-//        Client client = new Client("firstname", "lastname", "email", new Standard());
 //        clientDao.create(client);
 //        Client client = new Client(UUID.fromString("b323a642-cd09-44a7-9825-0dbe76fa8810"),"FIRSTNAME", "lastname", "email", new Standard());
 //        clientDao.update(client);
 //        clientDao.delete(client);
 //        db.dropClientTable();
 //        db.dropVMachineTable();
+//        db.dropRentTables();
         db.closeSession();
     }
 }

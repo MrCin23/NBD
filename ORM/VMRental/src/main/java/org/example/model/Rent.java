@@ -1,9 +1,21 @@
 package org.example.model;
 
+import com.datastax.oss.driver.api.mapper.annotations.*;
+import com.datastax.oss.driver.api.mapper.entity.naming.GetterStyle;
+import com.datastax.oss.driver.api.mapper.entity.naming.NamingConvention;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.DBConnection;
+import org.example.consts.DBConsts;
+import org.example.consts.RentConsts;
+import org.example.dao.ClientDao;
+import org.example.dao.VMachineDao;
+import org.example.mapper.ClientMapper;
+import org.example.mapper.ClientMapperBuilder;
+import org.example.mapper.VMachineMapper;
+import org.example.mapper.VMachineMapperBuilder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,25 +25,65 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rent  {
-    //to to jest chyba w ogole do przerobienia pod same uuid a nie cale obiekty
-    //bo mi sie nie chce pisac 20 codecow xd
+@Entity(defaultKeyspace = DBConsts.KEYSPACE)
+@CqlName("rent")
+@PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
+@NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
+public class Rent {
+    @PartitionKey
+    @CqlName(RentConsts.UUID_STRING)
     UUID rentID;
+    @ClusteringColumn(0)
+    @CqlName(RentConsts.CLIENT_UUID_STRING)
+    UUID clientID;
+    @Transient //?? idk if this is a good way to solve the problem
     Client client;
+    @ClusteringColumn(1)
+    @CqlName(RentConsts.VM_UUID_STRING)
+    UUID vmID;
+    @Transient //?? idk if this is a good way to solve the problem
     VMachine vMachine;
+    @CqlName(RentConsts.BEGIN_TIME_STRING)
     LocalDateTime beginTime;
+    @CqlName(RentConsts.END_TIME_STRING)
     LocalDateTime endTime;
+    @CqlName(RentConsts.RENT_COST_STRING)
     double rentCost;
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
         if(!vMachine.isRented()) {
-            this.client = client;
-            this.vMachine = vMachine;
+            setClient(client);
+            setvMachine(vMachine);
+            this.rentID = UUID.randomUUID();
             beginRent(beginTime);
         }
         else {
             throw new RuntimeException("This machine is already rented");
         }
+    }
+
+    public void setvMachine(VMachine vMachine) {
+        this.vMachine = vMachine;
+        this.vmID = vMachine.getUuid();
+    }
+
+    public void setvmID(UUID vmID) {
+        this.vmID = vmID;
+        VMachineMapper mapper = new VMachineMapperBuilder(DBConnection.getInstance().getSession()).build();
+        VMachineDao dao = mapper.vMachineDao();
+        this.vMachine = dao.findById(vmID);
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+        this.clientID = client.getClientID();
+    }
+
+    public void setClientID(UUID clientID) {
+        this.clientID = clientID;
+        ClientMapper mapper = new ClientMapperBuilder(DBConnection.getInstance().getSession()).build();
+        ClientDao dao = mapper.clientDao();
+        this.client = dao.findById(clientID);
     }
 
     //Methods

@@ -5,11 +5,14 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import lombok.Getter;
 import org.example.codec.ClientTypeCodec;
+import org.example.codec.LocalDateTimeCodec;
 import org.example.consts.ClientConsts;
 import org.example.consts.DBConsts;
+import org.example.consts.RentConsts;
 import org.example.consts.VMConsts;
 
 import java.net.InetSocketAddress;
@@ -34,6 +37,7 @@ public class DBConnection {
                     .addContactPoint(new InetSocketAddress(DBConsts.CASSANDRA1HOSTNAME, DBConsts.CASSANDRA1PORT))
                     .addContactPoint(new InetSocketAddress(DBConsts.CASSANDRA2HOSTNAME, DBConsts.CASSANDRA2PORT))
                     .addTypeCodecs(new ClientTypeCodec())
+                    .addTypeCodecs(new LocalDateTimeCodec())
                     .withLocalDatacenter(DBConsts.DATACENTER)
                     .withAuthCredentials(DBConsts.USERNAME, DBConsts.PASSWORD)
                     .withKeyspace(DBConsts.KEYSPACE)
@@ -71,8 +75,40 @@ public class DBConnection {
         session.execute(dropClients);
     }
 
-    public void createRentTable() {
-        throw new RuntimeException("Not implemented yet");
+    public void createRentTables() {
+        SimpleStatement createRentByClient = SchemaBuilder.createTable(RentConsts.TABLE_CLIENTS)
+                .ifNotExists()
+                .withPartitionKey(RentConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
+                .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.VM_UUID, DataTypes.UUID)
+                .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
+                .withClusteringOrder(RentConsts.CLIENT_UUID, ClusteringOrder.ASC)
+                .build();
+        SimpleStatement createRentByVMachine = SchemaBuilder.createTable(RentConsts.TABLE_VMACHINES)
+                .ifNotExists()
+                .withPartitionKey(RentConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(RentConsts.VM_UUID, DataTypes.UUID)
+                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
+                .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
+                .withClusteringOrder(RentConsts.VM_UUID, ClusteringOrder.ASC)
+                .build();
+        session.execute(createRentByClient);
+        session.execute(createRentByVMachine);
+    }
+
+    public void dropRentTables() {
+        SimpleStatement dropByClient = SchemaBuilder.dropTable(RentConsts.TABLE_CLIENTS)
+                .ifExists()
+                .build();
+        SimpleStatement dropByVMachine = SchemaBuilder.dropTable(RentConsts.TABLE_VMACHINES)
+                .ifExists()
+                .build();
+        session.execute(dropByClient);
+        session.execute(dropByVMachine);
     }
 
     public void createVMachineTable() {
