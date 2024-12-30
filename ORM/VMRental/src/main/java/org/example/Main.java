@@ -18,11 +18,11 @@ public class Main {
         db.initSession();
 //        db.createClientTable();
 //        db.createVMachineTable();
-
+//
 //        VMachineMapper vMachineMapper = new VMachineMapperBuilder(db.getSession()).build();
 //        VMachineDao vMachineDao = vMachineMapper.vMachineDao();
 //        x86 vm = new x86("AMD", 16, "32GB");
-//        AppleArch vm = new AppleArch(16, "32GB");
+////        AppleArch vm = new AppleArch(16, "32GB");
 //        vMachineDao.create(vm);
 //        List<VMachine> vms = vMachineDao.getAll();
 //        for (VMachine vm1 : vms) {

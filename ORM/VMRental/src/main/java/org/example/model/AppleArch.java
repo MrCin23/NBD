@@ -6,12 +6,12 @@ import com.datastax.oss.driver.api.mapper.annotations.NamingStrategy;
 import com.datastax.oss.driver.api.mapper.entity.naming.NamingConvention;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.example.consts.VMConsts;
 
 import java.util.UUID;
-
 @AllArgsConstructor
 @Entity(defaultKeyspace = "vmrental")
-@CqlName("vmachines")
+@CqlName(VMConsts.TABLE_STRING)
 @NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {

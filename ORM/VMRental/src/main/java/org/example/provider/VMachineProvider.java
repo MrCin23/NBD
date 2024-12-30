@@ -11,6 +11,7 @@ import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.select.Select;
 import com.datastax.oss.driver.api.querybuilder.update.Update;
+import org.example.consts.VMConsts;
 import org.example.model.AppleArch;
 import org.example.model.VMachine;
 import org.example.model.x86;
@@ -42,24 +43,24 @@ public class VMachineProvider {
                     AppleArch appleArch = (AppleArch) vmachine;
                     yield session.prepare(appleArchEntityHelper.insert().build())
                             .bind()
-                            .setUuid("uuid", appleArch.getUuid())
-                            .setInt("CPUNumber", appleArch.getCPUNumber())
-                            .setString("ramSize", appleArch.getRamSize())
-                            .setBoolean("rented", appleArch.isRented())
-                            .setString("discriminator", appleArch.getDiscriminator())
-                            .setFloat("actualRentalPrice", appleArch.getActualRentalPrice());
+                            .setUuid(VMConsts.UUID_STRING, appleArch.getUuid())
+                            .setInt(VMConsts.CPUNUMBER_STRING, appleArch.getCPUNumber())
+                            .setString(VMConsts.RAM_STRING, appleArch.getRamSize())
+                            .setBoolean(VMConsts.RENTED_STRING, appleArch.isRented())
+                            .setString(VMConsts.DISCRIMINATOR, appleArch.getDiscriminator())
+                            .setFloat(VMConsts.RENTALPRICE_STRING, appleArch.getActualRentalPrice());
                 }
                 case "x86" -> {
                     x86 x86 = (x86) vmachine;
                     yield session.prepare(x86EntityHelper.insert().build())
                             .bind()
-                            .setUuid("uuid", x86.getUuid())
-                            .setInt("CPUNumber", x86.getCPUNumber())
-                            .setString("ramSize", x86.getRamSize())
-                            .setBoolean("rented", x86.isRented())
-                            .setString("cpumanufacturer", x86.getCPUManufacturer())
-                            .setString("discriminator", x86.getDiscriminator())
-                            .setFloat("actualRentalPrice", x86.getActualRentalPrice());
+                            .setUuid(VMConsts.UUID_STRING, x86.getUuid())
+                            .setInt(VMConsts.CPUNUMBER_STRING, x86.getCPUNumber())
+                            .setString(VMConsts.RAM_STRING, x86.getRamSize())
+                            .setBoolean(VMConsts.RENTED_STRING, x86.isRented())
+                            .setString(VMConsts.MANUFACTURER_STRING, x86.getCPUManufacturer())
+                            .setString(VMConsts.DISCRIMINATOR, x86.getDiscriminator())
+                            .setFloat(VMConsts.RENTALPRICE_STRING, x86.getActualRentalPrice());
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + vmachine.getDiscriminator());
             }
@@ -68,28 +69,28 @@ public class VMachineProvider {
 
     public List<VMachine> getAll() {
         Select select = QueryBuilder
-                .selectFrom(CqlIdentifier.fromCql("vmachines"))
+                .selectFrom(VMConsts.TABLE_STRING)
                 .all();
         ResultSet resultSet = session.execute(select.build());
         List<VMachine> vMachines = new ArrayList<>();
         for (Row row : resultSet) {
-            switch (Objects.requireNonNull(row.getString("discriminator"))) {
+            switch (Objects.requireNonNull(row.getString(VMConsts.DISCRIMINATOR))) {
                 case "AppleArch" -> {
                     vMachines.add(new AppleArch(
-                            row.getUuid("uuid"),
-                            row.getInt("CPUNumber"),
-                            row.getString("ramSize")
+                            row.getUuid(VMConsts.UUID_STRING),
+                            row.getInt(VMConsts.CPUNUMBER_STRING),
+                            row.getString(VMConsts.RAM_STRING)
                     ));
                 }
                 case "x86" -> {
                     vMachines.add(new x86(
-                            row.getUuid("uuid"),
-                            row.getString("cpumanufacturer"),
-                            row.getInt("CPUNumber"),
-                            row.getString("ramSize")
+                            row.getUuid(VMConsts.UUID_STRING),
+                            row.getString(VMConsts.MANUFACTURER_STRING),
+                            row.getInt(VMConsts.CPUNUMBER_STRING),
+                            row.getString(VMConsts.RAM_STRING)
                     ));
                 }
-                default -> throw new IllegalStateException("Unexpected value: " + row.getString("discriminator"));
+                default -> throw new IllegalStateException("Unexpected value: " + row.getString(VMConsts.DISCRIMINATOR));
             }
         }
         return vMachines;
@@ -100,25 +101,25 @@ public class VMachineProvider {
             switch (vmachine.getDiscriminator()) {
                 case "AppleArch" -> {
                     AppleArch appleArch = (AppleArch) vmachine;
-                    yield session.prepare(QueryBuilder.update("vmachines")
-                            .setColumn("ramSize", literal(appleArch.getRamSize()))
-                            .setColumn("rented", literal(appleArch.isRented()))
-                            .setColumn("discriminator", literal(appleArch.getDiscriminator()))
-                            .setColumn("actualRentalPrice", literal(appleArch.getActualRentalPrice()))
-                            .where(Relation.column("uuid").isEqualTo(literal(vmachine.getUuid())))
-                            .where(Relation.column("CPUNumber").isEqualTo(literal(vmachine.getCPUNumber())))
+                    yield session.prepare(QueryBuilder.update(VMConsts.TABLE_STRING)
+                            .setColumn(VMConsts.RAM_STRING, literal(appleArch.getRamSize()))
+                            .setColumn(VMConsts.RENTED_STRING, literal(appleArch.isRented()))
+                            .setColumn(VMConsts.DISCRIMINATOR, literal(appleArch.getDiscriminator()))
+                            .setColumn(VMConsts.RENTALPRICE_STRING, literal(appleArch.getActualRentalPrice()))
+                            .where(Relation.column(VMConsts.UUID_STRING).isEqualTo(literal(vmachine.getUuid())))
+                            .where(Relation.column(VMConsts.CPUNUMBER_STRING).isEqualTo(literal(vmachine.getCPUNumber())))
                             .build()).bind();
                 }
                 case "x86" -> {
                     x86 x86 = (x86) vmachine;
-                    yield session.prepare(QueryBuilder.update("vmachines")
-                            .setColumn("ramSize", literal(x86.getRamSize()))
-                            .setColumn("rented", literal(x86.isRented()))
-                            .setColumn("cpumanufacturer", literal(x86.getCPUManufacturer()))
-                            .setColumn("discriminator", literal(x86.getDiscriminator()))
-                            .setColumn("actualRentalPrice", literal(x86.getActualRentalPrice()))
-                            .where(Relation.column("uuid").isEqualTo(literal(vmachine.getUuid())))
-                            .where(Relation.column("CPUNumber").isEqualTo(literal(vmachine.getCPUNumber())))
+                    yield session.prepare(QueryBuilder.update(VMConsts.TABLE_STRING)
+                            .setColumn(VMConsts.RAM_STRING, literal(x86.getRamSize()))
+                            .setColumn(VMConsts.RENTED_STRING, literal(x86.isRented()))
+                            .setColumn(VMConsts.MANUFACTURER_STRING, literal(x86.getCPUManufacturer()))
+                            .setColumn(VMConsts.DISCRIMINATOR, literal(x86.getDiscriminator()))
+                            .setColumn(VMConsts.RENTALPRICE_STRING, literal(x86.getActualRentalPrice()))
+                            .where(Relation.column(VMConsts.UUID_STRING).isEqualTo(literal(vmachine.getUuid())))
+                            .where(Relation.column(VMConsts.CPUNUMBER_STRING).isEqualTo(literal(vmachine.getCPUNumber())))
                             .build()).bind(); // XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD co
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + vmachine.getDiscriminator());
@@ -129,12 +130,12 @@ public class VMachineProvider {
 
     public VMachine findById(UUID uuid) {
         Select select = QueryBuilder
-                .selectFrom(CqlIdentifier.fromCql("vmachines"))
+                .selectFrom(VMConsts.TABLE)
                 .all()
-                .where(Relation.column("uuid").isEqualTo(literal(uuid)));
+                .where(Relation.column(VMConsts.UUID_STRING).isEqualTo(literal(uuid)));
         Row row = session.execute(select.build()).one();
         assert row != null;
-        String discriminator = row.getString("discriminator");
+        String discriminator = row.getString(VMConsts.DISCRIMINATOR);
         assert discriminator != null;
         return switch (discriminator) {
             case "AppleArch" -> getAppleArch(row);
@@ -145,18 +146,18 @@ public class VMachineProvider {
 
     private AppleArch getAppleArch(Row row) {
         return new AppleArch(
-                row.getUuid("uuid"),
-                row.getInt("CPUNumber"),
-                row.getString("ramSize")
+                row.getUuid(VMConsts.UUID_STRING),
+                row.getInt(VMConsts.CPUNUMBER_STRING),
+                row.getString(VMConsts.RAM_STRING)
         );
     }
 
     private x86 getx86(Row row){
         return new x86(
-                row.getUuid("uuid"),
-                row.getString("cpumanufacturer"),
-                row.getInt("CPUNumber"),
-                row.getString("ramSize")
+                row.getUuid(VMConsts.UUID_STRING),
+                row.getString(VMConsts.MANUFACTURER_STRING),
+                row.getInt(VMConsts.CPUNUMBER_STRING),
+                row.getString(VMConsts.RAM_STRING)
         );
     }
 }

@@ -4,6 +4,8 @@ import com.datastax.oss.driver.api.mapper.annotations.*;
 import com.datastax.oss.driver.api.mapper.entity.naming.GetterStyle;
 import com.datastax.oss.driver.api.mapper.entity.naming.NamingConvention;
 import lombok.*;
+import org.example.consts.ClientConsts;
+import org.example.consts.DBConsts;
 
 import java.util.UUID;
 
@@ -11,24 +13,25 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(defaultKeyspace = "vmrental")
-@CqlName("clients")
+@Entity(defaultKeyspace = DBConsts.KEYSPACE)
+@CqlName(ClientConsts.TABLE_STRING)
 @PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
 @NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class Client {
     @PartitionKey
-    @CqlName("clientID")
+    @CqlName(ClientConsts.UUID_STRING)
     private UUID clientID;
-    @CqlName("firstName")
+    @CqlName(ClientConsts.NAME_STRING)
     private String firstName;
+    @CqlName(ClientConsts.SURNAME_STRING)
     private String surname;
-    @CqlName("emailAddress")
+    @CqlName(ClientConsts.EMAIL_STRING)
     private String emailAddress;
     @Getter
 
     // obrzydliwy gownokod, naprawic!!!!!!!!!!!!!!!
     @ClusteringColumn
-    @CqlName("clientType")
+    @CqlName(ClientConsts.TYPE_STRING)
     private String clientTypeDb;
     @Getter
     @Transient

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.consts.DBConsts;
+import org.example.consts.VMConsts;
 
 import java.util.UUID;
 
@@ -18,12 +20,12 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(defaultKeyspace = "vmrental")
-@CqlName("vmachines")
+@Entity(defaultKeyspace = DBConsts.KEYSPACE)
+@CqlName(VMConsts.TABLE_STRING)
 @PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
 @NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class x86 extends VMachine {
-    @CqlName("cpumanufacturer")
+    @CqlName(VMConsts.MANUFACTURER_STRING)
     private String CPUManufacturer;
 
     public x86(String CPUManufacturer,int CPUNumber, String ramSize) {

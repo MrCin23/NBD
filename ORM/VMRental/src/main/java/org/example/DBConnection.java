@@ -6,10 +6,11 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.internal.mapper.processor.util.generation.PropertyType;
 import lombok.Getter;
 import org.example.codec.ClientTypeCodec;
-import org.example.model.ClientType;
+import org.example.consts.ClientConsts;
+import org.example.consts.DBConsts;
+import org.example.consts.VMConsts;
 
 import java.net.InetSocketAddress;
 
@@ -30,39 +31,41 @@ public class DBConnection {
     public void initSession() {
         if (session == null) {
             session = CqlSession.builder()
-                    .addContactPoint(new InetSocketAddress("cassandra1", 9042))
-                    .addContactPoint(new InetSocketAddress("cassandra2", 9043))
+                    .addContactPoint(new InetSocketAddress(DBConsts.CASSANDRA1HOSTNAME, DBConsts.CASSANDRA1PORT))
+                    .addContactPoint(new InetSocketAddress(DBConsts.CASSANDRA2HOSTNAME, DBConsts.CASSANDRA2PORT))
                     .addTypeCodecs(new ClientTypeCodec())
-                    .withLocalDatacenter("dc1")
-                    .withAuthCredentials("nbd", "nbd")
-                    .withKeyspace(CqlIdentifier.fromCql("vmrental"))
+                    .withLocalDatacenter(DBConsts.DATACENTER)
+                    .withAuthCredentials(DBConsts.USERNAME, DBConsts.PASSWORD)
+                    .withKeyspace(DBConsts.KEYSPACE)
                     .build();
         }
     }
 
     public void createKeyspace() {
         if (session != null) {
-            session.execute("CREATE KEYSPACE IF NOT EXISTS vmrental with replication = {'class': 'SimpleStrategy', 'replication_factor': 2}");
+            session.execute("CREATE KEYSPACE IF NOT EXISTS " +
+                    DBConsts.KEYSPACE +
+                    " with replication = {'class': 'SimpleStrategy', 'replication_factor': 2}");
         } else {
             throw new IllegalStateException("Session is not initialized. Call initSession() first");
         }
     }
 
     public void createClientTable() {
-        SimpleStatement createClients = SchemaBuilder.createTable(CqlIdentifier.fromCql("clients"))
+        SimpleStatement createClients = SchemaBuilder.createTable(ClientConsts.TABLE)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql("clientID"), DataTypes.UUID)
-                .withClusteringColumn(CqlIdentifier.fromCql("clientType"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("firstName"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("surname"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("emailAddress"), DataTypes.TEXT)
-                .withClusteringOrder(CqlIdentifier.fromCql("clientType"), ClusteringOrder.ASC)
+                .withPartitionKey(ClientConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(ClientConsts.TYPE, DataTypes.TEXT)
+                .withColumn(ClientConsts.NAME, DataTypes.TEXT)
+                .withColumn(ClientConsts.SURNAME, DataTypes.TEXT)
+                .withColumn(ClientConsts.EMAIL, DataTypes.TEXT)
+                .withClusteringOrder(ClientConsts.TYPE, ClusteringOrder.ASC)
                 .build();
         session.execute(createClients);
     }
 
     public void dropClientTable() {
-        SimpleStatement dropClients = SchemaBuilder.dropTable(CqlIdentifier.fromCql("clients"))
+        SimpleStatement dropClients = SchemaBuilder.dropTable(ClientConsts.TABLE)
                 .ifExists()
                 .build();
         session.execute(dropClients);
@@ -73,22 +76,22 @@ public class DBConnection {
     }
 
     public void createVMachineTable() {
-        SimpleStatement createVMachines = SchemaBuilder.createTable(CqlIdentifier.fromCql("vmachines"))
+        SimpleStatement createVMachines = SchemaBuilder.createTable(VMConsts.TABLE)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql("uuid"), DataTypes.UUID)
-                .withClusteringColumn(CqlIdentifier.fromCql("CPUNumber"), DataTypes.INT)
-                .withColumn(CqlIdentifier.fromCql("ramSize"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("rented"), DataTypes.BOOLEAN)
-                .withColumn(CqlIdentifier.fromCql("discriminator"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("cpumanufacturer"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("actualRentalPrice"), DataTypes.FLOAT)
-                .withClusteringOrder(CqlIdentifier.fromCql("CPUNumber"), ClusteringOrder.ASC)
+                .withPartitionKey(VMConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(VMConsts.CPUNUMBER, DataTypes.INT)
+                .withColumn(VMConsts.RAM, DataTypes.TEXT)
+                .withColumn(VMConsts.RENTED, DataTypes.BOOLEAN)
+                .withColumn(VMConsts.DISCRIMINATOR, DataTypes.TEXT)
+                .withColumn(VMConsts.MANUFACTURER, DataTypes.TEXT)
+                .withColumn(VMConsts.RENTALPRICE, DataTypes.FLOAT)
+                .withClusteringOrder(VMConsts.CPUNUMBER, ClusteringOrder.ASC)
                 .build();
         session.execute(createVMachines);
     }
 
     public void dropVMachineTable() {
-        SimpleStatement dropVMachines = SchemaBuilder.dropTable(CqlIdentifier.fromCql("vmachines"))
+        SimpleStatement dropVMachines = SchemaBuilder.dropTable(VMConsts.TABLE)
                 .ifExists()
                 .build();
         session.execute(dropVMachines);
@@ -96,7 +99,8 @@ public class DBConnection {
 
     public void dropKeyspace() {
         if (session != null) {
-            session.execute("DROP KEYSPACE IF EXISTS vmrental");
+            session.execute("DROP KEYSPACE IF EXISTS " +
+                    DBConsts.KEYSPACE);
         } else {
             throw new IllegalStateException("Session is not initialized. Call initSession() first");
         }

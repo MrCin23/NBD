@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.consts.DBConsts;
+import org.example.consts.VMConsts;
 
 import java.util.UUID;
 
@@ -17,19 +19,20 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(defaultKeyspace = "vmrental")
-@CqlName("vmachines")
+@Entity(defaultKeyspace = DBConsts.KEYSPACE)
+@CqlName(VMConsts.TABLE_STRING)
 @PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
 @NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class VMachine extends AbstractEntity {
-    @CqlName("CPUNumber")
+    @CqlName(VMConsts.CPUNUMBER_STRING)
     private int CPUNumber;
-    @CqlName("ramSize")
+    @CqlName(VMConsts.RAM_STRING)
     private String ramSize;
-    @CqlName("rented")
+    @CqlName(VMConsts.RENTED_STRING)
     private boolean isRented;
-    @CqlName("actualRentalPrice")
+    @CqlName(VMConsts.RENTALPRICE_STRING)
     protected float actualRentalPrice;
+    @CqlName(VMConsts.DISCRIMINATOR_STRING)
     private String discriminator;
 
     public VMachine(int CPUNumber, String ramSize, boolean isRented, String discriminator) {
