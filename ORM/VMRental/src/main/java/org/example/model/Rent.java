@@ -30,7 +30,7 @@ import java.util.UUID;
 @PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
 @NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class Rent {
-    @PartitionKey
+    @PartitionKey //to raczej na pewno zle jest xd
     @CqlName(RentConsts.UUID_STRING)
     UUID rentID;
     @ClusteringColumn(0)
@@ -60,6 +60,14 @@ public class Rent {
         else {
             throw new RuntimeException("This machine is already rented");
         }
+    }
+
+    public Rent(UUID uuid, UUID clientID, UUID vmID, LocalDateTime beginTime, LocalDateTime endTime, double rentCost) {
+        setClientID(clientID);
+        setvmID(vmID);
+        this.rentID = uuid;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
     }
 
     public void setvMachine(VMachine vMachine) {
@@ -122,5 +130,19 @@ public class Rent {
         Duration d = Duration.between(beginTime, endTime);
         int days = (int) d.toDays();
         this.rentCost = days * vMachine.getActualRentalPrice();
+    }
+
+    @Override
+    public String toString() {
+        return "Rent{" +
+                "rentID=" + rentID +
+                ", clientID=" + clientID +
+                ", client=" + client +
+                ", vmID=" + vmID +
+                ", vMachine=" + vMachine +
+                ", beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                ", rentCost=" + rentCost +
+                '}';
     }
 }

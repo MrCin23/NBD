@@ -4,8 +4,8 @@ import com.datastax.oss.driver.api.core.CqlIdentifier;
 
 public class ClientConsts {
     private ClientConsts() {}
-    public static final String TABLE_STRING = "client";
-    public static final CqlIdentifier TABLE = CqlIdentifier.fromCql("client");
+    public static final String TABLE_STRING = "clients";
+    public static final CqlIdentifier TABLE = CqlIdentifier.fromCql("clients");
     public static final String UUID_STRING = "clientID";
     public static final CqlIdentifier UUID = CqlIdentifier.fromCql("clientID");
     public static final String NAME_STRING = "firstName";
