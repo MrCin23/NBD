@@ -4,7 +4,9 @@ import com.datastax.oss.driver.api.core.CqlIdentifier;
 
 public class RentConsts {
     private RentConsts() {}
+    public static final String TABLE_CLIENTS_STRING = "rents_by_client";
     public static final CqlIdentifier TABLE_CLIENTS = CqlIdentifier.fromCql("rents_by_client");
+    public static final String TABLE_VMACHINES_STRING = "rents_by_vmachine";
     public static final CqlIdentifier TABLE_VMACHINES = CqlIdentifier.fromCql("rents_by_vmachine");
     public static final String UUID_STRING ="uuid";
     public static final CqlIdentifier UUID = CqlIdentifier.fromCql("uuid");

@@ -20,32 +20,37 @@ public class Main {
         db.createClientTable();
         db.createVMachineTable();
         db.createRentTables();
-//        x86 vm = new x86("AMD", 16, "32GB");
-//        Client client = new Client("firstname", "lastname", "email", new Standard());
-//        ClientMapper clientMapper = new ClientMapperBuilder(db.getSession()).build();
-//        ClientDao clientDao = clientMapper.clientDao();
-//        clientDao.create(client);
-//        VMachineMapper vMachineMapper = new VMachineMapperBuilder(db.getSession()).build();
-//        VMachineDao vMachineDao = vMachineMapper.vMachineDao();
-//        vMachineDao.create(vm);
+        x86 vm = new x86("AMD", 16, "32GB");
+        Client client = new Client("firstname", "lastname", "email", new Standard());
+        ClientMapper clientMapper = new ClientMapperBuilder(db.getSession()).build();
+        ClientDao clientDao = clientMapper.clientDao();
+        clientDao.create(client);
+        VMachineMapper vMachineMapper = new VMachineMapperBuilder(db.getSession()).build();
+        VMachineDao vMachineDao = vMachineMapper.vMachineDao();
+        vMachineDao.create(vm);
         RentMapper mapper = new RentMapperBuilder(db.getSession()).build();
         RentDao dao = mapper.rentDao();
-//        dao.create(new Rent(client, vm, LocalDateTime.now()));
-        List<Rent> rents = dao.findAllByTable(RentConsts.TABLE_CLIENTS);
-        System.out.println("all from clients");
-        for (Rent rent : rents) {
-            System.out.println(rent.toString());
-        }
-        System.out.println("all by client id");
-        List<Rent> rents1 = dao.findByClientId(UUID.fromString("a9d33322-eb89-49b8-bfa0-37bd12ac76d7"));
-        for (Rent rent : rents1) {
-            System.out.println(rent.toString());
-        }
-        System.out.println("all by machine");
-        List<Rent> rents2 = dao.findByVMachineId(UUID.fromString("4149ef82-c5c9-4049-9dd4-bec1d40fe3f3"));
-        for (Rent rent : rents2) {
-            System.out.println(rent.toString());
-        }
+        Rent rent = new Rent(client, vm, LocalDateTime.now());
+        dao.create(rent);
+        dao.endRent(rent);
+//        List<Rent> rents = dao.findAllByTable(RentConsts.TABLE_CLIENTS);
+//        System.out.println("all from clients");
+//        for (Rent rent : rents) {
+//            System.out.println(rent.toString());
+//        }
+//        System.out.println("all by client id");
+//        List<Rent> rents1 = dao.findByClientId(UUID.fromString("d7948784-8dfc-4346-ad9c-02facdd8c6bf"));
+//        for (Rent rent : rents1) {
+//            System.out.println(rent.toString());
+//        }
+//        System.out.println("all by machine");
+//        List<Rent> rents2 = dao.findByVMachineId(UUID.fromString("c167d507-409d-4d6e-868f-e17852c9dd55"));
+//        for (Rent rent : rents2) {
+//            System.out.println(rent.toString());
+//        }
+
+
+
 //
 ////        AppleArch vm = new AppleArch(16, "32GB");
 //        vMachineDao.create(vm);

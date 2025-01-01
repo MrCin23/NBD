@@ -7,19 +7,22 @@ import com.datastax.oss.driver.api.core.cql.BatchType;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.mapper.MapperContext;
+import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import com.datastax.oss.driver.api.mapper.entity.EntityHelper;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.insert.Insert;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.select.Select;
+import com.datastax.oss.driver.api.querybuilder.update.Update;
 import org.example.DBConnection;
 import org.example.codec.LocalDateTimeCodec;
 import org.example.consts.RentConsts;
+import org.example.consts.VMConsts;
 import org.example.dao.ClientDao;
 import org.example.dao.VMachineDao;
 import org.example.mapper.ClientMapper;
 import org.example.mapper.VMachineMapper;
-import org.example.model.Rent;
+import org.example.model.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,16 +36,12 @@ import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
 public class RentProvider {
     private final CqlSession session;
-
-    private final EntityHelper<Rent> helper;
-
-    public RentProvider(MapperContext ctx, EntityHelper<Rent> helper) {
+    private final LocalDateTimeCodec codec = new LocalDateTimeCodec();
+    public RentProvider(MapperContext ctx) {
         this.session = ctx.getSession();
-        this.helper = helper;
     }
 
     public void create(Rent rent) {
-        LocalDateTimeCodec codec = new LocalDateTimeCodec();
         Insert byClient = QueryBuilder.insertInto(RentConsts.TABLE_CLIENTS)
                 .value(RentConsts.CLIENT_UUID, literal(rent.getClient().getClientID()))
                 .value(RentConsts.UUID, literal(rent.getRentID()))
@@ -71,34 +70,85 @@ public class RentProvider {
     public List<Rent> findAllByTable(CqlIdentifier table) {
         Select select = QueryBuilder.selectFrom(table)
                 .all();
-        return getRents(select);
+        if(table.equals(RentConsts.TABLE_CLIENTS)) {
+            return getRentsByClient(select);
+        } else if (table.equals(RentConsts.TABLE_VMACHINES)) {
+            return getRentsByVMachine(select);
+        } else {
+            throw new IllegalStateException("Given table does not exist");
+        }
     }
 
     public List<Rent> findByClientId(UUID clientId) {
         Select select = QueryBuilder.selectFrom(RentConsts.TABLE_CLIENTS).all()
-                .where(Relation.column(RentConsts.CLIENT_UUID).isEqualTo(literal(clientId)));
-                //.where(); // giga refaktor xddd
-        //tutaj ma byc filtrowanie po kluczu partycjonujacym ktorym obecnie jest rentuuid xd
-        return getRents(select);
+                .whereColumn(RentConsts.CLIENT_UUID).isEqualTo(literal(clientId))
+                .whereColumn(RentConsts.BEGIN_TIME).isGreaterThan(literal(Instant.now()));
+        return getRentsByClient(select);
     }
     public List<Rent> findByVMachineId(UUID uuid) {
-        Select select = QueryBuilder.selectFrom(RentConsts.TABLE_VMACHINES)
-                .all().where(Relation.column(RentConsts.VM_UUID).isEqualTo(literal(uuid)));
-        return getRents(select);
+        Select select = QueryBuilder.selectFrom(RentConsts.TABLE_VMACHINES).all()
+                .where(Relation.column(RentConsts.VM_UUID).isEqualTo(literal(uuid)));
+        return getRentsByVMachine(select);
     }
 
-    private List<Rent> getRents(Select select) {
+    public void endRent(Rent rent) {
+        rent.endRent(LocalDateTime.now());
+        Update updateByClient = QueryBuilder.update(RentConsts.TABLE_CLIENTS)
+                .setColumn(RentConsts.END_TIME, literal(rent.getEndTime(), codec))
+                .setColumn(RentConsts.RENT_COST, literal(rent.getRentCost()))
+                .where(Relation.column(RentConsts.CLIENT_UUID).isEqualTo(literal(rent.getClient().getClientID())))
+                .where(Relation.column(RentConsts.BEGIN_TIME).isEqualTo(literal(rent.getBeginTime(), codec)));
+        Update updateByVM = QueryBuilder.update(RentConsts.TABLE_VMACHINES)
+                .setColumn(RentConsts.END_TIME, literal(rent.getEndTime(), codec))
+                .setColumn(RentConsts.RENT_COST, literal(rent.getRentCost()))
+                .where(Relation.column(RentConsts.VM_UUID).isEqualTo(literal(rent.getVMachine().getUuid())));
+//        Update vm = QueryBuilder.update(VMConsts.TABLE)
+//                .setColumn(VMConsts.RENTED, literal(rent.getVMachine().isRented()))
+//                .where(Relation.column(VMConsts.UUID).isEqualTo(literal(rent.getVMachine().getUuid())));
+        BatchStatement batch = BatchStatement.builder(BatchType.LOGGED)
+                .addStatement(updateByClient.build())
+                .addStatement(updateByVM.build())
+                .build();
+        System.out.println(batch);
+        session.execute(batch);
+    }
+
+    ////////////////////////////////////
+    // Helper functions
+    ////////////////////////////////////
+    private List<Rent> getRentsByClient(Select select) {
         ResultSet rs = session.execute(select.build());
         List<Rent> rents = new ArrayList<>();
         List<Row> rows = rs.all();
         for (Row row : rows) {
-            rents.add(getRent(row));
+            rents.add(getRentsByClient(row));
         }
         return rents;
     }
 
-    private Rent getRent(Row row) {
-        return new Rent(
+    private List<Rent> getRentsByVMachine(Select select) {
+        ResultSet rs = session.execute(select.build());
+        List<Rent> rents = new ArrayList<>();
+        List<Row> rows = rs.all();
+        for (Row row : rows) {
+            rents.add(getRentsByVMachine(row));
+        }
+        return rents;
+    }
+
+    private Rent getRentsByClient(Row row) {
+        return new RentsByClient(
+                row.getUuid(RentConsts.UUID),
+                row.getUuid(RentConsts.CLIENT_UUID),
+                row.getUuid(RentConsts.VM_UUID),
+                localDateTimeFromField(row, RentConsts.BEGIN_TIME),
+                localDateTimeFromField(row, RentConsts.END_TIME),
+                row.getDouble(RentConsts.RENT_COST)
+        );
+    }
+
+    private Rent getRentsByVMachine(Row row) {
+        return new RentsByVMachine(
                 row.getUuid(RentConsts.UUID),
                 row.getUuid(RentConsts.CLIENT_UUID),
                 row.getUuid(RentConsts.VM_UUID),

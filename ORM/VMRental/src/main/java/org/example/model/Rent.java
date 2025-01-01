@@ -25,29 +25,14 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(defaultKeyspace = DBConsts.KEYSPACE)
-@CqlName("rent")
-@PropertyStrategy(getterStyle = GetterStyle.JAVABEANS)
-@NamingStrategy(convention = NamingConvention.LOWER_CAMEL_CASE)
 public class Rent {
-    @PartitionKey //to raczej na pewno zle jest xd
-    @CqlName(RentConsts.UUID_STRING)
     UUID rentID;
-    @ClusteringColumn(0)
-    @CqlName(RentConsts.CLIENT_UUID_STRING)
     UUID clientID;
-    @Transient //?? idk if this is a good way to solve the problem
     Client client;
-    @ClusteringColumn(1)
-    @CqlName(RentConsts.VM_UUID_STRING)
     UUID vmID;
-    @Transient //?? idk if this is a good way to solve the problem
     VMachine vMachine;
-    @CqlName(RentConsts.BEGIN_TIME_STRING)
     LocalDateTime beginTime;
-    @CqlName(RentConsts.END_TIME_STRING)
     LocalDateTime endTime;
-    @CqlName(RentConsts.RENT_COST_STRING)
     double rentCost;
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
@@ -68,6 +53,7 @@ public class Rent {
         this.rentID = uuid;
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.rentCost = rentCost;
     }
 
     public void setvMachine(VMachine vMachine) {

@@ -76,23 +76,22 @@ public class DBConnection {
     public void createRentTables() {
         SimpleStatement createRentByClient = SchemaBuilder.createTable(RentConsts.TABLE_CLIENTS)
                 .ifNotExists()
-                .withPartitionKey(RentConsts.UUID, DataTypes.UUID)
-                .withClusteringColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
-                .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withPartitionKey(RentConsts.CLIENT_UUID, DataTypes.UUID)
+                .withClusteringColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.UUID, DataTypes.UUID)
                 .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.VM_UUID, DataTypes.UUID)
                 .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
-                .withClusteringOrder(RentConsts.CLIENT_UUID, ClusteringOrder.ASC)
+                .withClusteringOrder(RentConsts.BEGIN_TIME, ClusteringOrder.ASC)
                 .build();
         SimpleStatement createRentByVMachine = SchemaBuilder.createTable(RentConsts.TABLE_VMACHINES)
                 .ifNotExists()
-                .withPartitionKey(RentConsts.UUID, DataTypes.UUID)
-                .withClusteringColumn(RentConsts.VM_UUID, DataTypes.UUID)
-                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
+                .withPartitionKey(RentConsts.VM_UUID, DataTypes.UUID)
+                .withColumn(RentConsts.UUID, DataTypes.UUID)
                 .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
                 .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
-                .withClusteringOrder(RentConsts.VM_UUID, ClusteringOrder.ASC)
                 .build();
         session.execute(createRentByClient);
         session.execute(createRentByVMachine);
