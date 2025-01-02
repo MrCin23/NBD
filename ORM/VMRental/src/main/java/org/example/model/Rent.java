@@ -19,6 +19,7 @@ import org.example.mapper.VMachineMapperBuilder;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
@@ -120,6 +121,31 @@ public class Rent {
 
     @Override
     public String toString() {
+        //todo zrobić to ładniej
+        if(endTime != null && beginTime != null){
+            return "Rent{" +
+                    "rentID=" + rentID +
+                    ", clientID=" + clientID +
+                    ", client=" + client +
+                    ", vmID=" + vmID +
+                    ", vMachine=" + vMachine +
+                    ", beginTime=" + beginTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + //Baza zapisuje i tak tylko do milisekund
+                    ", endTime=" + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) +
+                    ", rentCost=" + rentCost +
+                    '}';
+        }
+        else if(endTime == null && beginTime != null) {
+            return "Rent{" +
+                    "rentID=" + rentID +
+                    ", clientID=" + clientID +
+                    ", client=" + client +
+                    ", vmID=" + vmID +
+                    ", vMachine=" + vMachine +
+                    ", beginTime=" + beginTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + //Baza zapisuje i tak tylko do milisekund
+                    ", endTime=" + endTime +
+                    ", rentCost=" + rentCost +
+                    '}';
+        }
         return "Rent{" +
                 "rentID=" + rentID +
                 ", clientID=" + clientID +
