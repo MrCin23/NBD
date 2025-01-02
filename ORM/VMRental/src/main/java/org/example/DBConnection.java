@@ -73,25 +73,50 @@ public class DBConnection {
         session.execute(dropClients);
     }
 
+    /**
+     * Góra sprzed spełniania reguł biznesowych
+     */
     public void createRentTables() {
+//        SimpleStatement createRentByClient = SchemaBuilder.createTable(RentConsts.TABLE_CLIENTS)
+//                .ifNotExists()
+//                .withPartitionKey(RentConsts.CLIENT_UUID, DataTypes.UUID)
+//                .withClusteringColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+//                .withColumn(RentConsts.UUID, DataTypes.UUID)
+//                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
+//                .withColumn(RentConsts.VM_UUID, DataTypes.UUID)
+//                .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
+//                .withClusteringOrder(RentConsts.BEGIN_TIME, ClusteringOrder.ASC)
+//                .build();
+//        SimpleStatement createRentByVMachine = SchemaBuilder.createTable(RentConsts.TABLE_VMACHINES)
+//                .ifNotExists()
+//                .withPartitionKey(RentConsts.VM_UUID, DataTypes.UUID)
+//                .withColumn(RentConsts.UUID, DataTypes.UUID)
+//                .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
+//                .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
+//                .withColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
+//                .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
+//                .build();
+//        session.execute(createRentByClient);
+//        session.execute(createRentByVMachine);
         SimpleStatement createRentByClient = SchemaBuilder.createTable(RentConsts.TABLE_CLIENTS)
                 .ifNotExists()
                 .withPartitionKey(RentConsts.CLIENT_UUID, DataTypes.UUID)
-                .withClusteringColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
-                .withColumn(RentConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(RentConsts.UUID, DataTypes.UUID) //.withColumn(RentConsts.UUID, DataTypes.UUID)
+                .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.VM_UUID, DataTypes.UUID)
                 .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
-                .withClusteringOrder(RentConsts.BEGIN_TIME, ClusteringOrder.ASC)
+                .withClusteringOrder(RentConsts.UUID, ClusteringOrder.ASC) //test
                 .build();
         SimpleStatement createRentByVMachine = SchemaBuilder.createTable(RentConsts.TABLE_VMACHINES)
                 .ifNotExists()
                 .withPartitionKey(RentConsts.VM_UUID, DataTypes.UUID)
-                .withColumn(RentConsts.UUID, DataTypes.UUID)
+                .withClusteringColumn(RentConsts.UUID, DataTypes.UUID) //.withColumn(RentConsts.UUID, DataTypes.UUID)
                 .withColumn(RentConsts.BEGIN_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.END_TIME, DataTypes.TIMESTAMP)
                 .withColumn(RentConsts.CLIENT_UUID, DataTypes.UUID)
                 .withColumn(RentConsts.RENT_COST, DataTypes.DOUBLE)
+                .withClusteringOrder(RentConsts.UUID, ClusteringOrder.ASC) //test
                 .build();
         session.execute(createRentByClient);
         session.execute(createRentByVMachine);
@@ -101,10 +126,10 @@ public class DBConnection {
         SimpleStatement dropByClient = SchemaBuilder.dropTable(RentConsts.TABLE_CLIENTS)
                 .ifExists()
                 .build();
+        session.execute(dropByClient);
         SimpleStatement dropByVMachine = SchemaBuilder.dropTable(RentConsts.TABLE_VMACHINES)
                 .ifExists()
                 .build();
-        session.execute(dropByClient);
         session.execute(dropByVMachine);
     }
 

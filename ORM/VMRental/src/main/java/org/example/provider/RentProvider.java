@@ -81,8 +81,8 @@ public class RentProvider {
 
     public List<Rent> findByClientId(UUID clientId) {
         Select select = QueryBuilder.selectFrom(RentConsts.TABLE_CLIENTS).all()
-                .whereColumn(RentConsts.CLIENT_UUID).isEqualTo(literal(clientId))
-                .whereColumn(RentConsts.BEGIN_TIME).isGreaterThan(literal(Instant.now()));
+                .whereColumn(RentConsts.CLIENT_UUID).isEqualTo(literal(clientId));
+                //.whereColumn(RentConsts.BEGIN_TIME).isGreaterThan(literal(Instant.now()));
         return getRentsByClient(select);
     }
     public List<Rent> findByVMachineId(UUID uuid) {
@@ -97,11 +97,13 @@ public class RentProvider {
                 .setColumn(RentConsts.END_TIME, literal(rent.getEndTime(), codec))
                 .setColumn(RentConsts.RENT_COST, literal(rent.getRentCost()))
                 .where(Relation.column(RentConsts.CLIENT_UUID).isEqualTo(literal(rent.getClient().getClientID())))
-                .where(Relation.column(RentConsts.BEGIN_TIME).isEqualTo(literal(rent.getBeginTime(), codec)));
+//                .where(Relation.column(RentConsts.BEGIN_TIME).isEqualTo(literal(rent.getBeginTime(), codec)));
+                .where(Relation.column(RentConsts.UUID).isEqualTo(literal(rent.getRentID())));
         Update updateByVM = QueryBuilder.update(RentConsts.TABLE_VMACHINES)
                 .setColumn(RentConsts.END_TIME, literal(rent.getEndTime(), codec))
                 .setColumn(RentConsts.RENT_COST, literal(rent.getRentCost()))
-                .where(Relation.column(RentConsts.VM_UUID).isEqualTo(literal(rent.getVMachine().getUuid())));
+                .where(Relation.column(RentConsts.VM_UUID).isEqualTo(literal(rent.getVMachine().getUuid())))
+                .where(Relation.column(RentConsts.UUID).isEqualTo(literal(rent.getRentID())));
 //        Update vm = QueryBuilder.update(VMConsts.TABLE)
 //                .setColumn(VMConsts.RENTED, literal(rent.getVMachine().isRented()))
 //                .where(Relation.column(VMConsts.UUID).isEqualTo(literal(rent.getVMachine().getUuid())));
