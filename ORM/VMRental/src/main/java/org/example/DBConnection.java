@@ -38,7 +38,7 @@ public class DBConnection {
                     .addTypeCodecs(new LocalDateTimeCodec())
                     .withLocalDatacenter(DBConsts.DATACENTER)
                     .withAuthCredentials(DBConsts.USERNAME, DBConsts.PASSWORD)
-                    .withKeyspace(DBConsts.KEYSPACE)
+                    .withKeyspace(DBConsts.KEYSPACE) //todo to za pierwszym razem na nowej maszynie komentować
                     .build();
         }
     }

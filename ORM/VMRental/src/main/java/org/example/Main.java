@@ -17,6 +17,7 @@ public class Main {
     public static void main(String[] args) {
         DBConnection db = DBConnection.getInstance();
         db.initSession();
+//        db.createKeyspace(); //todo to za pierwszym razem na nowej maszynie odkomentować
         db.createClientTable();
         db.createVMachineTable();
         db.createRentTables();
