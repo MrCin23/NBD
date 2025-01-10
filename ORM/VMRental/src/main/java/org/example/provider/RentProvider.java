@@ -111,7 +111,6 @@ public class RentProvider {
                 .addStatement(updateByClient.build())
                 .addStatement(updateByVM.build())
                 .build();
-        System.out.println(batch);
         session.execute(batch);
     }
 

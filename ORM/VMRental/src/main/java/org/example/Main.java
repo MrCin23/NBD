@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         DBConnection db = DBConnection.getInstance();
-//        db.initSession();
+        db.initSession();
 //        db.createKeyspace(); //todo to za pierwszym razem na nowej maszynie odkomentować
 //        db.dropRentTables();
 //        db.createClientTable();
@@ -75,20 +75,20 @@ public class Main {
 ////        db.dropVMachineTable();
 ////        db.dropRentTables();
 //        db.closeSession();
-        ClientManager clientManager = ClientManager.getInstance();
-        Client client = new Client("Adam", "Kowalski", "a.kowal@polska.gurom", new Admin());
-        clientManager.registerExistingClient(client);
-        clientManager.update(client.getClientID(), "surname", "Nowak");
-        VMachineManager vMachineManager = VMachineManager.getInstance();
-        VMachine vMachine = new x86("Intel", 8, "16GiB");
-        vMachineManager.registerExistingVMachine(vMachine);
-        vMachineManager.update(vMachine.getUuid(), "ramSize", "32GiB");
-        RentManager rentManager = RentManager.getInstance();
-        Rent rent = new Rent(client, vMachine, LocalDateTime.now());
-        rentManager.registerExistingRent(rent);
-        rentManager.endRent(rent.getClientID(), rent.getVmID(), LocalDateTime.of(2026, 1, 1, 21, 37, 59));
-        rent = new Rent(client, vMachine, LocalDateTime.now());
-        rentManager.registerExistingRent(rent);
+//        ClientManager clientManager = ClientManager.getInstance();
+//        Client client = new Client("Adam", "Kowalski", "a.kowal@polska.gurom", new Admin());
+//        clientManager.registerExistingClient(client);
+//        clientManager.update(client.getClientID(), "surname", "Nowak");
+//        VMachineManager vMachineManager = VMachineManager.getInstance();
+//        VMachine vMachine = new x86("Intel", 8, "16GiB");
+//        vMachineManager.registerExistingVMachine(vMachine);
+//        vMachineManager.update(vMachine.getUuid(), "ramSize", "32GiB");
+//        RentManager rentManager = RentManager.getInstance();
+//        Rent rent = new Rent(client, vMachine, LocalDateTime.now());
+//        rentManager.registerExistingRent(rent);
+//        rentManager.endRent(rent.getClientID(), rent.getVmID(), LocalDateTime.of(2026, 1, 1, 21, 37, 59));
+//        rent = new Rent(client, vMachine, LocalDateTime.now());
+//        rentManager.registerExistingRent(rent);
 //        DBConnection db = DBConnection.getInstance();
         db.closeSession(); //todo zastanowić się czy nie zrobić autocloseable
     }
