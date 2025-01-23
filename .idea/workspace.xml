@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9d5e047-e74b-433a-a7a4-fe5deb43a675" name="Changes" comment="idkk">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AbstractEntityMgd.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AbstractMongoRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Admin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AppleArch.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Client.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientTypeCodec.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/CodecProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/MongoUUID.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/MongoUUIDCodec.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Rent.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/RentManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/RentRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Standard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineCodec.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/x86.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/test/java/ManagerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/src/test/java/ManagerTests.java" afterDir="false" />
-    </list>
+    <list default="true" id="c9d5e047-e74b-433a-a7a4-fe5deb43a675" name="Changes" comment="idkk" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,17 +39,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.VMRental: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;kafka&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/piotr/Desktop/NBD/ORM/VMRental&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.VMRental: Compose Deployment.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "<unknown>",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/piotr/OneDrive/Pulpit/NBD/ORM/VMRental",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="VMRental: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
@@ -97,6 +72,14 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.117" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.117" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -109,6 +92,8 @@
       <workItem from="1737640068806" duration="73000" />
       <workItem from="1737640144215" duration="77000" />
       <workItem from="1737640239467" duration="69000" />
+      <workItem from="1737640396364" duration="7000" />
+      <workItem from="1737659455827" duration="61000" />
     </task>
     <servers />
   </component>

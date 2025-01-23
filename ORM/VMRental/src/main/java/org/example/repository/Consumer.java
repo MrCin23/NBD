@@ -17,6 +17,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
+import org.example.manager.RentManager;
 import org.example.model.Rent;
 //import org.example.generated.Rent;
 
@@ -31,13 +32,14 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Consumer {
     private static final List<KafkaConsumer<UUID, String>> consumerGroup = new ArrayList<>();
 
     private static String topics;
 
-    private static final RentRepository rentRepository = new RentRepository();
+    private static final RentManager rm = RentManager.getInstance();
 
     public static void initConsumerGroup() {
         Properties consumerConfig = new Properties();
@@ -79,8 +81,8 @@ public class Consumer {
                     objectMapper.registerModule(new JavaTimeModule());
                     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
                     Rent rent = objectMapper.readValue(record.value(), Rent.class);
-                    rentRepository.add(rent);
                     System.out.println(result);
+                    rm.registerExistingRent(rent);
                     consumer.commitSync();
                 }
             }
@@ -95,15 +97,15 @@ public class Consumer {
     public static void consumeTopicsByGroup(String name) throws InterruptedException {
         topics = name;
         initConsumerGroup();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        for (KafkaConsumer<UUID, String> consumer : consumerGroup) {
-            executorService.execute(() -> consume(consumer));
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+            for (KafkaConsumer<UUID, String> consumer : consumerGroup) {
+                executorService.execute(() -> consume(consumer));
+            }
+            Thread.sleep(10000);
+            for (KafkaConsumer<UUID, String> consumer : consumerGroup) {
+                consumer.wakeup();
+            }
         }
-        Thread.sleep(10000);
-        for (KafkaConsumer<UUID, String> consumer : consumerGroup) {
-            consumer.wakeup();
-        }
-        executorService.shutdown();
     }
 
     public static boolean doesTopicExist(String topicName) {

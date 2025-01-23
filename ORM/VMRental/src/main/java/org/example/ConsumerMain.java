@@ -18,7 +18,7 @@ public class ConsumerMain {
             System.out.println("Oczekiwanie na powstanie tematu");
             Thread.sleep(1000);
         } while(!Consumer.doesTopicExist("rents"));
-        System.out.println("Upa");
+        System.out.println("apud");
         Consumer.consumeTopicsByGroup("rents");
 
 

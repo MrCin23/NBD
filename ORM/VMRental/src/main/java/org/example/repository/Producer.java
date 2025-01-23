@@ -58,6 +58,9 @@ public class Producer {
     public static void sendMessage (String topic, Rent rent) throws InterruptedException {
         try {
             initProducer();
+            if(!doesTopicExist(topic)){
+                createTopic(topic);
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
