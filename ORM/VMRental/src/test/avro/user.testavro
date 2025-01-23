@@ -1,0 +1,77 @@
+{
+  "type": "record",
+  "name": "Client",
+  "namespace": "org.example.generated",
+  "fields": [
+    {
+      "name": "entityId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "surname",
+      "type": "string"
+    },
+    {
+      "name": "emailAddress",
+      "type": "string"
+    },
+    {
+      "name": "clientType",
+      "type": [
+        {
+          "type": "record",
+          "name": "Standard",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "maxRentedMachines",
+              "type": "int"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "type": "record",
+          "name": "Admin",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "maxRentedMachines",
+              "type": "int"
+            },
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "currentRents",
+      "type": "int"
+    }
+  ]
+}

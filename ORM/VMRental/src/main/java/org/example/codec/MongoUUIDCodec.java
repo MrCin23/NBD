@@ -1,4 +1,4 @@
-package org.example;
+package org.example.codec;
 
 import java.util.UUID;
 import org.bson.BsonReader;
@@ -7,6 +7,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.example.model.MongoUUID;
 
 
 public class MongoUUIDCodec implements Codec<MongoUUID> {

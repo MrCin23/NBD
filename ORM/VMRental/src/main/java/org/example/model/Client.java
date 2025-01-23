@@ -1,8 +1,11 @@
-package org.example;
+package org.example.model;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.avro.reflect.AvroSchema;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 

@@ -1,4 +1,7 @@
-import org.example.*;
+import org.example.manager.ClientManager;
+import org.example.manager.RentManager;
+import org.example.manager.VMachineManager;
+import org.example.model.*;
 import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;

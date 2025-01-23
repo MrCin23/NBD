@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9d5e047-e74b-433a-a7a4-fe5deb43a675" name="Changes" comment="">
+    <list default="true" id="c9d5e047-e74b-433a-a7a4-fe5deb43a675" name="Changes" comment="idkk">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AbstractEntityMgd.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AbstractMongoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Admin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/AppleArch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Client.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/ClientTypeCodec.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/CodecProvider.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/MongoUUID.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/MongoUUIDCodec.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Rent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/RentManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/RentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/Standard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachine.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineCodec.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/VMachineRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/main/java/org/example/x86.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ORM/VMRental/src/test/java/ManagerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/ORM/VMRental/src/test/java/ManagerTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,31 +34,48 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="cassandra" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Piotrolinek&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MrCin23/NBD.git&quot;,
+    &quot;accountId&quot;: &quot;a69d26b5-dc37-49b1-ac28-b04cd56d8b95&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2nVnyk2yYQh12uFZFsyW1ZqAuKX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.VMRental: Compose Deployment.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/piotr/Desktop/NBD/ORM/VMRental",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.VMRental: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;kafka&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/piotr/Desktop/NBD/ORM/VMRental&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="VMRental: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
@@ -45,7 +86,9 @@
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml" />
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -53,14 +96,6 @@
         <item itemvalue="Docker.VMRental: Compose Deployment" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -71,10 +106,17 @@
       <option name="presentableId" value="Default" />
       <updated>1729067367458</updated>
       <workItem from="1729067368545" duration="247000" />
+      <workItem from="1737640068806" duration="73000" />
+      <workItem from="1737640144215" duration="77000" />
+      <workItem from="1737640239467" duration="69000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="idkk" />
+    <option name="LAST_COMMIT_MESSAGE" value="idkk" />
   </component>
 </project>
