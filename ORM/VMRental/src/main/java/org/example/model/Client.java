@@ -4,6 +4,7 @@ package org.example.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.avro.reflect.AvroSchema;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Client extends AbstractEntityMgd {
     @BsonProperty("firstName")
     private String firstName;

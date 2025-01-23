@@ -1,0 +1,182 @@
+{
+  "type": "record",
+  "name": "Rent",
+  "namespace": "org.example.generated",
+  "fields": [
+    {
+      "name": "entityId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "client",
+      "type": {
+        "type": "record",
+        "name": "Client",
+        "fields": [
+          {
+            "name": "entityId",
+            "type": {
+              "type": "string",
+              "logicalType": "uuid"
+            }
+          },
+          {
+            "name": "firstName",
+            "type": "string"
+          },
+          {
+            "name": "surname",
+            "type": "string"
+          },
+          {
+            "name": "emailAddress",
+            "type": "string"
+          },
+          {
+            "name": "clientType",
+            "type": [
+              {
+                "type": "record",
+                "name": "Standard",
+                "fields": [
+                  {
+                    "name": "entityId",
+                    "type": {
+                      "type": "string",
+                      "logicalType": "uuid"
+                    }
+                  },
+                  {
+                    "name": "maxRentedMachines",
+                    "type": "int"
+                  },
+                  {
+                    "name": "name",
+                    "type": "string"
+                  }
+                ]
+              },
+              {
+                "type": "record",
+                "name": "Admin",
+                "fields": [
+                  {
+                    "name": "entityId",
+                    "type": {
+                      "type": "string",
+                      "logicalType": "uuid"
+                    }
+                  },
+                  {
+                    "name": "maxRentedMachines",
+                    "type": "int"
+                  },
+                  {
+                    "name": "name",
+                    "type": "string"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "currentRents",
+            "type": "int"
+          }
+        ]
+      }
+    },
+    {
+      "name": "vMachine",
+      "type": [
+        {
+          "type": "record",
+          "name": "AppleArch",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "CPUNumber",
+              "type": "int"
+            },
+            {
+              "name": "ramSize",
+              "type": "string"
+            },
+            {
+              "name": "isRented",
+              "type": "int"
+            },
+            {
+              "name": "actualRentalPrice",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "type": "record",
+          "name": "x86",
+          "fields": [
+            {
+              "name": "entityId",
+              "type": {
+                "type": "string",
+                "logicalType": "uuid"
+              }
+            },
+            {
+              "name": "CPUNumber",
+              "type": "int"
+            },
+            {
+              "name": "ramSize",
+              "type": "string"
+            },
+            {
+              "name": "isRented",
+              "type": "int"
+            },
+            {
+              "name": "actualRentalPrice",
+              "type": "float"
+            },
+            {
+              "name": "CPUManufacturer",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "beginTime",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-micros"
+      }
+    },
+    {
+      "name": "endTime",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "logicalType": "timestamp-micros"
+        }
+      ],
+      "default": null
+    },
+    {
+      "name": "rentCost",
+      "type": "double"
+    }
+  ]
+}

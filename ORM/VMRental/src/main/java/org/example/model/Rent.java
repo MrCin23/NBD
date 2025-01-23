@@ -27,6 +27,8 @@ public class Rent extends AbstractEntityMgd {
     @Getter
     @BsonProperty("rentCost")
     private double rentCost;
+    @BsonProperty("rentalName")
+    private String rentalName;
 
     public Rent() {
         super(new MongoUUID(UUID.randomUUID()));
@@ -38,6 +40,7 @@ public class Rent extends AbstractEntityMgd {
             this.client = client;
             this.vMachine = vMachine;
             beginRent(beginTime);
+            this.rentalName = "VMRental";
         }
         else {
             throw new RuntimeException("This machine is already rented");
@@ -46,13 +49,14 @@ public class Rent extends AbstractEntityMgd {
 
     @BsonCreator
     public Rent(@BsonProperty("_id") MongoUUID uuid,@BsonProperty("client") Client client, @BsonProperty("vMachine") VMachine vMachine,
-                @BsonProperty("beginTime") LocalDateTime beginTime, @BsonProperty("endTime") LocalDateTime endTime, @BsonProperty("rentCost") double rentCost) {
+                @BsonProperty("beginTime") LocalDateTime beginTime, @BsonProperty("endTime") LocalDateTime endTime, @BsonProperty("rentCost") double rentCost, @BsonProperty("rentalName") String rentalName) {
         super(uuid);
         this.client = client;
         this.vMachine = vMachine;
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.rentCost = rentCost;
+        this.rentalName = rentalName;
     }
 
     //Methods
@@ -98,6 +102,7 @@ public class Rent extends AbstractEntityMgd {
                 ", beginTime=" + beginTime +
                 ", endTime=" + endTime +
                 ", rentCost=" + rentCost +
+                ", rentalName='" + rentalName  +
                 '}';
     }
 

@@ -1,16 +1,24 @@
 package org.example.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaFuture;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.common.serialization.UUIDSerializer;
+//import org.example.generated.Client;
+import org.example.model.Rent;
 
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 public class Producer {
@@ -27,7 +35,7 @@ public class Producer {
         producer = new KafkaProducer<>(producerConfig);
     }
 
-    public void createTopic (String topic) throws InterruptedException {
+    public static void createTopic (String topic) throws InterruptedException {
         Properties properties = new Properties();
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka1:9292, kafka1:9392");
         int partitionsNumber = 3;
@@ -44,6 +52,52 @@ public class Producer {
         } catch (ExecutionException ee) {
             System.out.println(ee.getCause());
             //assertThat(ee.getCause(), is( instanceof (TopicExistsException.class))); ??????
+        }
+    }
+
+    public static void sendMessage (String topic, Rent rent) throws InterruptedException {
+        try {
+            initProducer();
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String rentString = objectMapper.writeValueAsString(rent);
+            ProducerRecord<UUID, String> record = new ProducerRecord<>(topic, rent.getEntityId().getUuid(), rentString);
+            Future<RecordMetadata> sent = producer.send(record);
+            RecordMetadata recordMetadata = sent.get();
+            System.out.println(recordMetadata);
+        } catch (ExecutionException | InterruptedException e) {
+            System.out.println(e.getCause());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void deleteTopic(String topicName) {
+        Properties config = new Properties();
+        config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka2:9292, kafka3:9392");
+
+        try (AdminClient adminClient = AdminClient.create(config)) {
+            adminClient.deleteTopics(Collections.singletonList(topicName)).all().get();
+            System.out.println("Temat '" + topicName + "' został usunięty.");
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("Nie udało się usunąć tematu: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean doesTopicExist(String topicName) {
+        Properties config = new Properties();
+        config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192,kafka2:9292,kafka3:9392");
+
+        try (AdminClient adminClient = AdminClient.create(config)) {
+            Set<String> topicNames = adminClient.listTopics().names().get();
+            return topicNames.contains(topicName);
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("Nie udało się sprawdzić istnienia tematu: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 }

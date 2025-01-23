@@ -84,6 +84,11 @@ public class RentRepository extends AbstractMongoRepository {
             Bson updateClientFilter = Updates.inc("currentRents", 1);
             clients.updateOne(session, clientFilter, updateClientFilter);
             Bson currentRentsFilter = Filters.lt("currentRents", rent.getClient().getClientType().getMaxRentedMachines());
+            client = clients.find(clientFilter).first();
+            if(client == null){
+//                throw new Exception("");
+                clients.insertOne(rent.getClient());
+            }
             client = clients.find(Filters.and(clientFilter, currentRentsFilter)).first();
             if(client == null){
                 throw new Exception("");

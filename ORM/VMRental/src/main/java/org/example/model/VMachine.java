@@ -1,6 +1,8 @@
 package org.example.model;
 
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -10,6 +12,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_clazz")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AppleArch.class, name = "AppleArch"),
+        @JsonSubTypes.Type(value = x86.class, name = "x86")
+})
 public abstract class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")

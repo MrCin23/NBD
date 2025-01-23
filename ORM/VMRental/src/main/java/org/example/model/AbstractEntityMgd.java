@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonId;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+
 public abstract class AbstractEntityMgd implements Serializable {
     @BsonProperty("_id")
     @BsonId
@@ -18,5 +20,9 @@ public abstract class AbstractEntityMgd implements Serializable {
     @BsonCreator
     public AbstractEntityMgd(@BsonProperty MongoUUID entityId) {
         this.entityId = entityId;
+    }
+
+    public AbstractEntityMgd() {
+        this.entityId = new MongoUUID();
     }
 }
