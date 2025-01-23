@@ -38,8 +38,10 @@ public class Rent {
 
     public Rent(Client client, VMachine vMachine, LocalDateTime beginTime) {
         if(!vMachine.isRented()) {
-            setClient(client);
-            setvMachine(vMachine);
+            this.client = client;
+            this.vMachine = vMachine;
+            this.vmID = vMachine.getUuid();
+            this.clientID = client.getClientID();
             this.rentID = UUID.randomUUID();
             beginRent(beginTime);
         }
@@ -49,36 +51,12 @@ public class Rent {
     }
 
     public Rent(UUID uuid, UUID clientID, UUID vmID, LocalDateTime beginTime, LocalDateTime endTime, double rentCost) {
-        setClientID(clientID);
-        setvmID(vmID);
+        this.clientID = clientID;
+        this.vmID = vmID;
         this.rentID = uuid;
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.rentCost = rentCost;
-    }
-
-    public void setvMachine(VMachine vMachine) {
-        this.vMachine = vMachine;
-        this.vmID = vMachine.getUuid();
-    }
-
-    public void setvmID(UUID vmID) {
-        this.vmID = vmID;
-        VMachineMapper mapper = new VMachineMapperBuilder(DBConnection.getInstance().getSession()).build();
-        VMachineDao dao = mapper.vMachineDao();
-        this.vMachine = dao.findById(vmID);
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-        this.clientID = client.getClientID();
-    }
-
-    public void setClientID(UUID clientID) {
-        this.clientID = clientID;
-        ClientMapper mapper = new ClientMapperBuilder(DBConnection.getInstance().getSession()).build();
-        ClientDao dao = mapper.clientDao();
-        this.client = dao.findById(clientID);
     }
 
     //Methods

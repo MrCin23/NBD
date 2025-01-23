@@ -1,7 +1,9 @@
 package org.example.manager;
 
 import org.example.DBConnection;
+import org.example.dao.ClientDao;
 import org.example.dao.RentDao;
+import org.example.dao.VMachineDao;
 import org.example.mapper.*;
 import org.example.model.Client;
 import org.example.model.Rent;
@@ -17,6 +19,8 @@ public class RentManager {
     private static RentManager instance;
     DBConnection db;
     RentDao rentDao;
+    ClientDao clientDao;
+    VMachineDao vmDao;
 
     public static synchronized RentManager getInstance() {
         if (instance == null) {
@@ -31,6 +35,10 @@ public class RentManager {
         db.createRentTables();
         RentMapper rentMapper = new RentMapperBuilder(db.getSession()).build();
         rentDao = rentMapper.rentDao();
+        ClientMapper clientMapper = new ClientMapperBuilder(db.getSession()).build();
+        clientDao = clientMapper.clientDao();
+        VMachineMapper vMachineMapper = new VMachineMapperBuilder(db.getSession()).build();
+        vmDao = vMachineMapper.vMachineDao();
     }
 
     public void registerRent(Client client, VMachine vMachine, LocalDateTime beginTime) {
@@ -43,11 +51,33 @@ public class RentManager {
     }
 
     public List<Rent> getRentsByClientID(UUID uuid) {
-        return rentDao.findByClientId(uuid);
+        //find client
+        Client client = clientDao.findById(uuid); //Q1
+        //find rent
+        List<Rent> rents = rentDao.findByClientId(uuid); //client = null, vmachine = null Q3
+        //client -> rent, vmachine -> rent
+        for (Rent rent : rents) {
+            rent.setClient(client); //client no longer null
+            //find vmachine from rent id
+            VMachine vm = vmDao.findById(rent.getVmID()); //Q5
+            rent.setVMachine(vm); //vmachine no longer null
+        }
+        return rents;
     }
 
     public List<Rent> getRentsByVMachineID(UUID uuid) {
-        return rentDao.findByVMachineId(uuid);
+        //find vm
+        VMachine vm = vmDao.findById(uuid); //Q2
+        //find rent
+        List<Rent> rents = rentDao.findByVMachineId(uuid); //client = null, vmachine = null Q4
+        //client -> rent, vmachine -> rent
+        for (Rent rent : rents) {
+            rent.setVMachine(vm); //vmachine no longer null
+            //find client from rent id
+            Client client = clientDao.findById(rent.getClientID()); //Q6
+            rent.setClient(client); //client no longer null
+        }
+        return rents;
     }
 
     public void endRent(UUID clientID, UUID vMachineID, LocalDateTime endTime) {

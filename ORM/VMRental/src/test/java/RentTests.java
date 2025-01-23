@@ -45,8 +45,12 @@ public class RentTests {
         rentDao.create(rent);
 
         Rent rent2 = rentDao.findByVMachineId(vMachine.getUuid()).getFirst();
+        rent2.setVMachine(vMachine);
+        rent2.setClient(client);
         Assertions.assertEquals(rent2.toString(), rent.toString());
         rent2 = rentDao.findByClientId(client.getClientID()).getFirst();
+        rent2.setVMachine(vMachine);
+        rent2.setClient(client);
         Assertions.assertEquals(rent2.toString(), rent.toString());
     }
 
@@ -67,6 +71,7 @@ public class RentTests {
         Client client3 = new Client("Martin", "Bricky", "intel.enjoyer@architecture.assembly.com", new Standard());
         VMachine vMachine3 = new x86("Intel", 2, "1GiB");
         Rent rent3 = new Rent(client3, vMachine3, LocalDateTime.now());
+
         clientDao.create(client1);
         clientDao.create(client2);
         clientDao.create(client3);
@@ -78,18 +83,30 @@ public class RentTests {
         rentDao.create(rent3);
 
         Rent test = rentDao.findByVMachineId(vMachine1.getUuid()).getFirst();
+        test.setVMachine(vMachine1);
+        test.setClient(client1);
         Assertions.assertEquals(rent1.toString(), test.toString());
         test = rentDao.findByClientId(client1.getClientID()).getFirst();
+        test.setVMachine(vMachine1);
+        test.setClient(client1);
         Assertions.assertEquals(rent1.toString(), test.toString());
 
         test = rentDao.findByVMachineId(vMachine2.getUuid()).getFirst();
+        test.setVMachine(vMachine2);
+        test.setClient(client2);
         Assertions.assertEquals(rent2.toString(), test.toString());
         test = rentDao.findByClientId(client2.getClientID()).getFirst();
+        test.setVMachine(vMachine2);
+        test.setClient(client2);
         Assertions.assertEquals(rent2.toString(), test.toString());
 
         test = rentDao.findByVMachineId(vMachine3.getUuid()).getFirst();
+        test.setVMachine(vMachine3);
+        test.setClient(client3);
         Assertions.assertEquals(rent3.toString(), test.toString());
         test = rentDao.findByClientId(client3.getClientID()).getFirst();
+        test.setVMachine(vMachine3);
+        test.setClient(client3);
         Assertions.assertEquals(rent3.toString(), test.toString());
     }
 
@@ -108,10 +125,14 @@ public class RentTests {
         vMachineDao.create(vMachine);
         rentDao.create(rent);
         Rent rent2 = rentDao.findByClientId(client.getClientID()).getFirst();
+        rent2.setVMachine(vMachine);
+        rent2.setClient(client);
         Assertions.assertEquals(rent2.toString(), rent.toString());
         Assertions.assertNull(rent2.getEndTime());
         rentDao.endRent(rent);
         rent2 = rentDao.findByClientId(client.getClientID()).getFirst();
+        rent2.setVMachine(vMachine);
+        rent2.setClient(client);
         Assertions.assertNotNull(rent2.getEndTime());
     }
 
