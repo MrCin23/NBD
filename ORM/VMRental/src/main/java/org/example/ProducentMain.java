@@ -13,7 +13,7 @@ public class ProducentMain {
             Client client = new Client("Mathew", "Tar", "MTar@ias.allegro.com", new Standard());
             VMachine vMachine = new AppleArch(4, "8GB");
             Rent rent = new Rent(client, vMachine, LocalDateTime.now());
-            Producer.deleteTopic("rents");
+//            Producer.deleteTopic("rents");
             Thread.sleep(1000);
             if(!Producer.doesTopicExist("rents")) {
                 Producer.createTopic("rents");

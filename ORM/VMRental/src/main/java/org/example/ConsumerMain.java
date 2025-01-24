@@ -1,6 +1,5 @@
 package org.example;
 
-//import org.apache.avro.mapred.AvroMapper;
 
 import org.example.repository.Consumer;
 
@@ -15,7 +14,7 @@ public class ConsumerMain {
 //            Thread.sleep(1000);
 //        } while(!Consumer.doesTopicExist("rents"));
 //        System.out.println("It works now");
-        Consumer.createTopic("rents");
+//        Consumer.createTopic("rents");
         Consumer.consumeTopicsByGroup("rents");
 
 
