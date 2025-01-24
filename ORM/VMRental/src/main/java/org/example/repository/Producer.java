@@ -36,6 +36,7 @@ public class Producer {
     }
 
     public static void createTopic (String topic) throws InterruptedException {
+        System.out.println("Creating topic " + topic);
         Properties properties = new Properties();
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka1:9292, kafka1:9392");
         int partitionsNumber = 3;
@@ -58,9 +59,9 @@ public class Producer {
     public static void sendMessage (String topic, Rent rent) throws InterruptedException {
         try {
             initProducer();
-            if(!doesTopicExist(topic)){
-                createTopic(topic);
-            }
+//            if(!doesTopicExist(topic)){
+//                createTopic(topic);
+//            }
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

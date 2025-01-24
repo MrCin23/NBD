@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.io.DatumReader;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.KafkaFuture;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -45,8 +45,11 @@ public class Consumer {
         Properties consumerConfig = new Properties();
         consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UUIDDeserializer.class.getName());
         consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "grupa");
+        consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "grupa1");
         consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192,kafka2:9292,kafka3:9392");
+        consumerConfig.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
 
         for(int i = 0; i < 2; i++) {
             KafkaConsumer<UUID, String> consumer = new KafkaConsumer<>(consumerConfig);
@@ -56,12 +59,11 @@ public class Consumer {
     }
 
     private static void consume(KafkaConsumer<UUID, String> consumer) {
-        initConsumerGroup();
         try {
             consumer.poll(0);
             Set<TopicPartition> consumerAssigment = consumer.assignment();
             System.out.println(consumer.groupMetadata().memberId() + " " + consumerAssigment);
-//            consumer.seekToBeginning(consumerAssigment);
+            consumer.seekToBeginning(consumerAssigment);
 
             Duration timeout = Duration.of(100, ChronoUnit.MILLIS);
             MessageFormat formattter = new MessageFormat("Konsument {5}, Temat {0}, partycja {1}, offset {2, number, integer}, klucz {3}, wartość " +
@@ -83,16 +85,19 @@ public class Consumer {
                     Rent rent = objectMapper.readValue(record.value(), Rent.class);
                     System.out.println(result);
                     rm.registerExistingRent(rent);
-                    consumer.commitSync();
+                    if (!records.isEmpty()) {
+                        consumer.commitSync();
+                    }
                 }
             }
 
         } catch (WakeupException e) {
             System.out.println("Job finished");
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            System.out.println("HEJ");
         }
     }
+
 
     public static void consumeTopicsByGroup(String name) throws InterruptedException {
         topics = name;
@@ -105,6 +110,27 @@ public class Consumer {
             for (KafkaConsumer<UUID, String> consumer : consumerGroup) {
                 consumer.wakeup();
             }
+        }
+    }
+
+    public static void createTopic (String topic) throws InterruptedException {
+        System.out.println("Creating topic " + topic);
+        Properties properties = new Properties();
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka1:9192, kafka1:9292, kafka1:9392");
+        int partitionsNumber = 3;
+        short replicationFactor = 3;
+        try (Admin admin = Admin.create(properties)) {
+            NewTopic newTopic = new NewTopic(topic, partitionsNumber, replicationFactor);
+            CreateTopicsOptions options = new CreateTopicsOptions()
+                    .timeoutMs(1000)
+                    .validateOnly(false)
+                    .retryOnQuotaViolation(true);
+            CreateTopicsResult result = admin.createTopics(List.of(newTopic), options);
+            KafkaFuture<Void> futureResult = result.values().get(topic);
+            futureResult.get();
+        } catch (ExecutionException ee) {
+            System.out.println(ee.getCause());
+            //assertThat(ee.getCause(), is( instanceof (TopicExistsException.class))); ??????
         }
     }
 
